@@ -4,13 +4,21 @@ A secure, decentralized student records management system built with React, Node
 
 ## 🌟 Features
 
+### Core Features
 - **Role-Based Access Control**: Separate portals for Students, Admins, and Institutions
 - **Blockchain Integration**: Tamper-proof record storage with cryptographic hashing
 - **MetaMask Support**: Web3 wallet authentication
-- **Student Self-Registration**: Students can register and access payment portal
+- **Student Self-Registration**: Students can register and access portal
 - **Payment Gateway**: UPI-based fee payment system for students
 - **Settings Management**: Password and profile management
 - **Responsive Design**: Mobile-friendly interface with modern UI
+
+### 🆕 Advanced Admin Features
+- **📊 Real-Time Analytics Dashboard**: Live stats, department performance, fee tracking, trend analysis
+- **🎓 Certificate Generator**: Bulk certificates with QR codes & blockchain verification
+- **📋 Workflow Automation**: Kanban board task management with automation workflows
+- **🤖 AI Study Buddy**: Intelligent chatbot for student assistance
+- **📈 Performance Analytics**: CGPA tracking, predictions, and recommendations
 
 ## 🚀 Quick Start
 
@@ -94,11 +102,12 @@ For detailed deployment instructions, see [Deployment Guide](../brain/4e77c4b2-d
 project/
 ├── backend/
 │   ├── server.js          # Main server file
+│   ├── aiChatbot.js       # AI Study Buddy module
 │   ├── package.json       # Backend dependencies
 │   └── .env.example       # Environment template
 ├── frontend/
 │   ├── src/
-│   │   ├── App.js         # Main React component
+│   │   ├── App.js         # Main React component (all pages)
 │   │   └── index.css      # Styles
 │   ├── public/
 │   │   └── index.html     # HTML template
@@ -113,13 +122,19 @@ project/
 ### Student
 - Self-registration
 - Login (email or MetaMask)
-- View dashboard
+- View dashboard with stats
 - Pay fees via UPI
 - Manage profile and password
+- View results, attendance, assignments
+- Access AI Study Buddy chatbot
+- View performance analytics
 
 ### Admin
 - Login
 - View dashboard with statistics
+- **📊 Analytics Dashboard**: Real-time insights, department comparison, fee tracking
+- **🎓 Certificate Generator**: Bulk generate certificates with QR codes
+- **📋 Workflow Manager**: Kanban board, task automation
 - Register students
 - Upload records to blockchain
 - Manage student records
@@ -128,6 +143,7 @@ project/
 ### Institution
 - Login
 - View dashboard
+- Access Analytics, Certificates, Workflows
 - Register students
 - Upload records
 - Manage records

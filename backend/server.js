@@ -22,13 +22,28 @@ const db = {
   students: [],
   records: [],
   institutions: [],
-  blockchainTransactions: []
+  blockchainTransactions: [],
+  notifications: [],
+  results: [],
+  attendance: [],
+  papers: [],
+  assignments: [],
+  timetable: [],
+  grievances: [],
+  events: [],
+  certificates: [],
+  chatHistory: [],
+  // New admin features
+  tasks: [],
+  workflows: [],
+  certificateTemplates: [],
+  activityLog: []
 };
 
 // Initialize demo data
 function initDemoData() {
   // Demo admin user
-  const adminPassword = bcrypt.hashSync('admin123', 10);
+  const adminPassword = bcrypt.hashSync('admin123', 10); //password is here
   db.users.push({
     id: uuidv4(),
     email: 'admin@university.edu',
@@ -96,6 +111,11 @@ function initDemoData() {
     enrollmentYear: 2024,
     walletAddress: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
     institutionId: db.institutions[0].id,
+    aadhaarNumber: '1234-5678-9012',
+    apaarId: 'APAAR2024001',
+    dob: '2002-05-15',
+    admissionType: 'counselling',
+    profilePicture: null,
     createdAt: new Date().toISOString()
   });
 
@@ -112,6 +132,177 @@ function initDemoData() {
     createdAt: new Date().toISOString(),
     issuedBy: db.institutions[0].id
   });
+
+  // Demo notifications
+  db.notifications.push(
+    {
+      id: uuidv4(),
+      title: '📢 Mid-Semester Exams Schedule Released',
+      message: 'The mid-semester examination schedule for all departments has been released. Please check the exam portal for your individual timetable. Exams begin from 25th February.',
+      type: 'important',
+      date: new Date().toISOString(),
+      read: false
+    },
+    {
+      id: uuidv4(),
+      title: '🏆 Annual Sports Day Registration Open',
+      message: 'Registration for Annual Sports Day 2024 is now open. Students can register for various events including athletics, cricket, football, and indoor games. Last date: 20th February.',
+      type: 'event',
+      date: new Date(Date.now() - 86400000).toISOString(),
+      read: false
+    },
+    {
+      id: uuidv4(),
+      title: '💳 Fee Payment Reminder',
+      message: 'This is a reminder that the last date for payment of semester fees is 28th February. Late payment will attract a fine of ₹500 per day.',
+      type: 'urgent',
+      date: new Date(Date.now() - 172800000).toISOString(),
+      read: true
+    },
+    {
+      id: uuidv4(),
+      title: '📚 Library Books Return Notice',
+      message: 'All borrowed library books must be returned before the semester exams. Students with pending books will not be issued hall tickets.',
+      type: 'notice',
+      date: new Date(Date.now() - 259200000).toISOString(),
+      read: true
+    }
+  );
+
+  // Demo results for student
+  db.results.push(
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      semester: 1,
+      subjects: [
+        { code: 'CS101', name: 'Programming Fundamentals', credits: 4, grade: 'A', gradePoints: 9 },
+        { code: 'CS102', name: 'Digital Logic Design', credits: 3, grade: 'A+', gradePoints: 10 },
+        { code: 'MA101', name: 'Engineering Mathematics I', credits: 4, grade: 'B+', gradePoints: 8 },
+        { code: 'PH101', name: 'Engineering Physics', credits: 3, grade: 'A', gradePoints: 9 },
+        { code: 'EN101', name: 'Technical English', credits: 2, grade: 'A+', gradePoints: 10 }
+      ],
+      sgpa: 9.0,
+      totalCredits: 16,
+      year: 2024
+    },
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      semester: 2,
+      subjects: [
+        { code: 'CS201', name: 'Data Structures', credits: 4, grade: 'A+', gradePoints: 10 },
+        { code: 'CS202', name: 'Object Oriented Programming', credits: 3, grade: 'A', gradePoints: 9 },
+        { code: 'MA201', name: 'Engineering Mathematics II', credits: 4, grade: 'A', gradePoints: 9 },
+        { code: 'EC201', name: 'Basic Electronics', credits: 3, grade: 'B+', gradePoints: 8 },
+        { code: 'HS201', name: 'Professional Ethics', credits: 2, grade: 'A', gradePoints: 9 }
+      ],
+      sgpa: 9.2,
+      totalCredits: 16,
+      year: 2024
+    }
+  );
+
+  // Demo attendance
+  db.attendance.push(
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      month: 'January',
+      year: 2025,
+      totalDays: 22,
+      presentDays: 20,
+      absentDays: 2,
+      percentage: 90.9
+    },
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      month: 'February',
+      year: 2025,
+      totalDays: 18,
+      presentDays: 16,
+      absentDays: 2,
+      percentage: 88.9
+    },
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      month: 'December',
+      year: 2024,
+      totalDays: 20,
+      presentDays: 19,
+      absentDays: 1,
+      percentage: 95.0
+    },
+    {
+      id: uuidv4(),
+      studentId: 'STU2024001',
+      month: 'November',
+      year: 2024,
+      totalDays: 24,
+      presentDays: 22,
+      absentDays: 2,
+      percentage: 91.7
+    }
+  );
+
+  // Demo previous year papers
+  db.papers.push(
+    { id: uuidv4(), subject: 'Data Structures', code: 'CS201', year: 2024, semester: 'Mid Sem', fileUrl: '/papers/cs201_mid_2024.pdf' },
+    { id: uuidv4(), subject: 'Data Structures', code: 'CS201', year: 2024, semester: 'End Sem', fileUrl: '/papers/cs201_end_2024.pdf' },
+    { id: uuidv4(), subject: 'Programming Fundamentals', code: 'CS101', year: 2024, semester: 'End Sem', fileUrl: '/papers/cs101_end_2024.pdf' },
+    { id: uuidv4(), subject: 'Engineering Mathematics I', code: 'MA101', year: 2024, semester: 'End Sem', fileUrl: '/papers/ma101_end_2024.pdf' },
+    { id: uuidv4(), subject: 'Digital Logic Design', code: 'CS102', year: 2023, semester: 'End Sem', fileUrl: '/papers/cs102_end_2023.pdf' },
+    { id: uuidv4(), subject: 'Object Oriented Programming', code: 'CS202', year: 2023, semester: 'Mid Sem', fileUrl: '/papers/cs202_mid_2023.pdf' }
+  );
+
+  // Demo assignments
+  db.assignments.push(
+    { id: uuidv4(), studentId: 'STU2024001', subject: 'Data Structures', title: 'Binary Tree Implementation', description: 'Implement BST with all operations', dueDate: '2025-02-15', status: 'pending', submittedAt: null, grade: null, feedback: null },
+    { id: uuidv4(), studentId: 'STU2024001', subject: 'OOP', title: 'Design Patterns Project', description: 'Implement Singleton and Factory patterns', dueDate: '2025-02-10', status: 'submitted', submittedAt: '2025-02-08', grade: 'A', feedback: 'Excellent implementation!' },
+    { id: uuidv4(), studentId: 'STU2024001', subject: 'Mathematics', title: 'Linear Algebra Problems', description: 'Solve problems from Chapter 5', dueDate: '2025-02-20', status: 'pending', submittedAt: null, grade: null, feedback: null },
+    { id: uuidv4(), studentId: 'STU2024001', subject: 'Data Structures', title: 'Graph Algorithms', description: 'Implement BFS and DFS', dueDate: '2025-01-25', status: 'graded', submittedAt: '2025-01-24', grade: 'A+', feedback: 'Outstanding work!' }
+  );
+
+  // Demo timetable
+  db.timetable.push(
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Monday', time: '09:00 AM', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-101' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Monday', time: '10:00 AM', subject: 'OOP Lab', faculty: 'Prof. Kumar', room: 'Lab-2' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Monday', time: '11:30 AM', subject: 'Mathematics', faculty: 'Dr. Gupta', room: 'MA-201' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Tuesday', time: '09:00 AM', subject: 'Digital Electronics', faculty: 'Prof. Singh', room: 'EC-101' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Tuesday', time: '11:00 AM', subject: 'Data Structures Lab', faculty: 'Dr. Sharma', room: 'Lab-1' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Wednesday', time: '09:00 AM', subject: 'OOP', faculty: 'Prof. Kumar', room: 'CS-102' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Wednesday', time: '02:00 PM', subject: 'Physics', faculty: 'Dr. Verma', room: 'PH-101' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Thursday', time: '10:00 AM', subject: 'Mathematics', faculty: 'Dr. Gupta', room: 'MA-201' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Thursday', time: '02:00 PM', subject: 'Technical English', faculty: 'Mrs. Reddy', room: 'EN-101' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Friday', time: '09:00 AM', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-101' },
+    { id: uuidv4(), studentId: 'STU2024001', day: 'Friday', time: '11:00 AM', subject: 'OOP', faculty: 'Prof. Kumar', room: 'CS-102' }
+  );
+
+  // Demo grievances
+  db.grievances.push(
+    { id: uuidv4(), studentId: 'STU2024001', category: 'Academic', subject: 'Incorrect Grade Entry', description: 'My CS201 grade shows as B but it should be A as per marks.', status: 'resolved', createdAt: '2025-01-15', resolvedAt: '2025-01-18', response: 'Grade has been corrected. Please check your updated result.' },
+    { id: uuidv4(), studentId: 'STU2024001', category: 'Hostel', subject: 'Water Supply Issue', description: 'No water supply in Block B for 2 days.', status: 'in-progress', createdAt: '2025-02-01', resolvedAt: null, response: 'Maintenance team has been notified. Will be fixed by tomorrow.' },
+    { id: uuidv4(), studentId: 'STU2024001', category: 'Infrastructure', subject: 'AC not working in Lab-1', description: 'The air conditioner in Lab-1 is not working properly.', status: 'pending', createdAt: '2025-02-05', resolvedAt: null, response: null }
+  );
+
+  // Demo events
+  db.events.push(
+    { id: uuidv4(), title: 'Tech Fest 2025', description: 'Annual technical festival with competitions, workshops and exhibitions.', date: '2025-03-15', time: '09:00 AM', venue: 'Main Auditorium', category: 'Cultural', registrationOpen: true, registered: [] },
+    { id: uuidv4(), title: 'Web Development Workshop', description: 'Learn React.js and Node.js from industry experts.', date: '2025-02-20', time: '10:00 AM', venue: 'Seminar Hall-1', category: 'Workshop', registrationOpen: true, registered: ['STU2024001'] },
+    { id: uuidv4(), title: 'Campus Placement Drive - TCS', description: 'TCS campus recruitment for 2025 batch.', date: '2025-02-25', time: '09:00 AM', venue: 'Placement Cell', category: 'Placement', registrationOpen: true, registered: [] },
+    { id: uuidv4(), title: 'Annual Sports Meet', description: 'Inter-departmental sports competition.', date: '2025-03-01', time: '08:00 AM', venue: 'Sports Ground', category: 'Sports', registrationOpen: false, registered: ['STU2024001'] },
+    { id: uuidv4(), title: 'AI/ML Seminar', description: 'Guest lecture on Artificial Intelligence and Machine Learning.', date: '2025-02-18', time: '02:00 PM', venue: 'Conference Hall', category: 'Seminar', registrationOpen: true, registered: [] }
+  );
+
+  // Demo certificates
+  db.certificates.push(
+    { id: uuidv4(), studentId: 'STU2024001', title: 'Academic Excellence Award', type: 'Achievement', description: 'For securing 9.2 CGPA in Semester 2', issuedDate: '2024-12-15', blockchainHash: '0x1a2b3c4d5e6f...', verified: true },
+    { id: uuidv4(), studentId: 'STU2024001', title: 'Web Development Workshop', type: 'Participation', description: 'Successfully completed 2-day workshop on MERN Stack', issuedDate: '2024-11-20', blockchainHash: '0x7g8h9i0j1k2l...', verified: true },
+    { id: uuidv4(), studentId: 'STU2024001', title: 'Hackathon Winner', type: 'Achievement', description: 'First place in Inter-College Hackathon 2024', issuedDate: '2024-10-10', blockchainHash: '0x3m4n5o6p7q8r...', verified: true },
+    { id: uuidv4(), studentId: 'STU2024001', title: 'NSS Volunteer', type: 'Service', description: 'Completed 120 hours of community service', issuedDate: '2024-09-05', blockchainHash: '0x9s0t1u2v3w4x...', verified: true }
+  );
 }
 
 // Helper function to generate SHA-256 hash
@@ -345,6 +536,89 @@ app.post('/api/student/register', authenticateToken, requireRole('admin', 'insti
   }
 });
 
+// Bulk upload students from Excel
+app.post('/api/student/bulk-upload', authenticateToken, requireRole('admin', 'institution'), async (req, res) => {
+  try {
+    const { students } = req.body;
+
+    if (!students || !Array.isArray(students) || students.length === 0) {
+      return res.status(400).json({ error: 'Students array is required' });
+    }
+
+    const results = {
+      success: [],
+      failed: [],
+      total: students.length
+    };
+
+    for (const studentData of students) {
+      try {
+        const { studentId, name, email, course, department, enrollmentYear } = studentData;
+
+        // Validate required fields
+        if (!studentId || !name || !email) {
+          results.failed.push({
+            studentId: studentId || 'Unknown',
+            error: 'Missing required fields (studentId, name, email)'
+          });
+          continue;
+        }
+
+        // Check if student already exists
+        const existingStudent = db.students.find(s => s.studentId === studentId);
+        if (existingStudent) {
+          // Update existing student
+          existingStudent.name = name;
+          existingStudent.email = email;
+          existingStudent.course = course || existingStudent.course;
+          existingStudent.department = department || existingStudent.department;
+          existingStudent.enrollmentYear = enrollmentYear || existingStudent.enrollmentYear;
+          existingStudent.updatedAt = new Date().toISOString();
+
+          results.success.push({
+            studentId,
+            name,
+            action: 'updated'
+          });
+        } else {
+          // Create new student
+          const newStudent = {
+            id: uuidv4(),
+            studentId,
+            name,
+            email,
+            course: course || '',
+            department: department || '',
+            enrollmentYear: enrollmentYear || new Date().getFullYear(),
+            walletAddress: null,
+            institutionId: req.user.institutionId || db.institutions[0]?.id,
+            createdAt: new Date().toISOString()
+          };
+
+          db.students.push(newStudent);
+          results.success.push({
+            studentId,
+            name,
+            action: 'created'
+          });
+        }
+      } catch (err) {
+        results.failed.push({
+          studentId: studentData.studentId || 'Unknown',
+          error: err.message
+        });
+      }
+    }
+
+    res.status(200).json({
+      message: `Processed ${results.total} students: ${results.success.length} successful, ${results.failed.length} failed`,
+      results
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Upload student record
 app.post('/api/student/uploadRecord', authenticateToken, requireRole('admin', 'institution'), async (req, res) => {
   try {
@@ -513,6 +787,456 @@ app.get('/api/students', authenticateToken, requireRole('admin', 'institution'),
   }));
   res.json({ students });
 });
+
+// ==================== NOTIFICATIONS ROUTES ====================
+
+// Get all notifications
+app.get('/api/notifications', authenticateToken, (req, res) => {
+  const notifications = db.notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.json({ notifications });
+});
+
+// Mark notification as read
+app.put('/api/notifications/:id/read', authenticateToken, (req, res) => {
+  const notification = db.notifications.find(n => n.id === req.params.id);
+  if (!notification) {
+    return res.status(404).json({ error: 'Notification not found' });
+  }
+  notification.read = true;
+  res.json({ message: 'Notification marked as read', notification });
+});
+
+// ==================== RESULTS ROUTES ====================
+
+// Get student results
+app.get('/api/student/results', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const studentId = user.studentId || 'STU2024001';
+  const results = db.results.filter(r => r.studentId === studentId);
+
+  // Calculate CGPA
+  const totalCredits = results.reduce((sum, r) => sum + r.totalCredits, 0);
+  const weightedSum = results.reduce((sum, r) => sum + (r.sgpa * r.totalCredits), 0);
+  const cgpa = totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : 0;
+
+  res.json({
+    results: results.sort((a, b) => a.semester - b.semester),
+    cgpa: parseFloat(cgpa),
+    totalSemesters: results.length
+  });
+});
+
+// ==================== ATTENDANCE ROUTES ====================
+
+// Get student attendance
+app.get('/api/student/attendance', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const studentId = user.studentId || 'STU2024001';
+  const attendance = db.attendance.filter(a => a.studentId === studentId);
+
+  // Calculate overall percentage
+  const totalPresent = attendance.reduce((sum, a) => sum + a.presentDays, 0);
+  const totalDays = attendance.reduce((sum, a) => sum + a.totalDays, 0);
+  const overallPercentage = totalDays > 0 ? ((totalPresent / totalDays) * 100).toFixed(1) : 0;
+
+  res.json({
+    attendance: attendance.sort((a, b) => {
+      if (b.year !== a.year) return b.year - a.year;
+      const months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      return months.indexOf(b.month) - months.indexOf(a.month);
+    }),
+    overallPercentage: parseFloat(overallPercentage),
+    totalPresent,
+    totalDays
+  });
+});
+
+// ==================== PROFILE ROUTES ====================
+
+// Get student profile
+app.get('/api/student/profile', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const studentId = user.studentId || 'STU2024001';
+  const student = db.students.find(s => s.studentId === studentId);
+
+  if (!student) {
+    return res.status(404).json({ error: 'Student profile not found' });
+  }
+
+  res.json({
+    profile: {
+      studentId: student.studentId,
+      name: student.name,
+      email: student.email,
+      course: student.course,
+      department: student.department,
+      enrollmentYear: student.enrollmentYear,
+      aadhaarNumber: student.aadhaarNumber || '',
+      apaarId: student.apaarId || '',
+      dob: student.dob || '',
+      admissionType: student.admissionType || '',
+      profilePicture: student.profilePicture || null,
+      walletAddress: student.walletAddress
+    }
+  });
+});
+
+// Update student profile
+app.put('/api/student/profile', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const studentId = user.studentId || 'STU2024001';
+  const student = db.students.find(s => s.studentId === studentId);
+
+  if (!student) {
+    return res.status(404).json({ error: 'Student profile not found' });
+  }
+
+  const { profilePicture, aadhaarNumber, apaarId, dob, admissionType } = req.body;
+
+  if (profilePicture !== undefined) {
+    student.profilePicture = profilePicture;
+  }
+  if (aadhaarNumber !== undefined) {
+    student.aadhaarNumber = aadhaarNumber;
+  }
+  if (apaarId !== undefined) {
+    student.apaarId = apaarId;
+  }
+  if (dob !== undefined) {
+    student.dob = dob;
+  }
+  if (admissionType !== undefined) {
+    student.admissionType = admissionType;
+  }
+
+  res.json({
+    message: 'Profile updated successfully',
+    profile: {
+      studentId: student.studentId,
+      name: student.name,
+      aadhaarNumber: student.aadhaarNumber,
+      apaarId: student.apaarId,
+      dob: student.dob,
+      admissionType: student.admissionType,
+      profilePicture: student.profilePicture
+    }
+  });
+});
+
+// ==================== PREVIOUS YEAR PAPERS ====================
+app.get('/api/papers', authenticateToken, (req, res) => {
+  res.json({ papers: db.papers });
+});
+
+// ==================== ASSIGNMENTS ====================
+app.get('/api/assignments', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const assignments = db.assignments.filter(a => a.studentId === studentId);
+  res.json({ assignments });
+});
+
+app.post('/api/assignments/:id/submit', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const assignment = db.assignments.find(a => a.id === id);
+  if (!assignment) {
+    return res.status(404).json({ error: 'Assignment not found' });
+  }
+  assignment.status = 'submitted';
+  assignment.submittedAt = new Date().toISOString().split('T')[0];
+  res.json({ message: 'Assignment submitted successfully', assignment });
+});
+
+// ==================== TIMETABLE ====================
+app.get('/api/timetable', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const timetable = db.timetable.filter(t => t.studentId === studentId);
+  res.json({ timetable });
+});
+
+// ==================== GRIEVANCES ====================
+app.get('/api/grievances', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const grievances = db.grievances.filter(g => g.studentId === studentId);
+  res.json({ grievances });
+});
+
+app.post('/api/grievances', authenticateToken, (req, res) => {
+  const { category, subject, description } = req.body;
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+
+  const newGrievance = {
+    id: uuidv4(),
+    studentId,
+    category,
+    subject,
+    description,
+    status: 'pending',
+    createdAt: new Date().toISOString().split('T')[0],
+    resolvedAt: null,
+    response: null
+  };
+
+  db.grievances.push(newGrievance);
+  res.json({ message: 'Grievance submitted successfully', grievance: newGrievance });
+});
+
+// ==================== EVENTS ====================
+app.get('/api/events', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const events = db.events.map(e => ({
+    ...e,
+    isRegistered: e.registered.includes(studentId)
+  }));
+  res.json({ events });
+});
+
+app.post('/api/events/:id/register', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+
+  const event = db.events.find(e => e.id === id);
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+  if (!event.registrationOpen) {
+    return res.status(400).json({ error: 'Registration is closed for this event' });
+  }
+  if (event.registered.includes(studentId)) {
+    return res.status(400).json({ error: 'Already registered for this event' });
+  }
+
+  event.registered.push(studentId);
+  res.json({ message: 'Registered successfully', event: { ...event, isRegistered: true } });
+});
+
+// ==================== CERTIFICATES ====================
+app.get('/api/certificates', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const certificates = db.certificates.filter(c => c.studentId === studentId);
+  res.json({ certificates });
+});
+
+// ==================== ID CARD ====================
+app.get('/api/student/idcard', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const student = db.students.find(s => s.studentId === studentId);
+
+  if (!student) {
+    return res.status(404).json({ error: 'Student not found' });
+  }
+
+  res.json({
+    idCard: {
+      studentId: student.studentId,
+      name: student.name,
+      course: student.course,
+      department: student.department,
+      enrollmentYear: student.enrollmentYear,
+      email: student.email,
+      profilePicture: student.profilePicture,
+      validUntil: '2028-05-31',
+      institutionName: 'BlockEdu University',
+      barcode: student.studentId
+    }
+  });
+});
+
+// ==================== PERFORMANCE ANALYTICS ====================
+app.get('/api/analytics/performance', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+
+  // Get all results
+  const results = db.results.filter(r => r.studentId === studentId);
+  const attendance = db.attendance.filter(a => a.studentId === studentId);
+
+  if (results.length === 0) {
+    return res.json({ analytics: null });
+  }
+
+  // Calculate overall CGPA
+  const totalCredits = results.reduce((sum, r) => sum + r.totalCredits, 0);
+  const weightedGPA = results.reduce((sum, r) => sum + (r.sgpa * r.totalCredits), 0);
+  const cgpa = (weightedGPA / totalCredits).toFixed(2);
+
+  // Calculate attendance percentage
+  const totalDays = attendance.reduce((sum, a) => sum + a.totalDays, 0);
+  const presentDays = attendance.reduce((sum, a) => sum + a.presentDays, 0);
+  const attendancePercentage = totalDays > 0 ? ((presentDays / totalDays) * 100).toFixed(1) : 0;
+
+  // Identify weak subjects (grade below B+)
+  const allSubjects = results.flatMap(r => r.subjects);
+  const weakSubjects = allSubjects.filter(s => s.gradePoints < 8).map(s => ({
+    name: s.name,
+    code: s.code,
+    grade: s.grade,
+    gradePoints: s.gradePoints
+  }));
+
+  // Predict next semester CGPA (simple linear trend)
+  const sgpaTrend = results.map(r => r.sgpa);
+  const avgImprovement = sgpaTrend.length > 1 ?
+    (sgpaTrend[sgpaTrend.length - 1] - sgpaTrend[0]) / (sgpaTrend.length - 1) : 0;
+  const predictedSGPA = Math.min(10, Math.max(0, sgpaTrend[sgpaTrend.length - 1] + avgImprovement)).toFixed(2);
+
+  // Generate recommendations
+  const recommendations = [];
+  if (parseFloat(cgpa) < 7.5) {
+    recommendations.push({ type: 'warning', text: 'Focus on improving grades - aim for A grades in upcoming exams' });
+  }
+  if (parseFloat(attendancePercentage) < 75) {
+    recommendations.push({ type: 'error', text: 'Attendance is below 75% - attend all classes to avoid shortage' });
+  }
+  if (weakSubjects.length > 0) {
+    recommendations.push({ type: 'info', text: `Focus on ${weakSubjects.length} weak subject(s): ${weakSubjects.slice(0, 2).map(s => s.name).join(', ')}` });
+  }
+  if (parseFloat(cgpa) >= 8.5) {
+    recommendations.push({ type: 'success', text: 'Excellent performance! Keep up the good work' });
+  }
+
+  // Performance trend
+  const trend = avgImprovement > 0.1 ? 'improving' : avgImprovement < -0.1 ? 'declining' : 'stable';
+
+  res.json({
+    analytics: {
+      cgpa: parseFloat(cgpa),
+      attendancePercentage: parseFloat(attendancePercentage),
+      totalSemesters: results.length,
+      weakSubjects,
+      predictions: {
+        nextSemesterSGPA: parseFloat(predictedSGPA),
+        expectedCGPA: ((parseFloat(cgpa) * totalCredits + parseFloat(predictedSGPA) * 16) / (totalCredits + 16)).toFixed(2)
+      },
+      recommendations,
+      trend,
+      semesterPerformance: results.map(r => ({
+        semester: r.semester,
+        sgpa: r.sgpa,
+        year: r.year
+      }))
+    }
+  });
+});
+
+// ==================== AI STUDY BUDDY ====================
+app.get('/api/chat/history', authenticateToken, (req, res) => {
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+  const history = db.chatHistory.filter(c => c.studentId === studentId).slice(-50);
+  res.json({ history });
+});
+
+app.post('/api/chat/message', authenticateToken, (req, res) => {
+  const { message, subject } = req.body;
+  const user = db.users.find(u => u.id === req.user.id);
+  const studentId = user?.studentId || 'STU2024001';
+
+  // Store user message
+  const userMsg = {
+    id: uuidv4(),
+    studentId,
+    message,
+    subject,
+    sender: 'user',
+    timestamp: new Date().toISOString()
+  };
+  db.chatHistory.push(userMsg);
+
+  // Generate AI response (mock - can integrate real AI later)
+  const aiResponse = generateAIResponse(message, subject, studentId);
+  const aiMsg = {
+    id: uuidv4(),
+    studentId,
+    message: aiResponse,
+    subject,
+    sender: 'ai',
+    timestamp: new Date().toISOString()
+  };
+  db.chatHistory.push(aiMsg);
+
+  res.json({ userMessage: userMsg, aiMessage: aiMsg });
+});
+
+// Mock AI response generator
+function generateAIResponse(message, subject, studentId) {
+  const lowerMsg = message.toLowerCase();
+
+  // Get student data for personalized responses
+  const results = db.results.filter(r => r.studentId === studentId);
+  const attendance = db.attendance.filter(a => a.studentId === studentId);
+
+  // Subject-specific responses
+  if (subject === 'Data Structures') {
+    if (lowerMsg.includes('tree') || lowerMsg.includes('bst')) {
+      return "Binary Search Trees (BST) are hierarchical data structures where each node has at most two children. Key properties:\n\n1. Left subtree contains nodes with keys less than parent\n2. Right subtree contains nodes with keys greater than parent\n3. Time complexity: O(log n) for balanced trees\n\nWould you like me to explain insertion, deletion, or traversal algorithms?";
+    }
+    if (lowerMsg.includes('complexity') || lowerMsg.includes('big o')) {
+      return "Time complexity measures how runtime grows with input size:\n\n• O(1) - Constant\n• O(log n) - Logarithmic (Binary Search)\n• O(n) - Linear (Array traversal)\n• O(n log n) - Linearithmic (Merge Sort)\n• O(n²) - Quadratic (Bubble Sort)\n\nWhat specific algorithm would you like to analyze?";
+    }
+  }
+
+  if (subject === 'OOP') {
+    if (lowerMsg.includes('inheritance') || lowerMsg.includes('polymorphism')) {
+      return "Object-Oriented Programming pillars:\n\n1. **Encapsulation**: Bundling data and methods\n2. **Inheritance**: Child class inherits parent properties\n3. **Polymorphism**: Same interface, different implementations\n4. **Abstraction**: Hiding complex implementation\n\nWhich concept would you like to explore in detail?";
+    }
+  }
+
+  // Performance-related questions
+  if (lowerMsg.includes('cgpa') || lowerMsg.includes('grade') || lowerMsg.includes('performance')) {
+    if (results.length > 0) {
+      const cgpa = (results.reduce((sum, r) => sum + r.sgpa, 0) / results.length).toFixed(2);
+      return `Based on your academic record, your current CGPA is ${cgpa}. ${parseFloat(cgpa) >= 8.5 ? "Excellent work! You're performing very well." :
+        parseFloat(cgpa) >= 7.0 ? "Good progress! Focus on weak subjects to improve further." :
+          "I recommend focusing on core subjects and attending doubt-clearing sessions."
+        }\n\nWould you like subject-specific study tips?`;
+    }
+  }
+
+  // Attendance questions
+  if (lowerMsg.includes('attendance') || lowerMsg.includes('absent')) {
+    if (attendance.length > 0) {
+      const totalDays = attendance.reduce((sum, a) => sum + a.totalDays, 0);
+      const presentDays = attendance.reduce((sum, a) => sum + a.presentDays, 0);
+      const percentage = ((presentDays / totalDays) * 100).toFixed(1);
+      return `Your current attendance is ${percentage}%. ${parseFloat(percentage) >= 75 ? "You're meeting the minimum requirement!" :
+        "⚠️ You're below 75% - attend all upcoming classes to avoid shortage."
+        }`;
+    }
+  }
+
+  // Study tips
+  if (lowerMsg.includes('study') || lowerMsg.includes('prepare') || lowerMsg.includes('exam')) {
+    return "Here are effective study strategies:\n\n1. **Pomodoro Technique**: 25 min focus + 5 min break\n2. **Active Recall**: Test yourself instead of re-reading\n3. **Spaced Repetition**: Review material at increasing intervals\n4. **Practice Problems**: Solve previous year papers\n5. **Group Study**: Discuss concepts with peers\n\nWhat subject are you preparing for?";
+  }
+
+  // Default helpful response
+  return `I'm here to help with your studies! I can assist with:\n\n• Subject concepts (Data Structures, OOP, Math, etc.)\n• Study strategies and exam preparation\n• Performance analysis and improvement tips\n• Doubt clarification\n\nWhat would you like to know more about?`;
+}
 
 // ==================== BLOCKCHAIN ROUTES ====================
 
@@ -1154,6 +1878,271 @@ app.get('/api/health', (req, res) => {
       ipfs: 'simulated'
     }
   });
+});
+// ==================== ADMIN ANALYTICS DASHBOARD ====================
+
+// Get comprehensive admin analytics
+app.get('/api/admin/analytics', authenticateToken, (req, res) => {
+  // Department-wise performance
+  const departments = [...new Set(db.students.map(s => s.department))];
+  const departmentStats = departments.map(dept => {
+    const deptStudents = db.students.filter(s => s.department === dept);
+    const deptResults = db.results.filter(r =>
+      deptStudents.some(s => s.studentId === r.studentId)
+    );
+    const avgSGPA = deptResults.length > 0
+      ? (deptResults.reduce((sum, r) => sum + r.sgpa, 0) / deptResults.length).toFixed(2)
+      : 0;
+    return { department: dept, studentCount: deptStudents.length, avgSGPA: parseFloat(avgSGPA) };
+  });
+
+  // Fee collection stats
+  const totalFees = db.students.length * 50000;
+  const collectedFees = db.students.filter(s => s.verified).length * 50000;
+  const pendingFees = totalFees - collectedFees;
+
+  // Attendance patterns
+  const attendanceStats = db.attendance.reduce((acc, a) => {
+    const percentage = ((a.presentDays / a.totalDays) * 100).toFixed(1);
+    if (percentage >= 90) acc.excellent++;
+    else if (percentage >= 75) acc.good++;
+    else acc.poor++;
+    return acc;
+  }, { excellent: 0, good: 0, poor: 0 });
+
+  // Activity log (recent activities)
+  const recentActivities = [
+    { type: 'registration', message: 'New student registered', time: new Date().toISOString(), count: db.students.length },
+    { type: 'login', message: 'Student logins today', time: new Date().toISOString(), count: Math.floor(Math.random() * 20) + 5 },
+    { type: 'assignment', message: 'Assignments submitted', time: new Date().toISOString(), count: db.assignments.length },
+    { type: 'grievance', message: 'Pending grievances', time: new Date().toISOString(), count: db.grievances.filter(g => g.status === 'pending').length }
+  ];
+
+  // Trend analysis
+  const monthlyTrend = [
+    { month: 'Jan', registrations: 12, fees: 600000 },
+    { month: 'Feb', registrations: 15, fees: 750000 },
+    { month: 'Mar', registrations: 8, fees: 400000 },
+    { month: 'Apr', registrations: 20, fees: 1000000 },
+    { month: 'May', registrations: 18, fees: 900000 },
+    { month: 'Jun', registrations: 25, fees: 1250000 }
+  ];
+
+  res.json({
+    summary: {
+      totalStudents: db.students.length,
+      verifiedStudents: db.students.filter(s => s.verified).length,
+      pendingVerification: db.students.filter(s => !s.verified).length,
+      totalRecords: db.records.length
+    },
+    departmentStats,
+    feeCollection: {
+      total: totalFees,
+      collected: collectedFees,
+      pending: pendingFees,
+      collectionRate: ((collectedFees / totalFees) * 100).toFixed(1)
+    },
+    attendanceStats,
+    recentActivities,
+    monthlyTrend,
+    performanceDistribution: {
+      excellent: db.results.filter(r => r.sgpa >= 9).length,
+      good: db.results.filter(r => r.sgpa >= 7 && r.sgpa < 9).length,
+      average: db.results.filter(r => r.sgpa >= 5 && r.sgpa < 7).length,
+      poor: db.results.filter(r => r.sgpa < 5).length
+    }
+  });
+});
+
+// ==================== CERTIFICATE GENERATOR ====================
+
+// Get certificate templates
+app.get('/api/admin/certificates/templates', authenticateToken, (req, res) => {
+  const templates = [
+    { id: 'bonafide', name: 'Bonafide Certificate', description: 'Proof of enrollment', fields: ['name', 'studentId', 'department', 'year'] },
+    { id: 'character', name: 'Character Certificate', description: 'Character and conduct', fields: ['name', 'studentId', 'department', 'conduct'] },
+    { id: 'course', name: 'Course Completion', description: 'Course completion certificate', fields: ['name', 'studentId', 'course', 'grade'] },
+    { id: 'internship', name: 'Internship Letter', description: 'Internship completion', fields: ['name', 'studentId', 'company', 'duration'] },
+    { id: 'degree', name: 'Degree Certificate', description: 'Graduation degree', fields: ['name', 'studentId', 'department', 'cgpa', 'year'] },
+    { id: 'merit', name: 'Merit Certificate', description: 'Academic excellence', fields: ['name', 'studentId', 'achievement', 'rank'] }
+  ];
+  res.json({ templates });
+});
+
+// Generate certificate
+app.post('/api/admin/certificates/generate', authenticateToken, (req, res) => {
+  const { templateId, studentIds, customData } = req.body;
+
+  const generatedCertificates = studentIds.map(studentId => {
+    const student = db.students.find(s => s.studentId === studentId);
+    if (!student) return null;
+
+    const certId = uuidv4();
+    const qrCode = `https://verify.blockedu.com/cert/${certId}`;
+    const blockchainHash = crypto.createHash('sha256').update(certId + studentId + Date.now()).digest('hex');
+
+    const certificate = {
+      id: certId,
+      templateId,
+      studentId,
+      studentName: student.name,
+      department: student.department,
+      issueDate: new Date().toISOString(),
+      qrCode,
+      blockchainHash,
+      verified: true,
+      customData: customData || {}
+    };
+
+    db.certificates.push(certificate);
+    return certificate;
+  }).filter(Boolean);
+
+  res.json({
+    success: true,
+    message: `Generated ${generatedCertificates.length} certificates`,
+    certificates: generatedCertificates
+  });
+});
+
+// Get all certificates
+app.get('/api/admin/certificates', authenticateToken, (req, res) => {
+  res.json({ certificates: db.certificates });
+});
+
+// Verify certificate by ID
+app.get('/api/certificates/verify/:certId', (req, res) => {
+  const certificate = db.certificates.find(c => c.id === req.params.certId);
+  if (!certificate) {
+    return res.status(404).json({ error: 'Certificate not found' });
+  }
+  res.json({ valid: true, certificate });
+});
+
+// ==================== WORKFLOW AUTOMATION ====================
+
+// Get all tasks
+app.get('/api/admin/tasks', authenticateToken, (req, res) => {
+  res.json({ tasks: db.tasks });
+});
+
+// Create task
+app.post('/api/admin/tasks', authenticateToken, (req, res) => {
+  const { title, description, assignedTo, priority, dueDate, category } = req.body;
+
+  const task = {
+    id: uuidv4(),
+    title,
+    description,
+    assignedTo,
+    priority: priority || 'medium',
+    status: 'todo',
+    category: category || 'general',
+    dueDate,
+    createdAt: new Date().toISOString(),
+    createdBy: req.user.id
+  };
+
+  db.tasks.push(task);
+  res.json({ success: true, task });
+});
+
+// Update task status
+app.put('/api/admin/tasks/:taskId', authenticateToken, (req, res) => {
+  const task = db.tasks.find(t => t.id === req.params.taskId);
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' });
+  }
+
+  Object.assign(task, req.body, { updatedAt: new Date().toISOString() });
+  res.json({ success: true, task });
+});
+
+// Delete task
+app.delete('/api/admin/tasks/:taskId', authenticateToken, (req, res) => {
+  const index = db.tasks.findIndex(t => t.id === req.params.taskId);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Task not found' });
+  }
+
+  db.tasks.splice(index, 1);
+  res.json({ success: true, message: 'Task deleted' });
+});
+
+// Get workflow templates
+app.get('/api/admin/workflows', authenticateToken, (req, res) => {
+  const defaultWorkflows = [
+    {
+      id: 'new-admission',
+      name: 'New Admission',
+      description: 'Automated workflow for new student admissions',
+      steps: [
+        { order: 1, action: 'Receive Application', status: 'completed' },
+        { order: 2, action: 'Verify Documents', status: 'pending' },
+        { order: 3, action: 'Generate Fee Structure', status: 'pending' },
+        { order: 4, action: 'Send Welcome Email', status: 'pending' },
+        { order: 5, action: 'Assign Class', status: 'pending' }
+      ],
+      triggers: ['student_registered']
+    },
+    {
+      id: 'fee-payment',
+      name: 'Fee Payment',
+      description: 'Workflow triggered when fee is paid',
+      steps: [
+        { order: 1, action: 'Receive Payment', status: 'pending' },
+        { order: 2, action: 'Generate Receipt', status: 'pending' },
+        { order: 3, action: 'Update Student Status', status: 'pending' },
+        { order: 4, action: 'Send Confirmation', status: 'pending' }
+      ],
+      triggers: ['fee_paid']
+    },
+    {
+      id: 'certificate-request',
+      name: 'Certificate Request',
+      description: 'Workflow for certificate generation requests',
+      steps: [
+        { order: 1, action: 'Receive Request', status: 'pending' },
+        { order: 2, action: 'Verify Eligibility', status: 'pending' },
+        { order: 3, action: 'Generate Certificate', status: 'pending' },
+        { order: 4, action: 'Add Blockchain Hash', status: 'pending' },
+        { order: 5, action: 'Notify Student', status: 'pending' }
+      ],
+      triggers: ['certificate_requested']
+    }
+  ];
+
+  res.json({ workflows: [...defaultWorkflows, ...db.workflows] });
+});
+
+// Create custom workflow
+app.post('/api/admin/workflows', authenticateToken, (req, res) => {
+  const { name, description, steps, triggers } = req.body;
+
+  const workflow = {
+    id: uuidv4(),
+    name,
+    description,
+    steps: steps.map((s, i) => ({ order: i + 1, action: s, status: 'pending' })),
+    triggers: triggers || [],
+    createdAt: new Date().toISOString(),
+    createdBy: req.user.id
+  };
+
+  db.workflows.push(workflow);
+  res.json({ success: true, workflow });
+});
+
+// Get task statistics for Kanban
+app.get('/api/admin/tasks/stats', authenticateToken, (req, res) => {
+  const stats = {
+    todo: db.tasks.filter(t => t.status === 'todo').length,
+    inProgress: db.tasks.filter(t => t.status === 'in-progress').length,
+    review: db.tasks.filter(t => t.status === 'review').length,
+    done: db.tasks.filter(t => t.status === 'done').length,
+    overdue: db.tasks.filter(t => t.dueDate && new Date(t.dueDate) < new Date() && t.status !== 'done').length
+  };
+  res.json({ stats });
 });
 
 // Initialize demo data and start server
