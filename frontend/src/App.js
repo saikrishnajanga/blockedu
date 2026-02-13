@@ -26,6 +26,104 @@ const AuthContext = createContext(null);
 
 const useAuth = () => useContext(AuthContext);
 
+// ==================== LANGUAGE SYSTEM ====================
+const translations = {
+    en: {
+        dashboard: 'Dashboard', analytics: 'Analytics', notifications: 'Notifications',
+        schedule: 'Schedule', assignments: 'Assignments', results: 'Results',
+        attendance: 'Attendance', papers: 'Papers', events: 'Events',
+        grievances: 'Grievances', certificates: 'Certificates', idCard: 'ID Card',
+        payFees: 'Pay Fees', settings: 'Settings', aiChatbot: 'AI Chatbot',
+        studentsRecords: 'Students & Records', workflows: 'Workflows',
+        login: 'Login', register: 'Register', logout: 'Logout',
+        welcome: 'Welcome to Portal', welcomeBack: 'Welcome Back',
+        studentPortal: 'Student Portal', email: 'Email', password: 'Password',
+        fullName: 'Full Name', studentId: 'Student ID', department: 'Department',
+        sendOtp: 'Send OTP', verifyLogin: 'Verify & Login', otpSent: 'OTP sent to your email!',
+        enterOtp: 'Enter 6-digit OTP', loginWithPassword: 'Login with Password',
+        loginWithOtp: 'Login with OTP', or: 'or', resendOtp: 'Resend OTP',
+        securePlatform: 'Secure Student Records Management',
+        student: 'Student', admin: 'Admin',
+        registerDesc: 'Register, login and pay fees', adminDesc: 'Manage students and records'
+    },
+    hi: {
+        dashboard: 'डैशबोर्ड', analytics: 'विश्लेषण', notifications: 'सूचनाएं',
+        schedule: 'अनुसूची', assignments: 'असाइनमेंट', results: 'परिणाम',
+        attendance: 'उपस्थिति', papers: 'पेपर', events: 'कार्यक्रम',
+        grievances: 'शिकायतें', certificates: 'प्रमाणपत्र', idCard: 'पहचान पत्र',
+        payFees: 'शुल्क भुगतान', settings: 'सेटिंग्स', aiChatbot: 'AI चैटबॉट',
+        studentsRecords: 'छात्र और रिकॉर्ड', workflows: 'कार्यप्रवाह',
+        login: 'लॉगिन', register: 'पंजीकरण', logout: 'लॉगआउट',
+        welcome: 'Portal में आपका स्वागत है', welcomeBack: 'वापसी पर स्वागत है',
+        studentPortal: 'छात्र पोर्टल', email: 'ईमेल', password: 'पासवर्ड',
+        fullName: 'पूरा नाम', studentId: 'छात्र आईडी', department: 'विभाग',
+        sendOtp: 'OTP भेजें', verifyLogin: 'सत्यापित करें और लॉगिन करें', otpSent: 'OTP आपके ईमेल पर भेजा गया!',
+        enterOtp: '6 अंकों का OTP दर्ज करें', loginWithPassword: 'पासवर्ड से लॉगिन',
+        loginWithOtp: 'OTP से लॉगिन', or: 'या', resendOtp: 'OTP पुनः भेजें',
+        securePlatform: 'सुरक्षित छात्र रिकॉर्ड प्रबंधन',
+        student: 'छात्र', admin: 'प्रशासक',
+        registerDesc: 'पंजीकरण, लॉगिन और शुल्क भुगतान', adminDesc: 'छात्रों और रिकॉर्ड का प्रबंधन'
+    },
+    te: {
+        dashboard: 'డాష్‌బోర్డ్', analytics: 'విశ్లేషణలు', notifications: 'నోటిఫికేషన్లు',
+        schedule: 'షెడ్యూల్', assignments: 'అసైన్‌మెంట్లు', results: 'ఫలితాలు',
+        attendance: 'హాజరు', papers: 'పేపర్లు', events: 'ఈవెంట్లు',
+        grievances: 'ఫిర్యాదులు', certificates: 'సర్టిఫికేట్లు', idCard: 'ఐడి కార్డ్',
+        payFees: 'ఫీజు చెల్లింపు', settings: 'సెట్టింగ్స్', aiChatbot: 'AI చాట్‌బాట్',
+        studentsRecords: 'విద్యార్థులు & రికార్డులు', workflows: 'వర్క్‌ఫ్లోలు',
+        login: 'లాగిన్', register: 'నమోదు', logout: 'లాగ్‌అవుట్',
+        welcome: 'Portal కు స్వాగతం', welcomeBack: 'తిరిగి స్వాగతం',
+        studentPortal: 'విద్యార్థి పోర్టల్', email: 'ఇమెయిల్', password: 'పాస్‌వర్డ్',
+        fullName: 'పూర్తి పేరు', studentId: 'విద్యార్థి ఐడి', department: 'విభాగం',
+        sendOtp: 'OTP పంపండి', verifyLogin: 'ధృవీకరించి లాగిన్ చేయండి', otpSent: 'OTP మీ ఇమెయిల్‌కు పంపబడింది!',
+        enterOtp: '6 అంకెల OTP నమోదు చేయండి', loginWithPassword: 'పాస్‌వర్డ్‌తో లాగిన్',
+        loginWithOtp: 'OTP తో లాగిన్', or: 'లేదా', resendOtp: 'OTP మళ్ళీ పంపండి',
+        securePlatform: 'సురక్షిత విద్యార్థి రికార్డుల నిర్వహణ',
+        student: 'విద్యార్థి', admin: 'అడ్మిన్',
+        registerDesc: 'నమోదు, లాగిన్ మరియు ఫీజు చెల్లింపు', adminDesc: 'విద్యార్థులు మరియు రికార్డుల నిర్వహణ'
+    },
+    ta: {
+        dashboard: 'டாஷ்போர்ட்', analytics: 'பகுப்பாய்வு', notifications: 'அறிவிப்புகள்',
+        schedule: 'அட்டவணை', assignments: 'பணிகள்', results: 'முடிவுகள்',
+        attendance: 'வருகை', papers: 'தாள்கள்', events: 'நிகழ்வுகள்',
+        grievances: 'புகார்கள்', certificates: 'சான்றிதழ்கள்', idCard: 'அடையாள அட்டை',
+        payFees: 'கட்டணம் செலுத்து', settings: 'அமைப்புகள்', aiChatbot: 'AI சாட்பாட்',
+        studentsRecords: 'மாணவர்கள் & பதிவுகள்', workflows: 'பணிப்பாய்வுகள்',
+        login: 'உள்நுழைவு', register: 'பதிவு', logout: 'வெளியேறு',
+        welcome: 'Portal க்கு வரவேற்கிறோம்', welcomeBack: 'மீண்டும் வரவேற்கிறோம்',
+        studentPortal: 'மாணவர் போர்டல்', email: 'மின்னஞ்சல்', password: 'கடவுச்சொல்',
+        fullName: 'முழு பெயர்', studentId: 'மாணவர் ஐடி', department: 'துறை',
+        sendOtp: 'OTP அனுப்பு', verifyLogin: 'சரிபார்த்து உள்நுழையவும்', otpSent: 'OTP உங்கள் மின்னஞ்சலுக்கு அனுப்பப்பட்டது!',
+        enterOtp: '6 இலக்க OTP உள்ளிடவும்', loginWithPassword: 'கடவுச்சொல்லுடன் உள்நுழையவும்',
+        loginWithOtp: 'OTP உடன் உள்நுழையவும்', or: 'அல்லது', resendOtp: 'OTP மீண்டும் அனுப்பு',
+        securePlatform: 'பாதுகாப்பான மாணவர் பதிவு மேலாண்மை',
+        student: 'மாணவர்', admin: 'நிர்வாகி',
+        registerDesc: 'பதிவு, உள்நுழைவு மற்றும் கட்டணம் செலுத்துதல்', adminDesc: 'மாணவர்கள் மற்றும் பதிவுகளை நிர்வகிக்கவும்'
+    }
+};
+
+const LanguageContext = createContext('en');
+
+function useLanguage() {
+    const lang = useContext(LanguageContext);
+    return (key) => translations[lang]?.[key] || translations['en'][key] || key;
+}
+
+function LanguageProvider({ children }) {
+    const [lang, setLang] = useState(localStorage.getItem('language') || 'en');
+
+    const changeLang = (newLang) => {
+        localStorage.setItem('language', newLang);
+        setLang(newLang);
+    };
+
+    return (
+        <LanguageContext.Provider value={lang}>
+            {React.cloneElement(children, { onLangChange: changeLang, currentLang: lang })}
+        </LanguageContext.Provider>
+    );
+}
+
 // Auth Provider Component
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -71,6 +169,7 @@ function AuthProvider({ children }) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
+        window.location.href = '/';
     };
 
     return (
@@ -84,7 +183,7 @@ function AuthProvider({ children }) {
 function ProtectedRoute({ children, roles }) {
     const { user, loading } = useAuth();
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={2} />;
     if (!user) return <Navigate to="/login" />;
     if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" />;
 
@@ -101,6 +200,195 @@ function LoadingSpinner() {
     );
 }
 
+// Skeleton Loading Component
+function SkeletonLoader({ rows = 3, type = 'card' }) {
+    if (type === 'cards') {
+        return (
+            <div className="page-fade" style={{ padding: '2rem' }}>
+                <div className="skeleton skeleton-card" style={{ height: '40px', width: '250px', marginBottom: '1.5rem' }}></div>
+                <div className="grid-3">
+                    {[...Array(rows)].map((_, i) => (
+                        <div key={i} className="skeleton skeleton-card">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                                <div className="skeleton-circle"></div>
+                                <div style={{ flex: 1 }}>
+                                    <div className="skeleton-line medium"></div>
+                                    <div className="skeleton-line short"></div>
+                                </div>
+                            </div>
+                            <div className="skeleton-line long"></div>
+                            <div className="skeleton-line medium"></div>
+                            <div className="skeleton-line short"></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+    return (
+        <div className="page-fade" style={{ padding: '2rem' }}>
+            <div className="skeleton skeleton-card" style={{ height: '40px', width: '250px', marginBottom: '1.5rem' }}></div>
+            {[...Array(rows)].map((_, i) => (
+                <div key={i} className="skeleton skeleton-card" style={{ marginBottom: '1rem' }}>
+                    <div className="skeleton-line long"></div>
+                    <div className="skeleton-line medium"></div>
+                    <div className="skeleton-line short"></div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+// Theme Toggle Component
+function ThemeToggle() {
+    const [isDark, setIsDark] = useState(() => {
+        const saved = localStorage.getItem('theme');
+        return saved ? saved === 'dark' : true; // default dark
+    });
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }, [isDark]);
+
+    return (
+        <button className="theme-toggle" onClick={() => setIsDark(!isDark)} title={isDark ? 'Switch to Light' : 'Switch to Dark'}>
+            <span>{isDark ? '🌙' : '☀️'}</span>
+            <div className={`theme-toggle-track ${!isDark ? 'active' : ''}`}>
+                <div className="theme-toggle-thumb"></div>
+            </div>
+        </button>
+    );
+}
+
+// Button Ripple Effect
+function addRipple(e, btnEl) {
+    const btn = btnEl || e.currentTarget;
+    if (!btn || !btn.getBoundingClientRect) return;
+    const rect = btn.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    ripple.className = 'ripple';
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
+
+// Confetti Component
+function ConfettiEffect({ trigger }) {
+    const [show, setShow] = useState(false);
+    const [pieces, setPieces] = useState([]);
+
+    useEffect(() => {
+        if (trigger) {
+            const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#8b5cf6'];
+            const newPieces = Array.from({ length: 50 }, (_, i) => ({
+                id: i,
+                left: Math.random() * 100,
+                delay: Math.random() * 0.5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: 6 + Math.random() * 8,
+                shape: Math.random() > 0.5 ? '50%' : '0',
+            }));
+            setPieces(newPieces);
+            setShow(true);
+            setTimeout(() => setShow(false), 3500);
+        }
+    }, [trigger]);
+
+    if (!show) return null;
+    return (
+        <div className="confetti-container">
+            {pieces.map(p => (
+                <div
+                    key={p.id}
+                    className="confetti-piece"
+                    style={{
+                        left: p.left + '%',
+                        animationDelay: p.delay + 's',
+                        background: p.color,
+                        width: p.size + 'px',
+                        height: p.size + 'px',
+                        borderRadius: p.shape,
+                    }}
+                />
+            ))}
+        </div>
+    );
+}
+
+// Circular Progress Ring
+function ProgressRing({ percentage = 0, size = 60, strokeWidth = 5, color }) {
+    const radius = (size - strokeWidth) / 2;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (percentage / 100) * circumference;
+
+    const getColor = () => {
+        if (color) return color;
+        if (percentage >= 90) return '#10b981';
+        if (percentage >= 75) return '#3b82f6';
+        if (percentage >= 50) return '#f59e0b';
+        return '#ef4444';
+    };
+
+    return (
+        <div className="progress-ring-container" style={{ width: size, height: size }}>
+            <svg className="progress-ring-svg" width={size} height={size}>
+                <circle className="progress-ring-bg" cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} />
+                <circle className="progress-ring-fill" cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} stroke={getColor()} strokeDasharray={circumference} strokeDashoffset={offset} />
+            </svg>
+            <span className="progress-ring-text">{Math.round(percentage)}%</span>
+        </div>
+    );
+}
+
+// Mobile Bottom Navigation
+function MobileBottomNav({ role }) {
+    const location = window.location.pathname;
+    const navigate = useNavigate();
+
+    const studentItems = [
+        { path: '/dashboard', icon: '🏠', label: 'Home' },
+        { path: '/papers', icon: '📚', label: 'Papers' },
+        { path: '/attendance', icon: '📊', label: 'Attend.' },
+        { path: '/notifications', icon: '🔔', label: 'Alerts' },
+        { path: '/settings', icon: '⚙️', label: 'Settings' },
+    ];
+
+    const adminItems = [
+        { path: '/dashboard', icon: '🏠', label: 'Home' },
+        { path: '/admin', icon: '⚙️', label: 'Admin' },
+        { path: '/notifications', icon: '🔔', label: 'Alerts' },
+        { path: '/settings', icon: '👤', label: 'Profile' },
+    ];
+
+    const items = role === 'admin' ? adminItems : studentItems;
+
+    return (
+        <nav className="mobile-bottom-nav">
+            <div className="mobile-bottom-nav-items">
+                {items.map(item => (
+                    <button
+                        key={item.path}
+                        className={`mobile-nav-item ${location === item.path || location.startsWith(item.path + '/') ? 'active' : ''}`}
+                        onClick={() => navigate(item.path)}
+                    >
+                        <span className="nav-icon">{item.icon}</span>
+                        <span>{item.label}</span>
+                    </button>
+                ))}
+            </div>
+        </nav>
+    );
+}
+
+// Page Wrapper with fade animation
+function PageWrapper({ children }) {
+    return <div className="page-fade">{children}</div>;
+}
+
 // Sidebar Component
 function Sidebar({ isOpen, onToggle }) {
     const { user, logout } = useAuth();
@@ -108,80 +396,128 @@ function Sidebar({ isOpen, onToggle }) {
 
     const isActive = (path) => location === path || location.startsWith(path + '/');
 
-    // Student links - includes all features
-    const studentLinks = [
-        { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-        { path: '/analytics', icon: '📈', label: 'Analytics' },
-        { path: '/notifications', icon: '🔔', label: 'Notifications' },
-        { path: '/schedule', icon: '🗓️', label: 'Schedule' },
-        { path: '/assignments', icon: '📝', label: 'Assignments' },
-        { path: '/results', icon: '📊', label: 'Results' },
-        { path: '/attendance', icon: '📅', label: 'Attendance' },
-        { path: '/papers', icon: '📚', label: 'Papers' },
-        { path: '/events', icon: '📢', label: 'Events' },
-        { path: '/grievances', icon: '💬', label: 'Grievances' },
-        { path: '/certificates', icon: '🏆', label: 'Certificates' },
-        { path: '/idcard', icon: '📱', label: 'ID Card' },
-        { path: '/payments', icon: '💳', label: 'Pay Fees' },
-        { path: '/settings', icon: '⚙️', label: 'Settings' },
+    const t = useLanguage();
+
+
+
+
+    // Student links organized by category
+    const studentLinkGroups = [
+        {
+            title: null,
+            links: [
+                { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+            ]
+        },
+        {
+            title: 'Academics',
+            links: [
+                { path: '/results', icon: '📝', label: t('results') },
+                { path: '/attendance', icon: '📅', label: t('attendance') },
+                { path: '/schedule', icon: '🗓️', label: t('schedule') },
+                { path: '/assignments', icon: '📄', label: t('assignments') },
+                { path: '/papers', icon: '📚', label: t('papers') },
+                { path: '/certificates', icon: '🏆', label: t('certificates') },
+            ]
+        },
+        {
+            title: 'Services',
+            links: [
+                { path: '/notifications', icon: '🔔', label: t('notifications') },
+                { path: '/events', icon: '📢', label: t('events') },
+                { path: '/grievances', icon: '💬', label: t('grievances') },
+                { path: '/payments', icon: '💳', label: t('payFees') },
+                { path: '/chatbot', icon: '🤖', label: t('aiChatbot') },
+            ]
+        },
+        {
+            title: 'Account',
+            links: [
+                { path: '/analytics', icon: '📊', label: t('analytics') },
+                { path: '/idcard', icon: '📱', label: t('idCard') },
+                { path: '/settings', icon: '⚙️', label: t('settings') },
+            ]
+        },
     ];
 
     // Admin links - includes student management, NO system admin
     const adminLinks = [
-        { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-        { path: '/admin', icon: '👥', label: 'Students & Records' },
-        { path: '/admin/analytics', icon: '📊', label: 'Analytics' },
-        { path: '/admin/certificates', icon: '🎓', label: 'Certificates' },
-        { path: '/admin/workflows', icon: '📋', label: 'Workflows' },
-        { path: '/settings', icon: '🔧', label: 'Settings' },
+        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+        { path: '/admin', icon: '👥', label: t('studentsRecords') },
+        { path: '/admin/analytics', icon: '📊', label: t('analytics') },
+        { path: '/admin/certificates', icon: '🎓', label: t('certificates') },
+        { path: '/admin/workflows', icon: '📋', label: t('workflows') },
+        { path: '/settings', icon: '🔧', label: t('settings') },
     ];
 
     // Institution links
     const institutionLinks = [
-        { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-        { path: '/admin', icon: '👥', label: 'Students & Records' },
-        { path: '/settings', icon: '⚙️', label: 'Settings' },
+        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+        { path: '/admin', icon: '👥', label: t('studentsRecords') },
+        { path: '/settings', icon: '⚙️', label: t('settings') },
     ];
 
+    const isStudent = user && user.role === 'student';
     const getLinks = () => {
         if (!user) return [];
         if (user.role === 'admin') return adminLinks;
         if (user.role === 'institution') return institutionLinks;
-        return studentLinks;
+        return []; // student uses grouped rendering
     };
 
     const links = getLinks();
 
-    // Don't show sidebar on landing/student portal pages when not logged in
-    if (!user && (location === '/' || location === '/student' || location === '/verify')) {
+    // Don't show sidebar on landing/student portal/login pages when not logged in
+    if (!user && (location === '/' || location === '/student' || location === '/verify' || location === '/login')) {
         return null;
     }
 
     return (
-        <aside className={`sidebar ${isOpen ? '' : 'collapsed'}`}>
+        <aside className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
             <div className="sidebar-header">
                 <span className="logo-icon">🔗</span>
-                <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>BlockEdu</h2>
+                <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
             </div>
 
-            <nav className="sidebar-nav">
-                {links.map((link) => (
-                    <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}>
-                        <span className="nav-icon">{link.icon}</span>
-                        <span className="nav-text">{link.label}</span>
-                    </Link>
-                ))}
+            <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
+                {isStudent ? (
+                    /* Student: grouped sections */
+                    studentLinkGroups.map((group, i) => (
+                        <div key={i} style={group.title ? { marginTop: i === 1 ? '0.25rem' : '0.25rem' } : {}}>
+                            {group.title && (
+                                <div className="sidebar-section-title" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', marginTop: '0.75rem', marginBottom: '0.25rem', opacity: 0.6 }}>
+                                    {group.title}
+                                </div>
+                            )}
+                            {group.links.map((link) => (
+                                <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} style={{ padding: '0.45rem 0.75rem', fontSize: '0.88rem', position: 'relative' }}>
+                                    <span className="nav-icon" style={{ fontSize: '1.05rem' }}>{link.icon}</span>
+                                    <span className="nav-text">{link.label}</span>
+                                    {link.path === '/notifications' && <span className="notification-dot"></span>}
+                                </Link>
+                            ))}
+                        </div>
+                    ))
+                ) : (
+                    /* Admin/Institution: flat list */
+                    links.map((link) => (
+                        <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}>
+                            <span className="nav-icon">{link.icon}</span>
+                            <span className="nav-text">{link.label}</span>
+                        </Link>
+                    ))
+                )}
             </nav>
 
             {user && (
-                <div className="sidebar-section">
-                    <div className="sidebar-link" style={{ cursor: 'default' }}>
+                <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+                    <div className="sidebar-link" style={{ cursor: 'default', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
                         <span className="nav-icon">👤</span>
-                        <span className="nav-text">{user.name}</span>
+                        <span className="nav-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</span>
                     </div>
-                    <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer' }}>
+                    <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
                         <span className="nav-icon">🚪</span>
-                        <span className="nav-text">Logout</span>
+                        <span className="nav-text">{t('logout')}</span>
                     </button>
                 </div>
             )}
@@ -193,7 +529,6 @@ function Sidebar({ isOpen, onToggle }) {
 function TopBar({ onToggleSidebar, sidebarOpen }) {
     const { user, logout } = useAuth();
     const [walletAddress, setWalletAddress] = useState(null);
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
     const connectWallet = async () => {
         if (window.ethereum) {
@@ -221,6 +556,8 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                     style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
                     onChange={(e) => {
                         localStorage.setItem('language', e.target.value);
+                        // Dispatch storage event to trigger re-render across components
+                        window.dispatchEvent(new Event('languageChange'));
                         window.location.reload();
                     }}
                     defaultValue={localStorage.getItem('language') || 'en'}
@@ -232,19 +569,7 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                 </select>
 
                 {/* Dark Mode Toggle */}
-                <button
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => {
-                        const newTheme = theme === 'dark' ? 'light' : 'dark';
-                        document.documentElement.setAttribute('data-theme', newTheme);
-                        localStorage.setItem('theme', newTheme);
-                        setTheme(newTheme);
-                    }}
-                    style={{ padding: '0.4rem 0.8rem', fontSize: '1.2rem' }}
-                    title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                >
-                    {theme === 'dark' ? '☀️' : '🌙'}
-                </button>
+                <ThemeToggle />
 
                 {walletAddress ? (
                     <div className="wallet-address">
@@ -283,9 +608,11 @@ function HomePage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const t = useLanguage();
+
     const roles = [
-        { id: 'student', icon: '🎓', title: 'Student', desc: 'Register, login and pay fees', color: '#667eea', path: '/student' },
-        { id: 'admin', icon: '👨‍💼', title: 'Admin', desc: 'Manage students and records', color: '#f59e0b', path: '/login?role=admin' }
+        { id: 'student', icon: '🎓', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
+        { id: 'admin', icon: '👨‍💼', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
     ];
 
     if (user) {
@@ -297,8 +624,8 @@ function HomePage() {
         <div className="role-selection-page">
             <div className="role-hero">
                 <div className="logo-large">🔗</div>
-                <h1>Welcome to BlockEdu</h1>
-                <p>Secure Blockchain-Based Student Records Management</p>
+                <h1>{t('welcome')}</h1>
+                <p>{t('securePlatform')}</p>
             </div>
             <div className="role-cards">
                 {roles.map((role) => (
@@ -329,11 +656,11 @@ function StudentPortalPage() {
         <div className="student-portal">
             <div className="portal-header">
                 <button className="btn btn-outline btn-sm" onClick={() => navigate('/')}>← Back</button>
-                <h1>🎓 Student Portal</h1>
+                <h1>🎓 {useLanguage()('studentPortal')}</h1>
             </div>
             <div className="portal-tabs">
-                <button className={`tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>Login</button>
-                <button className={`tab ${activeTab === 'register' ? 'active' : ''}`} onClick={() => setActiveTab('register')}>Register</button>
+                <button className={`tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>{useLanguage()('login')}</button>
+                <button className={`tab ${activeTab === 'register' ? 'active' : ''}`} onClick={() => setActiveTab('register')}>{useLanguage()('register')}</button>
             </div>
             <div className="portal-content">
                 {activeTab === 'login' ? <StudentLoginForm /> : <StudentRegisterForm />}
@@ -342,14 +669,28 @@ function StudentPortalPage() {
     );
 }
 
-// Student Login Form
+// Student Login Form with OTP Support
 function StudentLoginForm() {
     const { login, walletLogin } = useAuth();
     const navigate = useNavigate();
+    const t = useLanguage();
+    const [loginMode, setLoginMode] = useState('password'); // 'password' or 'otp'
     const [formData, setFormData] = useState({ email: '', password: '' });
+    const [otpData, setOtpData] = useState({ email: '', otp: '' });
     const [loading, setLoading] = useState(false);
     const [walletLoading, setWalletLoading] = useState(false);
     const [error, setError] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
+    const [otpMessage, setOtpMessage] = useState('');
+    const [countdown, setCountdown] = useState(0);
+
+    // Countdown timer for OTP resend
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [countdown]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -359,7 +700,43 @@ function StudentLoginForm() {
             await login(formData.email, formData.password);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.message || 'Login failed');
+            setError(err.response?.data?.error || err.message || 'Login failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSendOtp = async () => {
+        if (!otpData.email) {
+            setError('Please enter your email');
+            return;
+        }
+        setLoading(true);
+        setError('');
+        setOtpMessage('');
+        try {
+            const res = await api.post('/auth/send-otp', { email: otpData.email });
+            setOtpSent(true);
+            setOtpMessage(`${res.data.message}${res.data.otp_code ? ` (OTP: ${res.data.otp_code})` : ''}`);
+            setCountdown(60);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Failed to send OTP');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            const res = await api.post('/auth/verify-otp', { email: otpData.email, otp: otpData.otp });
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            window.location.href = '/dashboard';
+        } catch (err) {
+            setError(err.response?.data?.error || 'OTP verification failed');
         } finally {
             setLoading(false);
         }
@@ -387,26 +764,89 @@ function StudentLoginForm() {
     return (
         <div className="auth-form">
             {error && <div className="alert alert-error">{error}</div>}
+            {otpMessage && <div className="alert alert-success">{otpMessage}</div>}
 
             <button type="button" onClick={handleMetaMaskLogin} disabled={walletLoading} className="btn btn-metamask" style={{ width: '100%', marginBottom: '1.5rem' }}>
                 {walletLoading ? 'Connecting...' : '🦊 Sign in with MetaMask'}
             </button>
 
-            <div className="divider"><span>or use email</span></div>
+            <div className="divider"><span>{t('or')} use email</span></div>
 
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label className="form-label">Email</label>
-                    <input type="email" className="form-control" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
-                </div>
-                <div className="form-group">
-                    <label className="form-label">Password</label>
-                    <input type="password" className="form-control" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
-                </div>
-                <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
-                    {loading ? 'Logging in...' : 'Login'}
+            {/* Login Mode Toggle */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                <button
+                    type="button"
+                    className={`btn ${loginMode === 'password' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ flex: 1, fontSize: '0.9rem' }}
+                    onClick={() => { setLoginMode('password'); setError(''); setOtpMessage(''); }}
+                >
+                    🔑 {t('loginWithPassword')}
                 </button>
-            </form>
+                <button
+                    type="button"
+                    className={`btn ${loginMode === 'otp' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ flex: 1, fontSize: '0.9rem' }}
+                    onClick={() => { setLoginMode('otp'); setError(''); setOtpMessage(''); }}
+                >
+                    📧 {t('loginWithOtp')}
+                </button>
+            </div>
+
+            {loginMode === 'password' ? (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">{t('email')}</label>
+                        <input type="email" className="form-control" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">{t('password')}</label>
+                        <input type="password" className="form-control" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
+                        {loading ? 'Logging in...' : t('login')}
+                    </button>
+                </form>
+            ) : (
+                <div>
+                    <div className="form-group">
+                        <label className="form-label">{t('email')}</label>
+                        <input type="email" className="form-control" value={otpData.email} onChange={(e) => setOtpData({ ...otpData, email: e.target.value })} placeholder="student@university.edu" />
+                    </div>
+                    {!otpSent ? (
+                        <button type="button" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }} onClick={handleSendOtp}>
+                            {loading ? 'Sending...' : `📧 ${t('sendOtp')}`}
+                        </button>
+                    ) : (
+                        <form onSubmit={handleVerifyOtp}>
+                            <div className="form-group">
+                                <label className="form-label">{t('enterOtp')}</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={otpData.otp}
+                                    onChange={(e) => setOtpData({ ...otpData, otp: e.target.value.replace(/\D/g, '').slice(0, 6) })}
+                                    placeholder="000000"
+                                    maxLength="6"
+                                    style={{ fontSize: '1.5rem', textAlign: 'center', letterSpacing: '0.5rem' }}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary btn-lg" disabled={loading || otpData.otp.length !== 6} style={{ width: '100%' }}>
+                                {loading ? 'Verifying...' : `✅ ${t('verifyLogin')}`}
+                            </button>
+                            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                {countdown > 0 ? (
+                                    <span className="text-muted">{t('resendOtp')} in {countdown}s</span>
+                                ) : (
+                                    <button type="button" className="btn btn-secondary btn-sm" onClick={handleSendOtp} disabled={loading}>
+                                        🔄 {t('resendOtp')}
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
@@ -582,7 +1022,7 @@ function DashboardPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="dashboard">
@@ -991,22 +1431,127 @@ function AdminPage() {
     const [uploadResult, setUploadResult] = useState(null);
     const [uploadError, setUploadError] = useState('');
 
+    // Paper upload states
+    const [papers, setPapers] = useState([]);
+    const [paperFile, setPaperFile] = useState(null);
+    const [paperMeta, setPaperMeta] = useState({ subject: '', code: '', year: new Date().getFullYear(), semester: 'End Sem', department: '' });
+    const [paperUploading, setPaperUploading] = useState(false);
+    const [paperMsg, setPaperMsg] = useState('');
+    const [selectedPapers, setSelectedPapers] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState(0);
+
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
         try {
-            const [studentsRes, txRes] = await Promise.all([
+            const [studentsRes, txRes, papersRes] = await Promise.all([
                 api.get('/students'),
-                api.get('/blockchain/transactions')
+                api.get('/blockchain/transactions'),
+                api.get('/papers')
             ]);
             setStudents(studentsRes.data.students || []);
             setTransactions(txRes.data.transactions || []);
+            setPapers(papersRes.data.papers || []);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    // Paper upload handler
+    const handlePaperUpload = async (e) => {
+        e.preventDefault();
+        if (!paperFile) { setPaperMsg('Please select a PDF file'); return; }
+        if (!paperMeta.subject.trim()) { setPaperMsg('Subject name is required'); return; }
+
+        setPaperUploading(true);
+        setPaperMsg('');
+        setUploadProgress(0);
+        try {
+            const formData = new FormData();
+            formData.append('file', paperFile);
+            formData.append('subject', paperMeta.subject);
+            formData.append('code', paperMeta.code);
+            formData.append('year', paperMeta.year);
+            formData.append('semester', paperMeta.semester);
+            formData.append('department', paperMeta.department);
+
+            const res = await api.post('/admin/papers/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (e) => {
+                    const pct = Math.round((e.loaded * 100) / e.total);
+                    setUploadProgress(pct);
+                }
+            });
+            setPapers([res.data.paper, ...papers]);
+            setPaperFile(null);
+            setPaperMeta({ subject: '', code: '', year: new Date().getFullYear(), semester: 'End Sem', department: '' });
+            setPaperMsg('✅ Paper uploaded successfully!');
+            const fi = document.getElementById('paper-file-input');
+            if (fi) fi.value = '';
+            setTimeout(() => setPaperMsg(''), 3000);
+        } catch (err) {
+            setPaperMsg('❌ ' + (err.response?.data?.error || 'Upload failed'));
+        } finally {
+            setPaperUploading(false);
+            setUploadProgress(0);
+        }
+    };
+
+    const handleDeletePaper = async (id) => {
+        if (!window.confirm('Delete this paper?')) return;
+        try {
+            await api.delete(`/admin/papers/${id}`);
+            setPapers(papers.filter(p => p.id !== id));
+            setSelectedPapers(selectedPapers.filter(s => s !== id));
+        } catch (err) {
+            alert('Failed to delete paper');
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (selectedPapers.length === 0) return;
+        if (!window.confirm(`Delete ${selectedPapers.length} selected paper(s)?`)) return;
+        try {
+            await api.post('/admin/papers/bulk-delete', { ids: selectedPapers });
+            setPapers(papers.filter(p => !selectedPapers.includes(p.id)));
+            setSelectedPapers([]);
+            setPaperMsg(`✅ ${selectedPapers.length} paper(s) deleted successfully!`);
+            setTimeout(() => setPaperMsg(''), 3000);
+        } catch (err) {
+            alert('Failed to delete papers');
+        }
+    };
+
+    const togglePaperSelect = (id) => {
+        setSelectedPapers(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedPapers.length === papers.length) setSelectedPapers([]);
+        else setSelectedPapers(papers.map(p => p.id));
+    };
+
+    const [editPaper, setEditPaper] = useState(null);
+    const [editData, setEditData] = useState({});
+
+    const startEditPaper = (paper) => {
+        setEditPaper(paper.id);
+        setEditData({ subject: paper.subject, code: paper.code || '', department: paper.department || '', year: paper.year, semester: paper.semester });
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            const res = await api.put(`/admin/papers/${editPaper}`, editData);
+            setPapers(papers.map(p => p.id === editPaper ? { ...p, ...res.data.paper } : p));
+            setEditPaper(null);
+            setPaperMsg('✅ Paper updated successfully!');
+            setTimeout(() => setPaperMsg(''), 3000);
+        } catch (err) {
+            alert('Failed to update paper');
         }
     };
 
@@ -1019,8 +1564,14 @@ function AdminPage() {
         try {
             const response = await api.get(`/student/verify/${verifyId}`);
             setVerifyResult(response.data);
+            // Auto-clear result after 5 seconds
+            setTimeout(() => {
+                setVerifyResult(null);
+                setVerifyId('');
+            }, 5000);
         } catch (error) {
             setVerifyError(error.response?.data?.error || 'Student not found');
+            setTimeout(() => setVerifyError(''), 3000);
         } finally {
             setVerifyLoading(false);
         }
@@ -1081,6 +1632,14 @@ function AdminPage() {
             const response = await api.post('/student/bulk-upload', { students: excelData });
             setUploadResult(response.data);
             fetchData(); // Refresh student list
+            // Auto-close after 3 seconds
+            setTimeout(() => {
+                setExcelData([]);
+                setUploadResult(null);
+                setUploadError('');
+                const fileInput = document.getElementById('excel-upload');
+                if (fileInput) fileInput.value = '';
+            }, 3000);
         } catch (error) {
             setUploadError(error.response?.data?.error || 'Upload failed');
         } finally {
@@ -1096,7 +1655,7 @@ function AdminPage() {
         if (fileInput) fileInput.value = '';
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -1117,6 +1676,9 @@ function AdminPage() {
                 </button>
                 <button className={`tab ${activeTab === 'transactions' ? 'active' : ''}`} onClick={() => setActiveTab('transactions')}>
                     🔗 Transactions
+                </button>
+                <button className={`tab ${activeTab === 'papers' ? 'active' : ''}`} onClick={() => setActiveTab('papers')}>
+                    📚 Academic Papers
                 </button>
             </div>
 
@@ -1393,6 +1955,163 @@ function AdminPage() {
                     </div>
                 </div>
             )}
+
+            {activeTab === 'papers' && (
+                <div className="section">
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <div className="card-header">
+                            <h3 className="card-title">📚 Upload Academic Paper / Study Material</h3>
+                        </div>
+                        <form onSubmit={handlePaperUpload}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label className="form-label">Subject Name *</label>
+                                    <input className="form-control" placeholder="e.g. Data Structures" value={paperMeta.subject} onChange={(e) => setPaperMeta({ ...paperMeta, subject: e.target.value })} required />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label className="form-label">Subject Code</label>
+                                    <input className="form-control" placeholder="e.g. CS201" value={paperMeta.code} onChange={(e) => setPaperMeta({ ...paperMeta, code: e.target.value })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label className="form-label">Department</label>
+                                    <input className="form-control" placeholder="e.g. Computer Science" value={paperMeta.department} onChange={(e) => setPaperMeta({ ...paperMeta, department: e.target.value })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label className="form-label">Year</label>
+                                    <input className="form-control" type="number" value={paperMeta.year} onChange={(e) => setPaperMeta({ ...paperMeta, year: e.target.value })} />
+                                </div>
+                                <div className="form-group" style={{ margin: 0 }}>
+                                    <label className="form-label">Semester / Type</label>
+                                    <select className="form-control" value={paperMeta.semester} onChange={(e) => setPaperMeta({ ...paperMeta, semester: e.target.value })}>
+                                        <option>End Sem</option>
+                                        <option>Mid Sem</option>
+                                        <option>Supplementary</option>
+                                        <option>Assignment</option>
+                                        <option>Notes</option>
+                                        <option>Syllabus</option>
+                                        <option>Reference</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group" style={{ margin: '0 0 1rem' }}>
+                                <label className="form-label">PDF File * (max 20MB)</label>
+                                <input id="paper-file-input" type="file" className="form-control" accept=".pdf" onChange={(e) => setPaperFile(e.target.files[0])} style={{ padding: '0.5rem' }} required />
+                            </div>
+                            {paperMsg && <div className={`alert ${paperMsg.startsWith('✅') ? 'alert-success' : 'alert-error'}`} style={{ marginBottom: '1rem' }}>{paperMsg}</div>}
+                            <button type="submit" className="btn btn-primary" disabled={paperUploading}>
+                                {paperUploading ? `Uploading... ${uploadProgress}%` : '📤 Upload Paper'}
+                            </button>
+                            {paperUploading && uploadProgress > 0 && (
+                                <div style={{ marginTop: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px', overflow: 'hidden', height: '8px' }}>
+                                    <div style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #667eea, #764ba2)', borderRadius: '8px', transition: 'width 0.3s ease' }} />
+                                </div>
+                            )}
+                        </form>
+                    </div>
+
+                    {papers.length > 0 && (
+                        <div className="card">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                                <h3 style={{ margin: 0 }}>📄 Uploaded Papers ({papers.length})</h3>
+                                {selectedPapers.length > 0 && (
+                                    <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={handleBulkDelete}>
+                                        🗑️ Delete Selected ({selectedPapers.length})
+                                    </button>
+                                )}
+                            </div>
+                            <div className="table-container" style={{ marginTop: '1rem' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th style={{ width: '40px' }}>
+                                                <input type="checkbox" checked={selectedPapers.length === papers.length && papers.length > 0} onChange={toggleSelectAll} />
+                                            </th>
+                                            <th>Subject</th>
+                                            <th>Code</th>
+                                            <th>Department</th>
+                                            <th>Year</th>
+                                            <th>Type</th>
+                                            <th>File</th>
+                                            <th>Downloads</th>
+                                            <th>Rating</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {papers.map(p => (
+                                            <tr key={p.id} style={{ background: selectedPapers.includes(p.id) ? 'rgba(102,126,234,0.08)' : 'transparent' }}>
+                                                <td><input type="checkbox" checked={selectedPapers.includes(p.id)} onChange={() => togglePaperSelect(p.id)} /></td>
+                                                <td><strong>{p.subject}</strong></td>
+                                                <td><code>{p.code || '-'}</code></td>
+                                                <td>{p.department || '-'}</td>
+                                                <td>{p.year}</td>
+                                                <td><span className="badge badge-info">{p.semester}</span></td>
+                                                <td style={{ fontSize: '0.85rem' }}>{p.fileName || 'PDF'}</td>
+                                                <td><span className="badge badge-secondary" style={{ fontSize: '0.85rem' }}>📥 {p.downloads || 0}</span></td>
+                                                <td>
+                                                    {p.avgRating > 0 ? (
+                                                        <span style={{ fontSize: '0.85rem' }}>⭐ {p.avgRating} ({p.totalRatings})</span>
+                                                    ) : (
+                                                        <span className="text-muted" style={{ fontSize: '0.8rem' }}>No ratings</span>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                        <a href={`http://localhost:5000${p.fileUrl}`} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm">👁️</a>
+                                                        <button className="btn btn-sm" style={{ background: '#667eea', color: 'white', border: 'none' }} onClick={() => startEditPaper(p)} title="Edit">✏️</button>
+                                                        <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={() => handleDeletePaper(p.id)} title="Delete">🗑️</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Edit Paper Modal */}
+                    {editPaper && (
+                        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }} onClick={() => setEditPaper(null)}>
+                            <div className="card" style={{ width: '500px', maxWidth: '90vw', maxHeight: '80vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
+                                <h3 style={{ marginBottom: '1rem' }}>✏️ Edit Paper Details</h3>
+                                <div className="form-group">
+                                    <label className="form-label">Subject Name *</label>
+                                    <input className="form-control" value={editData.subject} onChange={e => setEditData({ ...editData, subject: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Subject Code</label>
+                                    <input className="form-control" value={editData.code} onChange={e => setEditData({ ...editData, code: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Department</label>
+                                    <input className="form-control" value={editData.department} onChange={e => setEditData({ ...editData, department: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Year</label>
+                                    <input className="form-control" type="number" value={editData.year} onChange={e => setEditData({ ...editData, year: e.target.value })} />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Type</label>
+                                    <select className="form-control" value={editData.semester} onChange={e => setEditData({ ...editData, semester: e.target.value })}>
+                                        <option>End Sem</option>
+                                        <option>Mid Sem</option>
+                                        <option>Supplementary</option>
+                                        <option>Assignment</option>
+                                        <option>Notes</option>
+                                        <option>Syllabus</option>
+                                        <option>Reference</option>
+                                    </select>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+                                    <button className="btn btn-primary" onClick={handleSaveEdit}>💾 Save Changes</button>
+                                    <button className="btn btn-secondary" onClick={() => setEditPaper(null)}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
@@ -1435,7 +2154,7 @@ function NotificationsPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={4} />;
 
     return (
         <div className="dashboard">
@@ -1453,13 +2172,29 @@ function NotificationsPage() {
                     notifications.map(notification => (
                         <div
                             key={notification.id}
-                            className="card"
+                            className="card swipe-notification"
                             style={{
                                 marginBottom: '1rem',
                                 borderLeft: `4px solid var(--${getTypeColor(notification.type)})`,
-                                opacity: notification.read ? 0.7 : 1
+                                opacity: notification.read ? 0.7 : 1,
+                                cursor: 'pointer'
                             }}
                             onClick={() => !notification.read && markAsRead(notification.id)}
+                            onTouchStart={(e) => { e.currentTarget.dataset.startX = e.touches[0].clientX; e.currentTarget.classList.add('swiping'); }}
+                            onTouchMove={(e) => {
+                                const diff = e.touches[0].clientX - parseFloat(e.currentTarget.dataset.startX || 0);
+                                if (diff > 0) e.currentTarget.style.transform = `translateX(${diff}px)`;
+                            }}
+                            onTouchEnd={(e) => {
+                                const diff = e.changedTouches[0].clientX - parseFloat(e.currentTarget.dataset.startX || 0);
+                                e.currentTarget.classList.remove('swiping');
+                                if (diff > 120) {
+                                    e.currentTarget.classList.add('dismissed');
+                                    setTimeout(() => markAsRead(notification.id), 300);
+                                } else {
+                                    e.currentTarget.style.transform = '';
+                                }
+                            }}
                         >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <div>
@@ -1514,7 +2249,7 @@ function ResultsPage() {
         return 'error';
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -1620,7 +2355,7 @@ function AttendancePage() {
         return 'error';
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="dashboard">
@@ -1634,17 +2369,20 @@ function AttendancePage() {
                     <h3 className="card-title">Overall Attendance</h3>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
-                    <div style={{ flex: 1, minWidth: '200px' }}>
-                        <div style={{
-                            fontSize: '3rem',
-                            fontWeight: 'bold',
-                            color: `var(--${getPercentageColor(overallPercentage)})`
-                        }}>
-                            {overallPercentage}%
+                    <div style={{ flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <ProgressRing percentage={overallPercentage} size={90} strokeWidth={7} />
+                        <div>
+                            <div style={{
+                                fontSize: '2rem',
+                                fontWeight: 'bold',
+                                color: `var(--${getPercentageColor(overallPercentage)}-color)`
+                            }}>
+                                {overallPercentage}%
+                            </div>
+                            <p className="text-muted" style={{ marginBottom: 0 }}>
+                                {totalPresent} / {totalDays} days present
+                            </p>
                         </div>
-                        <p className="text-muted">
-                            {totalPresent} days present out of {totalDays} working days
-                        </p>
                     </div>
                     <div style={{ flex: 2, minWidth: '300px' }}>
                         <div style={{
@@ -1695,7 +2433,8 @@ function AttendancePage() {
                                     <td><span className="badge badge-success">{record.presentDays}</span></td>
                                     <td><span className="badge badge-error">{record.absentDays}</span></td>
                                     <td>{record.totalDays}</td>
-                                    <td>
+                                    <td style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <ProgressRing percentage={record.percentage} size={36} strokeWidth={3} />
                                         <span className={`badge badge-${getPercentageColor(record.percentage)}`}>
                                             {record.percentage}%
                                         </span>
@@ -1710,11 +2449,13 @@ function AttendancePage() {
     );
 }
 
-// Previous Year Papers Page
+// Previous Year Papers / Academic Materials Page
 function PapersPage() {
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState('All');
+    const [viewFilter, setViewFilter] = useState('all'); // all, bookmarked, recent
 
     useEffect(() => {
         api.get('/papers').then(res => {
@@ -1723,51 +2464,163 @@ function PapersPage() {
         }).catch(() => setLoading(false));
     }, []);
 
-    const filteredPapers = papers.filter(p =>
-        p.subject.toLowerCase().includes(filter.toLowerCase()) ||
-        p.code.toLowerCase().includes(filter.toLowerCase())
+    const isRecent = (date) => {
+        if (!date) return false;
+        const diff = Date.now() - new Date(date).getTime();
+        return diff < 7 * 24 * 60 * 60 * 1000; // 7 days
+    };
+
+    const filteredPapers = papers.filter(p => {
+        const matchesText = p.subject.toLowerCase().includes(filter.toLowerCase()) ||
+            (p.code || '').toLowerCase().includes(filter.toLowerCase()) ||
+            (p.department || '').toLowerCase().includes(filter.toLowerCase());
+        const matchesType = typeFilter === 'All' || p.semester === typeFilter;
+        const matchesView = viewFilter === 'all' || (viewFilter === 'bookmarked' && p.bookmarked) || (viewFilter === 'recent' && isRecent(p.uploadedAt));
+        return matchesText && matchesType && matchesView;
+    });
+
+    const recentPapers = papers.filter(p => isRecent(p.uploadedAt));
+    const types = ['All', ...new Set(papers.map(p => p.semester))];
+
+    const formatSize = (bytes) => {
+        if (!bytes) return '';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    };
+
+    const handleDownload = async (paper) => {
+        try {
+            const res = await api.post(`/papers/${paper.id}/download`);
+            setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, downloads: res.data.downloads } : p));
+        } catch (err) { /* ignore */ }
+        window.open(`http://localhost:5000${paper.fileUrl}`, '_blank');
+    };
+
+    const handleBookmark = async (paper) => {
+        try {
+            const res = await api.post(`/papers/${paper.id}/bookmark`);
+            setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, bookmarked: res.data.bookmarked } : p));
+        } catch (err) { /* ignore */ }
+    };
+
+    const handleRate = async (paper, rating) => {
+        try {
+            const res = await api.post(`/papers/${paper.id}/rate`, { rating });
+            setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, avgRating: res.data.avgRating, totalRatings: res.data.totalRatings, userRating: res.data.userRating } : p));
+        } catch (err) { /* ignore */ }
+    };
+
+    const StarRating = ({ paper }) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            {[1, 2, 3, 4, 5].map(star => (
+                <span
+                    key={star}
+                    onClick={() => handleRate(paper, star)}
+                    style={{ cursor: 'pointer', fontSize: '1rem', color: star <= (paper.userRating || 0) ? '#f6ad55' : '#cbd5e0', transition: 'color 0.2s' }}
+                >★</span>
+            ))}
+            {paper.avgRating > 0 && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '4px' }}>{paper.avgRating} ({paper.totalRatings})</span>}
+        </div>
     );
 
-    if (loading) return <LoadingSpinner />;
+    const PaperCard = ({ paper, showBadge }) => (
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+            {showBadge && <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'linear-gradient(135deg, #48bb78, #38a169)', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600 }}>🆕 New</span>}
+            <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
+                    <span style={{ fontSize: '2rem' }}>📄</span>
+                    <div style={{ flex: 1 }}>
+                        <h4 style={{ margin: 0 }}>{paper.subject}</h4>
+                        {paper.code && <code style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{paper.code}</code>}
+                    </div>
+                    <button
+                        onClick={() => handleBookmark(paper)}
+                        style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', padding: '4px', transition: 'transform 0.2s' }}
+                        title={paper.bookmarked ? 'Remove Bookmark' : 'Bookmark'}
+                    >
+                        {paper.bookmarked ? '🔖' : '🏷️'}
+                    </button>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                    <span className="badge badge-info">{paper.year}</span>
+                    <span className="badge badge-secondary">{paper.semester}</span>
+                    {paper.department && <span className="badge" style={{ background: 'rgba(102,126,234,0.15)', color: '#667eea' }}>{paper.department}</span>}
+                </div>
+                <StarRating paper={paper} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                    {paper.fileName && <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>📎 {paper.fileName} {formatSize(paper.fileSize) && `(${formatSize(paper.fileSize)})`}</p>}
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>📥 {paper.downloads || 0}</span>
+                </div>
+            </div>
+            {paper.fileUrl ? (
+                <button onClick={() => handleDownload(paper)} className="btn btn-primary btn-sm" style={{ width: '100%', marginTop: '0.75rem' }}>
+                    📥 View / Download PDF
+                </button>
+            ) : (
+                <button className="btn btn-secondary btn-sm" disabled style={{ width: '100%', marginTop: '0.75rem' }}>📥 Not Available</button>
+            )}
+        </div>
+    );
+
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📚 Previous Year Papers</h1>
-                <p className="text-muted">Download question papers for exam preparation</p>
+                <h1>📚 Academic Papers & Study Materials</h1>
+                <p className="text-muted">Download question papers, notes, and reference materials uploaded by your institution</p>
             </div>
 
-            <div className="form-group" style={{ maxWidth: '400px', marginBottom: '1.5rem' }}>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="🔍 Search by subject or code..."
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                />
-            </div>
-
-            <div className="grid-3">
-                {filteredPapers.map((paper, idx) => (
-                    <div key={idx} className="card" style={{ cursor: 'pointer' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                            <span style={{ fontSize: '2rem' }}>📄</span>
-                            <div>
-                                <h4 style={{ margin: 0 }}>{paper.subject}</h4>
-                                <code style={{ color: 'var(--text-secondary)' }}>{paper.code}</code>
-                            </div>
-                        </div>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                            <span className="badge badge-info">{paper.year}</span>
-                            <span className="badge badge-secondary">{paper.semester}</span>
-                        </div>
-                        <button className="btn btn-primary btn-sm" style={{ width: '100%' }}>
-                            📥 Download PDF
-                        </button>
-                    </div>
+            {/* View tabs */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                {[
+                    { key: 'all', label: `📚 All (${papers.length})` },
+                    { key: 'recent', label: `🆕 Recently Added (${recentPapers.length})` },
+                    { key: 'bookmarked', label: `🔖 Bookmarked (${papers.filter(p => p.bookmarked).length})` }
+                ].map(tab => (
+                    <button
+                        key={tab.key}
+                        className={`btn btn-sm ${viewFilter === tab.key ? 'btn-primary' : 'btn-secondary'}`}
+                        onClick={() => setViewFilter(tab.key)}
+                        style={{ fontSize: '0.85rem' }}
+                    >
+                        {tab.label}
+                    </button>
                 ))}
-                {filteredPapers.length === 0 && <p className="text-muted">No papers found</p>}
             </div>
+
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                <div className="form-group" style={{ flex: '1', minWidth: '250px', margin: 0 }}>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="🔍 Search by subject, code, or department..."
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+                </div>
+                <select className="form-control" style={{ width: 'auto', minWidth: '150px' }} value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+                    {types.map(t => <option key={t}>{t}</option>)}
+                </select>
+            </div>
+
+            {papers.length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📭</div>
+                    <h3>No Papers Available Yet</h3>
+                    <p className="text-muted">Your institution hasn't uploaded any academic papers yet. Check back later!</p>
+                </div>
+            ) : (
+                <>
+                    <div className="grid-3">
+                        {filteredPapers.map((paper) => (
+                            <PaperCard key={paper.id} paper={paper} showBadge={isRecent(paper.uploadedAt)} />
+                        ))}
+                    </div>
+                    {filteredPapers.length === 0 && <div className="card" style={{ textAlign: 'center', padding: '2rem' }}><p className="text-muted" style={{ margin: 0 }}>No papers match your filters</p></div>}
+                </>
+            )}
         </div>
     );
 }
@@ -1790,7 +2643,7 @@ function SchedulePage() {
         classes: timetable.filter(t => t.day === day).sort((a, b) => a.time.localeCompare(b.time))
     }));
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -1867,7 +2720,7 @@ function AssignmentsPage() {
 
     const filtered = filter === 'all' ? assignments : assignments.filter(a => a.status === filter);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -1967,7 +2820,7 @@ function GrievancesPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -2063,7 +2916,7 @@ function EventsPage() {
         return colors[cat] || 'secondary';
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -2118,7 +2971,7 @@ function CertificatesPage() {
         return colors[type] || 'secondary';
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="dashboard">
@@ -2165,7 +3018,7 @@ function IDCardPage() {
         }).catch(() => setLoading(false));
     }, []);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={2} type="cards" />;
     if (!idCard) return <div className="dashboard"><p className="text-muted">Unable to load ID card</p></div>;
 
     return (
@@ -2249,7 +3102,7 @@ function AnalyticsPage() {
         }).catch(() => setLoading(false));
     }, []);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
     if (!analytics) return <div className="dashboard"><p className="text-muted">No performance data available</p></div>;
 
     const getTrendIcon = (trend) => {
@@ -2694,7 +3547,7 @@ function SettingsPage() {
                         <h3 className="card-title">Student Information</h3>
                     </div>
                     {profileLoading ? (
-                        <LoadingSpinner />
+                        <SkeletonLoader rows={3} />
                     ) : studentProfile ? (
                         <form onSubmit={async (e) => {
                             e.preventDefault();
@@ -2990,6 +3843,7 @@ function PaymentPage() {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [showUPIModal, setShowUPIModal] = useState(false);
     const [selectedFees, setSelectedFees] = useState([]);
+    const [showConfetti, setShowConfetti] = useState(false);
 
     const feeTypes = [
         { id: 'tuition_fee', name: 'Tuition Fee', amount: 50000, icon: '🎓', description: 'Semester tuition charges' },
@@ -3049,6 +3903,8 @@ function PaymentPage() {
                 description: feeTypes.filter(f => selectedFees.includes(f.id)).map(f => f.name).join(', ')
             });
             setMessage({ type: 'success', text: 'Payment recorded successfully!' });
+            setShowConfetti(true);
+            setTimeout(() => setShowConfetti(false), 3000);
             setShowUPIModal(false);
             setShowPaymentModal(false);
             setSelectedFees([]);
@@ -3062,10 +3918,11 @@ function PaymentPage() {
 
     const formatINR = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="dashboard">
+            <ConfettiEffect trigger={showConfetti} />
             <div className="dashboard-header">
                 <h1>💳 Fee Payments</h1>
                 <p className="text-muted">Select fees and pay securely via UPI</p>
@@ -3274,7 +4131,7 @@ function SystemAdminPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} />;
 
     return (
         <div className="dashboard">
@@ -3512,7 +4369,7 @@ function AdminAnalyticsPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="page-container">
@@ -3681,15 +4538,48 @@ function AdminAnalyticsPage() {
     );
 }
 
-// Certificate Generator Page
+// Certificate Generator Page - with pre-existing templates, form editor, and PDF download
 function CertificateGeneratorPage() {
-    const [templates, setTemplates] = useState([]);
     const [students, setStudents] = useState([]);
-    const [selectedTemplate, setSelectedTemplate] = useState(null);
-    const [selectedStudents, setSelectedStudents] = useState([]);
-    const [certificates, setCertificates] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [generating, setGenerating] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [showPreview, setShowPreview] = useState(false);
+    const [formData, setFormData] = useState({});
+    const certRef = useRef(null);
+    const [showConfetti, setShowConfetti] = useState(false);
+
+    // Pre-existing certificate templates
+    const certTemplates = [
+        { id: 'bonafide', name: '🏛️ Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
+        { id: 'course_completion', name: '📜 Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
+        { id: 'transfer', name: '🔄 Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
+        { id: 'migration', name: '✈️ Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
+        { id: 'merit', name: '🏆 Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
+        { id: 'participation', name: '🎪 Participation Certificate', color: '#48bb78', border: '#2f9e5f', fields: ['studentName', 'eventName', 'eventDate', 'organizer', 'venue'] },
+        { id: 'internship', name: '💼 Internship Certificate', color: '#ed64a6', border: '#d53f8c', fields: ['studentName', 'company', 'role', 'duration', 'startDate', 'endDate', 'supervisor'] },
+        { id: 'character', name: '📋 Character Certificate', color: '#319795', border: '#2c7a7b', fields: ['studentName', 'fatherName', 'department', 'enrollmentYear', 'conduct', 'character'] },
+        { id: 'study', name: '📖 Study Certificate', color: '#d69e2e', border: '#b7791f', fields: ['studentName', 'fatherName', 'course', 'department', 'fromDate', 'toDate', 'enrollmentYear'] },
+        { id: 'medical_fitness', name: '🏥 Medical Fitness Certificate', color: '#38a169', border: '#2f855a', fields: ['studentName', 'fatherName', 'age', 'bloodGroup', 'fitnessStatus', 'remarks'] },
+        { id: 'sports', name: '⚽ Sports Certificate', color: '#dd6b20', border: '#c05621', fields: ['studentName', 'sportName', 'eventLevel', 'position', 'eventDate', 'venue', 'year'] },
+        { id: 'provisional', name: '🎓 Provisional Degree Certificate', color: '#553c9a', border: '#44337a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'passingYear', 'grade', 'division'] },
+    ];
+
+    const fieldLabels = {
+        studentName: 'Student Name', course: 'Course / Programme', department: 'Department',
+        startDate: 'Start Date', endDate: 'End Date', grade: 'Grade', credits: 'Credits',
+        achievement: 'Achievement', semester: 'Semester', rank: 'Rank', year: 'Year',
+        eventName: 'Event Name', eventDate: 'Event Date', organizer: 'Organizer', venue: 'Venue',
+        company: 'Company Name', role: 'Role/Position', duration: 'Duration', supervisor: 'Supervisor',
+        fatherName: "Father's / Guardian's Name", enrollmentYear: 'Enrollment Year', conduct: 'Conduct', character: 'Character',
+        studentId: 'Student ID / Roll No.', purpose: 'Purpose', currentYear: 'Current Year of Study',
+        lastDate: 'Last Attending Date', reason: 'Reason for Leaving',
+        fromUniversity: 'From University', toUniversity: 'To University',
+        fromDate: 'Study From Date', toDate: 'Study To Date',
+        age: 'Age', bloodGroup: 'Blood Group', fitnessStatus: 'Fitness Status', remarks: 'Remarks',
+        sportName: 'Sport / Game', eventLevel: 'Level (School/District/State/National)', position: 'Position / Award',
+        passingYear: 'Passing Year', division: 'Division (First/Second/Third)'
+    };
 
     useEffect(() => {
         fetchData();
@@ -3697,165 +4587,250 @@ function CertificateGeneratorPage() {
 
     const fetchData = async () => {
         try {
-            const [templatesRes, studentsRes, certsRes] = await Promise.all([
-                api.get('/admin/certificates/templates'),
-                api.get('/students'),
-                api.get('/admin/certificates')
-            ]);
-            setTemplates(templatesRes.data.templates);
+            const studentsRes = await api.get('/students');
             setStudents(studentsRes.data.students || []);
-            setCertificates(certsRes.data.certificates || []);
         } catch (err) {
-            console.error('Failed to fetch data:', err);
+            console.error('Failed to fetch students:', err);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleGenerate = async () => {
-        if (!selectedTemplate || selectedStudents.length === 0) {
-            alert('Please select a template and at least one student');
-            return;
-        }
-        setGenerating(true);
-        try {
-            const response = await api.post('/admin/certificates/generate', {
-                templateId: selectedTemplate,
-                studentIds: selectedStudents
-            });
-            alert(response.data.message);
-            setCertificates([...certificates, ...response.data.certificates]);
-            setSelectedStudents([]);
-        } catch (err) {
-            alert('Failed to generate certificates');
-        } finally {
-            setGenerating(false);
+    const handleSelectStudent = (student) => {
+        setSelectedStudent(student);
+        if (selectedTemplate) {
+            prefillForm(student, selectedTemplate);
         }
     };
 
-    const toggleStudent = (studentId) => {
-        setSelectedStudents(prev =>
-            prev.includes(studentId)
-                ? prev.filter(id => id !== studentId)
-                : [...prev, studentId]
+    const handleSelectTemplate = (template) => {
+        setSelectedTemplate(template);
+        if (selectedStudent) {
+            prefillForm(selectedStudent, template);
+        }
+    };
+
+    const prefillForm = (student, template) => {
+        const today = new Date().toISOString().split('T')[0];
+        const data = {};
+        template.fields.forEach(field => {
+            if (field === 'studentName') data[field] = student.name || '';
+            else if (field === 'studentId') data[field] = student.studentId || '';
+            else if (field === 'department') data[field] = student.department || '';
+            else if (field === 'course') data[field] = student.course || '';
+            else if (field === 'enrollmentYear') data[field] = student.enrollmentYear || '';
+            else if (field === 'passingYear') data[field] = new Date().getFullYear().toString();
+            else if (field === 'currentYear') {
+                const enrolled = parseInt(student.enrollmentYear) || new Date().getFullYear();
+                data[field] = `${new Date().getFullYear() - enrolled + 1}`;
+            }
+            else if (field === 'startDate' || field === 'endDate' || field === 'eventDate' || field === 'lastDate' || field === 'fromDate' || field === 'toDate') data[field] = today;
+            else if (field === 'year') data[field] = new Date().getFullYear().toString();
+            else if (field === 'conduct') data[field] = 'Good';
+            else if (field === 'character') data[field] = 'Good';
+            else if (field === 'fitnessStatus') data[field] = 'Medically Fit';
+            else if (field === 'division') data[field] = 'First';
+            else data[field] = '';
+        });
+        setFormData(data);
+    };
+
+    const handleDownloadPDF = () => {
+        const printContent = certRef.current;
+        if (!printContent) return;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html><head><title>${selectedTemplate.name} - ${formData.studentName}</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+                body { margin: 0; padding: 0; }
+                @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+            </style></head><body>
+            ${printContent.outerHTML}
+            <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
+            </body></html>
+        `);
+        printWindow.document.close();
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3000);
+    };
+
+    const renderCertificate = () => {
+        if (!selectedTemplate || !formData.studentName) return null;
+        const t = selectedTemplate;
+        const today = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+        const certId = `CERT-${Date.now().toString(36).toUpperCase()}`;
+
+        return (
+            <div ref={certRef} style={{
+                width: '800px', minHeight: '580px', margin: '0 auto', padding: '40px',
+                background: 'white', color: '#333', fontFamily: "'Inter', sans-serif",
+                border: `3px solid ${t.color}`, borderRadius: '0',
+                position: 'relative', overflow: 'hidden'
+            }}>
+                {/* Corner decorations */}
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '80px', height: '80px', borderTop: `6px solid ${t.color}`, borderLeft: `6px solid ${t.color}` }} />
+                <div style={{ position: 'absolute', top: 0, right: 0, width: '80px', height: '80px', borderTop: `6px solid ${t.color}`, borderRight: `6px solid ${t.color}` }} />
+                <div style={{ position: 'absolute', bottom: 0, left: 0, width: '80px', height: '80px', borderBottom: `6px solid ${t.color}`, borderLeft: `6px solid ${t.color}` }} />
+                <div style={{ position: 'absolute', bottom: 0, right: 0, width: '80px', height: '80px', borderBottom: `6px solid ${t.color}`, borderRight: `6px solid ${t.color}` }} />
+
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                    <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', color: t.color, margin: '0 0 5px', letterSpacing: '2px' }}>PORTAL UNIVERSITY</h2>
+                    <p style={{ fontSize: '0.75rem', color: '#888', margin: 0 }}>Blockchain-Verified Academic Records</p>
+                </div>
+
+                {/* Divider */}
+                <div style={{ width: '200px', height: '2px', background: `linear-gradient(to right, transparent, ${t.color}, transparent)`, margin: '15px auto' }} />
+
+                {/* Title */}
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', textAlign: 'center', color: t.color, margin: '10px 0 5px', textTransform: 'uppercase', letterSpacing: '4px' }}>
+                    {{
+                        bonafide: 'Bonafide Certificate',
+                        course_completion: 'Certificate of Completion',
+                        transfer: 'Transfer Certificate',
+                        migration: 'Migration Certificate',
+                        merit: 'Certificate of Merit',
+                        participation: 'Certificate of Participation',
+                        internship: 'Internship Certificate',
+                        character: 'Character Certificate',
+                        study: 'Study Certificate',
+                        medical_fitness: 'Medical Fitness Certificate',
+                        sports: 'Sports Achievement Certificate',
+                        provisional: 'Provisional Degree Certificate'
+                    }[t.id]}
+                </h1>
+
+                {/* Body */}
+                <div style={{ textAlign: 'center', margin: '20px 40px', lineHeight: 1.8, fontSize: '0.95rem' }}>
+                    <p>This is to certify that</p>
+                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', fontFamily: "'Playfair Display', serif", color: t.color, margin: '10px 0', borderBottom: `2px solid ${t.color}`, display: 'inline-block', padding: '0 20px' }}>
+                        {formData.studentName}
+                    </p>
+
+                    {t.id === 'bonafide' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, bearing Roll No. <strong>{formData.studentId}</strong>, is a bonafide student of this institution, currently studying in <strong>{formData.currentYear}</strong> year of <strong>{formData.course}</strong>, Department of <strong>{formData.department}</strong>, since <strong>{formData.enrollmentYear}</strong>. This certificate is issued for the purpose of <strong>{formData.purpose}</strong>.</p>}
+                    {t.id === 'course_completion' && <p>has successfully completed the course <strong>{formData.course}</strong> in the Department of <strong>{formData.department}</strong> with grade <strong>{formData.grade}</strong> earning <strong>{formData.credits}</strong> credits.</p>}
+                    {t.id === 'transfer' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, was a student of <strong>{formData.course}</strong>, Department of <strong>{formData.department}</strong>, enrolled in <strong>{formData.enrollmentYear}</strong>. The student attended the institution till <strong>{formData.lastDate}</strong>. Reason for leaving: <strong>{formData.reason}</strong>. Conduct during the period of study: <strong>{formData.conduct}</strong>. No dues are pending against the student.</p>}
+                    {t.id === 'migration' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, was a student of <strong>{formData.course}</strong>, Department of <strong>{formData.department}</strong>, at <strong>{formData.fromUniversity}</strong>, enrolled in <strong>{formData.enrollmentYear}</strong>. The student is permitted to migrate to <strong>{formData.toUniversity}</strong>. Last date of attendance: <strong>{formData.lastDate}</strong>.</p>}
+                    {t.id === 'merit' && <p>has shown outstanding performance and achieved <strong>{formData.achievement}</strong> with Rank <strong>{formData.rank}</strong> in <strong>{formData.semester}</strong> semester, Department of <strong>{formData.department}</strong>.</p>}
+                    {t.id === 'participation' && <p>has actively participated in <strong>{formData.eventName}</strong> organized by <strong>{formData.organizer}</strong> held at <strong>{formData.venue}</strong> on <strong>{formData.eventDate}</strong>.</p>}
+                    {t.id === 'internship' && <p>has successfully completed an internship at <strong>{formData.company}</strong> as <strong>{formData.role}</strong> for a duration of <strong>{formData.duration}</strong> under the supervision of <strong>{formData.supervisor}</strong>.</p>}
+                    {t.id === 'character' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, Department of <strong>{formData.department}</strong>, enrolled in <strong>{formData.enrollmentYear}</strong>, has maintained <strong>{formData.conduct}</strong> conduct and <strong>{formData.character}</strong> character during the period of study.</p>}
+                    {t.id === 'study' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, was a student of <strong>{formData.course}</strong>, Department of <strong>{formData.department}</strong>, enrolled in <strong>{formData.enrollmentYear}</strong>, and has studied in this institution from <strong>{formData.fromDate}</strong> to <strong>{formData.toDate}</strong>.</p>}
+                    {t.id === 'medical_fitness' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, aged <strong>{formData.age}</strong> years, Blood Group <strong>{formData.bloodGroup}</strong>, has been examined and found to be <strong>{formData.fitnessStatus}</strong> for participation in academic and institutional activities. Remarks: <strong>{formData.remarks || 'Nil'}</strong>.</p>}
+                    {t.id === 'sports' && <p>has represented the institution in <strong>{formData.sportName}</strong> at the <strong>{formData.eventLevel}</strong> level and secured <strong>{formData.position}</strong> position held at <strong>{formData.venue}</strong> on <strong>{formData.eventDate}</strong>, <strong>{formData.year}</strong>.</p>}
+                    {t.id === 'provisional' && <p>S/o / D/o <strong>{formData.fatherName}</strong>, has successfully passed the <strong>{formData.course}</strong> examination from the Department of <strong>{formData.department}</strong>, enrolled in <strong>{formData.enrollmentYear}</strong>, passing in <strong>{formData.passingYear}</strong> with <strong>{formData.grade}</strong> grade / <strong>{formData.division}</strong> division. The final degree certificate is under preparation.</p>}
+                </div>
+
+                {/* Date and signatures */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px', padding: '0 40px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ borderTop: '1px solid #999', width: '160px', paddingTop: '8px', fontSize: '0.8rem', color: '#666' }}>Date: {today}</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ borderTop: '1px solid #999', width: '160px', paddingTop: '8px', fontSize: '0.8rem', color: '#666' }}>Authorized Signatory</div>
+                    </div>
+                </div>
+
+                {/* Certificate ID */}
+                <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.7rem', color: '#aaa' }}>
+                    Certificate ID: {certId} | Verified via Blockchain
+                </div>
+            </div>
         );
     };
 
-    const selectAll = () => {
-        setSelectedStudents(students.map(s => s.studentId));
-    };
-
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="page-container">
+            <ConfettiEffect trigger={showConfetti} />
             <div className="page-header">
                 <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     🎓 Certificate Generator
                 </h1>
             </div>
 
-            <div className="grid grid-2" style={{ gap: '1.5rem' }}>
-                {/* Template Selection */}
-                <div className="card">
-                    <h3>📋 Select Certificate Template</h3>
-                    <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
-                        {templates.map(template => (
-                            <div
-                                key={template.id}
-                                onClick={() => setSelectedTemplate(template.id)}
-                                style={{
-                                    padding: '1rem',
-                                    border: selectedTemplate === template.id ? '2px solid #667eea' : '1px solid var(--border-color)',
-                                    borderRadius: '10px',
-                                    cursor: 'pointer',
-                                    background: selectedTemplate === template.id ? 'rgba(102, 126, 234, 0.1)' : 'transparent'
-                                }}
-                            >
-                                <div style={{ fontWeight: 'bold' }}>{template.name}</div>
-                                <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>{template.description}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Student Selection */}
-                <div className="card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h3>👥 Select Students</h3>
-                        <button className="btn btn-secondary btn-sm" onClick={selectAll}>Select All</button>
-                    </div>
-                    <div style={{ marginTop: '1rem', maxHeight: '300px', overflowY: 'auto' }}>
-                        {students.map(student => (
-                            <div
-                                key={student.studentId}
-                                onClick={() => toggleStudent(student.studentId)}
-                                style={{
-                                    padding: '0.75rem',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '1rem',
-                                    borderBottom: '1px solid var(--border-color)',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={selectedStudents.includes(student.studentId)}
-                                    onChange={() => { }}
-                                />
-                                <div>
-                                    <div style={{ fontWeight: 'bold' }}>{student.name}</div>
-                                    <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>{student.studentId} • {student.department}</div>
+            {!showPreview ? (
+                <>
+                    {/* Step 1: Choose Template */}
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ marginBottom: '1rem' }}>Step 1: Choose Certificate Type</h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+                            {certTemplates.map(tmpl => (
+                                <div
+                                    key={tmpl.id}
+                                    onClick={() => handleSelectTemplate(tmpl)}
+                                    style={{
+                                        padding: '1rem', borderRadius: '10px', cursor: 'pointer', textAlign: 'center',
+                                        border: selectedTemplate?.id === tmpl.id ? `2px solid ${tmpl.color}` : '1px solid var(--border-color)',
+                                        background: selectedTemplate?.id === tmpl.id ? `${tmpl.color}15` : 'transparent',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    <div style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>{tmpl.name.split(' ')[0]}</div>
+                                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{tmpl.name.split(' ').slice(1).join(' ')}</div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* Generate Button */}
-            <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                <button
-                    className="btn btn-primary btn-lg"
-                    onClick={handleGenerate}
-                    disabled={generating || !selectedTemplate || selectedStudents.length === 0}
-                >
-                    {generating ? 'Generating...' : `🎓 Generate ${selectedStudents.length} Certificate(s)`}
-                </button>
-            </div>
-
-            {/* Generated Certificates */}
-            {certificates.length > 0 && (
-                <div className="card" style={{ marginTop: '2rem' }}>
-                    <h3>📜 Generated Certificates</h3>
-                    <table className="table" style={{ marginTop: '1rem' }}>
-                        <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Type</th>
-                                <th>Issue Date</th>
-                                <th>QR Code</th>
-                                <th>Blockchain Hash</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {certificates.slice(-10).map(cert => (
-                                <tr key={cert.id}>
-                                    <td>{cert.studentName}</td>
-                                    <td><span className="badge">{cert.templateId}</span></td>
-                                    <td>{new Date(cert.issueDate).toLocaleDateString()}</td>
-                                    <td>📱 QR</td>
-                                    <td style={{ fontSize: '0.8rem', fontFamily: 'monospace' }}>{cert.blockchainHash?.slice(0, 16)}...</td>
-                                    <td>
-                                        <button className="btn btn-secondary btn-sm">Download</button>
-                                    </td>
-                                </tr>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
+                        </div>
+                    </div>
+
+                    {/* Step 2: Select Student */}
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ marginBottom: '1rem' }}>Step 2: Select Student</h3>
+                        <select
+                            className="form-control"
+                            value={selectedStudent?.studentId || ''}
+                            onChange={(e) => {
+                                const s = students.find(st => st.studentId === e.target.value);
+                                if (s) handleSelectStudent(s);
+                            }}
+                        >
+                            <option value="">-- Select a student --</option>
+                            {students.map(s => (
+                                <option key={s.studentId} value={s.studentId}>{s.name} ({s.studentId}) - {s.department}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Step 3: Fill Details */}
+                    {selectedTemplate && selectedStudent && (
+                        <div className="card" style={{ marginBottom: '1.5rem' }}>
+                            <h3 style={{ marginBottom: '1rem' }}>Step 3: Fill Certificate Details</h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+                                {selectedTemplate.fields.map(field => (
+                                    <div key={field} className="form-group" style={{ margin: 0 }}>
+                                        <label className="form-label">{fieldLabels[field] || field}</label>
+                                        <input
+                                            className="form-control"
+                                            type={field.includes('Date') ? 'date' : 'text'}
+                                            value={formData[field] || ''}
+                                            onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+                                            placeholder={`Enter ${fieldLabels[field] || field}`}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                                <button className="btn btn-primary btn-lg" onClick={() => setShowPreview(true)}>
+                                    👁️ Preview &amp; Generate PDF
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </>
+            ) : (
+                /* Certificate Preview */
+                <>
+                    <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                        <button className="btn btn-secondary" onClick={() => setShowPreview(false)}>← Back to Edit</button>
+                        <button className="btn btn-primary" onClick={handleDownloadPDF}>📄 Download PDF</button>
+                    </div>
+                    <div style={{ background: '#f5f5f5', padding: '2rem', borderRadius: '10px', overflowX: 'auto' }}>
+                        {renderCertificate()}
+                    </div>
+                </>
             )}
         </div>
     );
@@ -3928,7 +4903,7 @@ function WorkflowManagerPage() {
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="page-container">
@@ -4083,179 +5058,242 @@ function WorkflowManagerPage() {
     );
 }
 
+// Full-page AI Chatbot Component
+function ChatbotPage() {
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState('');
+    const [subject, setSubject] = useState('General');
+    const [loading, setLoading] = useState(false);
+    const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        api.get('/chat/history').then(res => {
+            setMessages(res.data.history);
+        }).catch(() => { });
+    }, []);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    const sendMessage = async () => {
+        if (!input.trim()) return;
+        setLoading(true);
+        try {
+            const res = await api.post('/chat/message', { message: input, subject });
+            setMessages([...messages, res.data.userMessage, res.data.aiMessage]);
+            setInput('');
+        } catch (error) {
+            console.error('Chat error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)', maxWidth: '900px', margin: '0 auto' }}>
+            {/* Header */}
+            <div style={{
+                padding: '1.5rem',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <div>
+                    <h2 style={{ margin: 0 }}>🤖 AI Study Buddy</h2>
+                    <small style={{ opacity: 0.9 }}>Ask me anything about your studies!</small>
+                </div>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <select
+                        className="form-control"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        style={{ width: 'auto', fontSize: '0.9rem', background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px' }}
+                    >
+                        <option style={{ color: '#333' }}>General</option>
+                        <option style={{ color: '#333' }}>Data Structures</option>
+                        <option style={{ color: '#333' }}>OOP</option>
+                        <option style={{ color: '#333' }}>Mathematics</option>
+                        <option style={{ color: '#333' }}>Physics</option>
+                        <option style={{ color: '#333' }}>Digital Electronics</option>
+                    </select>
+                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat">✕</Link>
+                </div>
+            </div>
+
+            {/* Messages */}
+            <div style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--border-color)',
+                borderTop: 'none',
+                borderBottom: 'none'
+            }}>
+                {messages.length === 0 && (
+                    <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '3rem' }}>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👋</div>
+                        <h3>Hi! I'm your AI Study Buddy</h3>
+                        <p>Ask me about subjects, grades, attendance, study tips, or career advice!</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+                            {['What is my CGPA?', 'Explain binary search', 'Study tips for exams', 'Career advice'].map(q => (
+                                <button
+                                    key={q}
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={() => { setInput(q); }}
+                                    style={{ borderRadius: '20px' }}
+                                >
+                                    {q}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                {messages.map((msg, idx) => (
+                    <div key={idx} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '75%' }}>
+                        <div style={{
+                            padding: '0.75rem 1rem',
+                            borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                            background: msg.sender === 'user'
+                                ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                                : 'var(--bg-tertiary)',
+                            color: msg.sender === 'user' ? 'white' : 'var(--text-primary)',
+                            whiteSpace: 'pre-wrap',
+                            lineHeight: '1.5'
+                        }}>
+                            {msg.message}
+                        </div>
+                        <small className="text-muted" style={{ fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
+                            {new Date(msg.timestamp).toLocaleTimeString()}
+                        </small>
+                    </div>
+                ))}
+                {loading && (
+                    <div style={{ alignSelf: 'flex-start' }}>
+                        <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-tertiary)', borderRadius: '18px 18px 18px 4px' }}>
+                            <span className="typing-dots">Thinking...</span>
+                        </div>
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input */}
+            <div style={{
+                padding: '1rem 1.5rem',
+                borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderTop: 'none'
+            }}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ask a question..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                        disabled={loading}
+                        style={{ fontSize: '1rem' }}
+                    />
+                    <button
+                        className="btn btn-primary"
+                        onClick={sendMessage}
+                        disabled={loading || !input.trim()}
+                        style={{ minWidth: '60px', fontSize: '1.2rem' }}
+                    >
+                        {loading ? '...' : '📤'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // Main App Component with Sidebar Layout
 function App() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
+    // Global ripple effect on all .btn clicks
+    useEffect(() => {
+        const handler = (e) => {
+            const btn = e.target.closest('.btn');
+            if (btn) addRipple(e, btn);
+        };
+        document.addEventListener('click', handler);
+
+        // Apply saved theme on mount
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        return () => document.removeEventListener('click', handler);
+    }, []);
+
     return (
         <AuthProvider>
             <Router>
-                <div className="app-layout">
-                    <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-                    <div className={`main-content ${!sidebarOpen ? 'expanded' : ''}`}>
-                        <TopBar
-                            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                            sidebarOpen={sidebarOpen}
-                        />
-                        <div className="app-container">
-                            <Routes>
-                                <Route path="/" element={<HomePage />} />
-                                <Route path="/student" element={<StudentPortalPage />} />
-                                <Route path="/login" element={<LoginPage />} />
-                                <Route path="/verify" element={<VerifyPage />} />
-                                <Route path="/register-student" element={<StudentPortalPage />} />
-                                <Route
-                                    path="/dashboard"
-                                    element={
-                                        <ProtectedRoute>
-                                            <DashboardPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/analytics"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <AnalyticsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/settings"
-                                    element={
-                                        <ProtectedRoute>
-                                            <SettingsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/admin/analytics"
-                                    element={
-                                        <ProtectedRoute roles={['admin', 'institution']}>
-                                            <AdminAnalyticsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/admin/certificates"
-                                    element={
-                                        <ProtectedRoute roles={['admin', 'institution']}>
-                                            <CertificateGeneratorPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/admin/workflows"
-                                    element={
-                                        <ProtectedRoute roles={['admin', 'institution']}>
-                                            <WorkflowManagerPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/notifications"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <NotificationsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/results"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <ResultsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/attendance"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <AttendancePage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/papers"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <PapersPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/schedule"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <SchedulePage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/assignments"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <AssignmentsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/grievances"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <GrievancesPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/events"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <EventsPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/certificates"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <CertificatesPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/idcard"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <IDCardPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/payments"
-                                    element={
-                                        <ProtectedRoute roles={['student']}>
-                                            <PaymentPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/admin"
-                                    element={
-                                        <ProtectedRoute roles={['admin', 'institution']}>
-                                            <AdminPage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-                            </Routes>
-                        </div>
-                        <StudyBuddyChat />
-                    </div>
-                </div>
+                <AppInner sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             </Router>
         </AuthProvider>
     );
+}
+
+function AppInner({ sidebarOpen, setSidebarOpen }) {
+    return (
+        <div className="app-layout">
+            <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+            <div className={`main-content ${!sidebarOpen ? 'expanded' : ''}`}>
+                <TopBar
+                    onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                    sidebarOpen={sidebarOpen}
+                />
+                <div className="app-container">
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/student" element={<StudentPortalPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/verify" element={<VerifyPage />} />
+                        <Route path="/register-student" element={<StudentPortalPage />} />
+                        <Route path="/dashboard" element={<ProtectedRoute><PageWrapper><DashboardPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/analytics" element={<ProtectedRoute roles={['student']}><PageWrapper><AnalyticsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/settings" element={<ProtectedRoute><PageWrapper><SettingsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminAnalyticsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/certificates" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><CertificateGeneratorPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/workflows" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><WorkflowManagerPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/notifications" element={<ProtectedRoute roles={['student']}><PageWrapper><NotificationsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/results" element={<ProtectedRoute roles={['student']}><PageWrapper><ResultsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/attendance" element={<ProtectedRoute roles={['student']}><PageWrapper><AttendancePage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/papers" element={<ProtectedRoute roles={['student']}><PageWrapper><PapersPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/schedule" element={<ProtectedRoute roles={['student']}><PageWrapper><SchedulePage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/assignments" element={<ProtectedRoute roles={['student']}><PageWrapper><AssignmentsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/grievances" element={<ProtectedRoute roles={['student']}><PageWrapper><GrievancesPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/events" element={<ProtectedRoute roles={['student']}><PageWrapper><EventsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/fees" element={<ProtectedRoute roles={['student']}><PageWrapper><PaymentPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/payments" element={<ProtectedRoute roles={['student']}><PageWrapper><PaymentPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/idcard" element={<ProtectedRoute roles={['student']}><PageWrapper><IDCardPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/certificates" element={<ProtectedRoute roles={['student']}><PageWrapper><CertificatesPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/chatbot" element={<ProtectedRoute roles={['student']}><PageWrapper><ChatbotPage /></PageWrapper></ProtectedRoute>} />
+                    </Routes>
+                </div>
+            </div>
+            <MobileBottomNavWrapper />
+        </div>
+    );
+}
+
+function MobileBottomNavWrapper() {
+    const { user } = useAuth();
+    if (!user) return null;
+    return <MobileBottomNav role={user.role} />;
 }
 
 export default App;

@@ -4,7 +4,131 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+const { generateEnhancedAIResponse } = require('./aiChatbot');
+const nodemailer = require('nodemailer');
+
+// In-memory OTP store: { email: { otp, expiresAt } }
+const otpStore = {};
+
+// Email system - supports multiple providers
+let emailTransporter = null;
+let emailReady = false;
+let senderEmail = '';
+let emailProvider = '';
+let resendApiKey = null;
+
+// Auto-initialize email based on what's configured in .env
+async function initEmailTransporter() {
+
+  // Provider 1: Resend API (just needs RESEND_API_KEY)
+  if (process.env.RESEND_API_KEY) {
+    resendApiKey = process.env.RESEND_API_KEY;
+    senderEmail = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
+    emailProvider = 'Resend';
+    emailReady = true;
+    console.log(`\n📧 Email configured with Resend API`);
+    console.log(`   Sender: ${senderEmail}\n`);
+    return;
+  }
+
+  // Provider 2: Brevo SMTP (needs BREVO_SMTP_KEY)
+  if (process.env.BREVO_SMTP_KEY) {
+    emailTransporter = nodemailer.createTransport({
+      host: 'smtp-relay.brevo.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.BREVO_LOGIN || process.env.SMTP_EMAIL,
+        pass: process.env.BREVO_SMTP_KEY
+      }
+    });
+    senderEmail = process.env.SENDER_EMAIL || process.env.BREVO_LOGIN || process.env.SMTP_EMAIL;
+    emailProvider = 'Brevo';
+    emailReady = true;
+    console.log(`\n📧 Email configured with Brevo SMTP`);
+    console.log(`   Sender: ${senderEmail}\n`);
+    return;
+  }
+
+  // Provider 3: Gmail SMTP (needs SMTP_EMAIL + SMTP_PASSWORD)
+  if (process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD &&
+    process.env.SMTP_EMAIL !== 'your-gmail@gmail.com') {
+    emailTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD
+      }
+    });
+    senderEmail = process.env.SMTP_EMAIL;
+    emailProvider = 'Gmail';
+    emailReady = true;
+    console.log(`\n📧 Email configured with Gmail: ${senderEmail}\n`);
+    return;
+  }
+
+  // Fallback: Auto-create Ethereal test account (zero config)
+  try {
+    const testAccount = await nodemailer.createTestAccount();
+    emailTransporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass
+      }
+    });
+    senderEmail = testAccount.user;
+    emailProvider = 'Ethereal';
+    emailReady = true;
+    console.log(`\n📧 Auto-configured email (Ethereal test account)`);
+    console.log(`   Sender: ${testAccount.user}`);
+    console.log(`   View sent emails at: https://ethereal.email/login`);
+    console.log(`   Login: ${testAccount.user} / ${testAccount.pass}\n`);
+  } catch (err) {
+    console.log(`\n⚠️ Could not setup email: ${err.message}. OTP will be shown on screen.\n`);
+    emailReady = false;
+  }
+}
+
+// Send email function - handles both Nodemailer and Resend
+async function sendEmail(mailOptions) {
+  if (emailProvider === 'Resend') {
+    // Use Resend REST API
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: mailOptions.from,
+        to: [mailOptions.to],
+        subject: mailOptions.subject,
+        html: mailOptions.html
+      })
+    });
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || `Resend API error: ${response.status}`);
+    }
+    return { provider: 'Resend' };
+  } else {
+    // Use Nodemailer (Gmail, Brevo, Ethereal)
+    const info = await emailTransporter.sendMail(mailOptions);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    return { provider: emailProvider, previewUrl };
+  }
+}
+
+// Initialize email on startup
+initEmailTransporter();
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +139,32 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads', 'papers');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Multer config for PDF uploads
+const paperStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadsDir),
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+    cb(null, uniqueName);
+  }
+});
+const uploadPaper = multer({
+  storage: paperStorage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') cb(null, true);
+    else cb(new Error('Only PDF files are allowed'));
+  }
+});
 
 // In-memory database (simulating PostgreSQL/MongoDB)
 const db = {
@@ -37,7 +187,10 @@ const db = {
   tasks: [],
   workflows: [],
   certificateTemplates: [],
-  activityLog: []
+  activityLog: [],
+  // Paper engagement tracking
+  paperBookmarks: [],
+  paperRatings: []
 };
 
 // Initialize demo data
@@ -247,15 +400,7 @@ function initDemoData() {
     }
   );
 
-  // Demo previous year papers
-  db.papers.push(
-    { id: uuidv4(), subject: 'Data Structures', code: 'CS201', year: 2024, semester: 'Mid Sem', fileUrl: '/papers/cs201_mid_2024.pdf' },
-    { id: uuidv4(), subject: 'Data Structures', code: 'CS201', year: 2024, semester: 'End Sem', fileUrl: '/papers/cs201_end_2024.pdf' },
-    { id: uuidv4(), subject: 'Programming Fundamentals', code: 'CS101', year: 2024, semester: 'End Sem', fileUrl: '/papers/cs101_end_2024.pdf' },
-    { id: uuidv4(), subject: 'Engineering Mathematics I', code: 'MA101', year: 2024, semester: 'End Sem', fileUrl: '/papers/ma101_end_2024.pdf' },
-    { id: uuidv4(), subject: 'Digital Logic Design', code: 'CS102', year: 2023, semester: 'End Sem', fileUrl: '/papers/cs102_end_2023.pdf' },
-    { id: uuidv4(), subject: 'Object Oriented Programming', code: 'CS202', year: 2023, semester: 'Mid Sem', fileUrl: '/papers/cs202_mid_2023.pdf' }
-  );
+  // Papers are now uploaded by admin via /admin/papers/upload
 
   // Demo assignments
   db.assignments.push(
@@ -940,10 +1085,175 @@ app.put('/api/student/profile', authenticateToken, (req, res) => {
   });
 });
 
-// ==================== PREVIOUS YEAR PAPERS ====================
+// ==================== ACADEMIC PAPERS (ADMIN UPLOAD + STUDENT DOWNLOAD) ====================
+
+// Get all papers (students & admin) - sorted newest first
 app.get('/api/papers', authenticateToken, (req, res) => {
-  res.json({ papers: db.papers });
+  const sorted = [...db.papers].sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+  // Attach user's bookmarks
+  const userId = req.user.id;
+  const userBookmarks = db.paperBookmarks.filter(b => b.userId === userId).map(b => b.paperId);
+  const papersWithMeta = sorted.map(p => {
+    const ratings = db.paperRatings.filter(r => r.paperId === p.id);
+    const avgRating = ratings.length > 0 ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length) : 0;
+    const userRating = db.paperRatings.find(r => r.paperId === p.id && r.userId === userId);
+    return {
+      ...p,
+      bookmarked: userBookmarks.includes(p.id),
+      avgRating: Math.round(avgRating * 10) / 10,
+      totalRatings: ratings.length,
+      userRating: userRating ? userRating.rating : 0
+    };
+  });
+  res.json({ papers: papersWithMeta });
 });
+
+// Admin: Upload a paper PDF (with dedup check)
+app.post('/api/admin/papers/upload', authenticateToken, uploadPaper.single('file'), (req, res) => {
+  try {
+    const { subject, code, year, semester, department } = req.body;
+    if (!req.file) return res.status(400).json({ error: 'PDF file is required' });
+    if (!subject) return res.status(400).json({ error: 'Subject name is required' });
+
+    // Dedup check: same subject + code + year + semester
+    const duplicate = db.papers.find(p =>
+      p.subject.toLowerCase() === subject.toLowerCase() &&
+      (p.code || '').toLowerCase() === (code || '').toLowerCase() &&
+      p.year === (parseInt(year) || new Date().getFullYear()) &&
+      p.semester === (semester || 'End Sem')
+    );
+    if (duplicate) {
+      // Remove the just-uploaded file since it's a duplicate
+      const uploadedPath = path.join(__dirname, 'uploads/papers', req.file.filename);
+      if (fs.existsSync(uploadedPath)) fs.unlinkSync(uploadedPath);
+      return res.status(409).json({
+        error: `Duplicate: "${duplicate.subject} (${duplicate.code}) - ${duplicate.semester} ${duplicate.year}" already exists. Delete the old one first or edit it.`
+      });
+    }
+
+    const paper = {
+      id: uuidv4(),
+      subject: subject || 'Untitled',
+      code: code || '',
+      year: parseInt(year) || new Date().getFullYear(),
+      semester: semester || 'End Sem',
+      department: department || 'General',
+      fileName: req.file.originalname,
+      fileUrl: `/uploads/papers/${req.file.filename}`,
+      fileSize: req.file.size,
+      downloads: 0,
+      uploadedAt: new Date().toISOString(),
+      uploadedBy: req.user.email
+    };
+
+    db.papers.push(paper);
+    console.log(`\n📄 Paper uploaded: ${paper.subject} (${paper.code}) by ${req.user.email}`);
+    res.json({ message: 'Paper uploaded successfully', paper });
+  } catch (err) {
+    res.status(500).json({ error: 'Upload failed: ' + err.message });
+  }
+});
+
+// Admin: Delete a paper
+app.delete('/api/admin/papers/:id', authenticateToken, (req, res) => {
+  const idx = db.papers.findIndex(p => p.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Paper not found' });
+
+  const paper = db.papers[idx];
+  const filePath = path.join(__dirname, paper.fileUrl);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+  db.papers.splice(idx, 1);
+  // Clean up bookmarks and ratings
+  db.paperBookmarks = db.paperBookmarks.filter(b => b.paperId !== req.params.id);
+  db.paperRatings = db.paperRatings.filter(r => r.paperId !== req.params.id);
+  res.json({ message: 'Paper deleted successfully' });
+});
+
+// Admin: Bulk delete papers
+app.post('/api/admin/papers/bulk-delete', authenticateToken, (req, res) => {
+  const { ids } = req.body;
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'No paper IDs provided' });
+  }
+  let deleted = 0;
+  ids.forEach(id => {
+    const idx = db.papers.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      const paper = db.papers[idx];
+      const filePath = path.join(__dirname, paper.fileUrl);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      db.papers.splice(idx, 1);
+      db.paperBookmarks = db.paperBookmarks.filter(b => b.paperId !== id);
+      db.paperRatings = db.paperRatings.filter(r => r.paperId !== id);
+      deleted++;
+    }
+  });
+  res.json({ message: `${deleted} paper(s) deleted successfully`, deleted });
+});
+
+// Admin: Edit paper metadata
+app.put('/api/admin/papers/:id', authenticateToken, (req, res) => {
+  const paper = db.papers.find(p => p.id === req.params.id);
+  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+
+  const { subject, code, year, semester, department } = req.body;
+  if (subject !== undefined) paper.subject = subject;
+  if (code !== undefined) paper.code = code;
+  if (year !== undefined) paper.year = parseInt(year) || paper.year;
+  if (semester !== undefined) paper.semester = semester;
+  if (department !== undefined) paper.department = department;
+  paper.updatedAt = new Date().toISOString();
+
+  res.json({ message: 'Paper updated successfully', paper });
+});
+
+// Track paper download
+app.post('/api/papers/:id/download', authenticateToken, (req, res) => {
+  const paper = db.papers.find(p => p.id === req.params.id);
+  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+  paper.downloads = (paper.downloads || 0) + 1;
+  res.json({ downloads: paper.downloads });
+});
+
+// Toggle bookmark on a paper
+app.post('/api/papers/:id/bookmark', authenticateToken, (req, res) => {
+  const paper = db.papers.find(p => p.id === req.params.id);
+  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+
+  const userId = req.user.id;
+  const existing = db.paperBookmarks.findIndex(b => b.userId === userId && b.paperId === req.params.id);
+  if (existing !== -1) {
+    db.paperBookmarks.splice(existing, 1);
+    res.json({ bookmarked: false });
+  } else {
+    db.paperBookmarks.push({ userId, paperId: req.params.id, createdAt: new Date().toISOString() });
+    res.json({ bookmarked: true });
+  }
+});
+
+// Rate a paper (1-5 stars)
+app.post('/api/papers/:id/rate', authenticateToken, (req, res) => {
+  const paper = db.papers.find(p => p.id === req.params.id);
+  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+
+  const { rating } = req.body;
+  if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
+
+  const userId = req.user.id;
+  const existing = db.paperRatings.findIndex(r => r.userId === userId && r.paperId === req.params.id);
+  if (existing !== -1) {
+    db.paperRatings[existing].rating = rating;
+  } else {
+    db.paperRatings.push({ userId, paperId: req.params.id, rating, createdAt: new Date().toISOString() });
+  }
+
+  const allRatings = db.paperRatings.filter(r => r.paperId === req.params.id);
+  const avgRating = allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length;
+  res.json({ avgRating: Math.round(avgRating * 10) / 10, totalRatings: allRatings.length, userRating: rating });
+});
+
 
 // ==================== ASSIGNMENTS ====================
 app.get('/api/assignments', authenticateToken, (req, res) => {
@@ -1167,8 +1477,14 @@ app.post('/api/chat/message', authenticateToken, (req, res) => {
   };
   db.chatHistory.push(userMsg);
 
-  // Generate AI response (mock - can integrate real AI later)
-  const aiResponse = generateAIResponse(message, subject, studentId);
+  // Get student data for personalized responses
+  const student = db.students.find(s => s.studentId === studentId);
+  const results = db.results.filter(r => r.studentId === studentId);
+  const attendance = db.attendance.filter(a => a.studentId === studentId);
+  const studentData = { results, attendance, student };
+
+  // Generate AI response using enhanced chatbot
+  const aiResponse = generateEnhancedAIResponse(message, subject, studentData);
   const aiMsg = {
     id: uuidv4(),
     studentId,
@@ -1182,61 +1498,7 @@ app.post('/api/chat/message', authenticateToken, (req, res) => {
   res.json({ userMessage: userMsg, aiMessage: aiMsg });
 });
 
-// Mock AI response generator
-function generateAIResponse(message, subject, studentId) {
-  const lowerMsg = message.toLowerCase();
-
-  // Get student data for personalized responses
-  const results = db.results.filter(r => r.studentId === studentId);
-  const attendance = db.attendance.filter(a => a.studentId === studentId);
-
-  // Subject-specific responses
-  if (subject === 'Data Structures') {
-    if (lowerMsg.includes('tree') || lowerMsg.includes('bst')) {
-      return "Binary Search Trees (BST) are hierarchical data structures where each node has at most two children. Key properties:\n\n1. Left subtree contains nodes with keys less than parent\n2. Right subtree contains nodes with keys greater than parent\n3. Time complexity: O(log n) for balanced trees\n\nWould you like me to explain insertion, deletion, or traversal algorithms?";
-    }
-    if (lowerMsg.includes('complexity') || lowerMsg.includes('big o')) {
-      return "Time complexity measures how runtime grows with input size:\n\n• O(1) - Constant\n• O(log n) - Logarithmic (Binary Search)\n• O(n) - Linear (Array traversal)\n• O(n log n) - Linearithmic (Merge Sort)\n• O(n²) - Quadratic (Bubble Sort)\n\nWhat specific algorithm would you like to analyze?";
-    }
-  }
-
-  if (subject === 'OOP') {
-    if (lowerMsg.includes('inheritance') || lowerMsg.includes('polymorphism')) {
-      return "Object-Oriented Programming pillars:\n\n1. **Encapsulation**: Bundling data and methods\n2. **Inheritance**: Child class inherits parent properties\n3. **Polymorphism**: Same interface, different implementations\n4. **Abstraction**: Hiding complex implementation\n\nWhich concept would you like to explore in detail?";
-    }
-  }
-
-  // Performance-related questions
-  if (lowerMsg.includes('cgpa') || lowerMsg.includes('grade') || lowerMsg.includes('performance')) {
-    if (results.length > 0) {
-      const cgpa = (results.reduce((sum, r) => sum + r.sgpa, 0) / results.length).toFixed(2);
-      return `Based on your academic record, your current CGPA is ${cgpa}. ${parseFloat(cgpa) >= 8.5 ? "Excellent work! You're performing very well." :
-        parseFloat(cgpa) >= 7.0 ? "Good progress! Focus on weak subjects to improve further." :
-          "I recommend focusing on core subjects and attending doubt-clearing sessions."
-        }\n\nWould you like subject-specific study tips?`;
-    }
-  }
-
-  // Attendance questions
-  if (lowerMsg.includes('attendance') || lowerMsg.includes('absent')) {
-    if (attendance.length > 0) {
-      const totalDays = attendance.reduce((sum, a) => sum + a.totalDays, 0);
-      const presentDays = attendance.reduce((sum, a) => sum + a.presentDays, 0);
-      const percentage = ((presentDays / totalDays) * 100).toFixed(1);
-      return `Your current attendance is ${percentage}%. ${parseFloat(percentage) >= 75 ? "You're meeting the minimum requirement!" :
-        "⚠️ You're below 75% - attend all upcoming classes to avoid shortage."
-        }`;
-    }
-  }
-
-  // Study tips
-  if (lowerMsg.includes('study') || lowerMsg.includes('prepare') || lowerMsg.includes('exam')) {
-    return "Here are effective study strategies:\n\n1. **Pomodoro Technique**: 25 min focus + 5 min break\n2. **Active Recall**: Test yourself instead of re-reading\n3. **Spaced Repetition**: Review material at increasing intervals\n4. **Practice Problems**: Solve previous year papers\n5. **Group Study**: Discuss concepts with peers\n\nWhat subject are you preparing for?";
-  }
-
-  // Default helpful response
-  return `I'm here to help with your studies! I can assist with:\n\n• Subject concepts (Data Structures, OOP, Math, etc.)\n• Study strategies and exam preparation\n• Performance analysis and improvement tips\n• Doubt clarification\n\nWhat would you like to know more about?`;
-}
+// AI response is now handled by aiChatbot.js module (generateEnhancedAIResponse)
 
 // ==================== BLOCKCHAIN ROUTES ====================
 
@@ -1559,6 +1821,142 @@ app.post('/api/student/self-register', async (req, res) => {
         name: newUser.name,
         role: newUser.role,
         studentId
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==================== OTP LOGIN ====================
+
+// Send OTP to student email
+app.post('/api/auth/send-otp', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Check if user exists
+    const user = db.users.find(u => u.email === email && u.role === 'student');
+    if (!user) {
+      return res.status(404).json({ error: 'No student account found with this email' });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
+
+    // Store OTP
+    otpStore[email] = { otp, expiresAt };
+
+    // Send OTP via email
+    const mailOptions = {
+      from: `"Portal - Student Login" <${senderEmail}>`,
+      to: email,
+      subject: `Your OTP for Portal Login: ${otp}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="color: white; margin: 0;">🔗 Portal</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0;">Student Login OTP</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
+            <p>Hello <strong>${user.name}</strong>,</p>
+            <p>Your One-Time Password (OTP) for login is:</p>
+            <div style="text-align: center; margin: 20px 0;">
+              <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #667eea; background: #f0f0ff; padding: 15px 30px; border-radius: 10px; border: 2px dashed #667eea;">${otp}</span>
+            </div>
+            <p style="color: #666;">This OTP is valid for <strong>5 minutes</strong>. Do not share it with anyone.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #999; font-size: 12px;">If you did not request this OTP, please ignore this email.</p>
+          </div>
+        </div>
+      `
+    };
+
+    let emailSent = false;
+    let previewUrl = null;
+    try {
+      if (emailReady) {
+        const result = await sendEmail(mailOptions);
+        emailSent = true;
+        previewUrl = result.previewUrl || null;
+        console.log(`\n📧 OTP ${otp} sent to ${email} via ${emailProvider}`);
+        if (previewUrl) {
+          console.log(`📨 View email at: ${previewUrl}`);
+        }
+        console.log('');
+      } else {
+        console.log(`\n📧 OTP for ${email}: ${otp} (Email not ready)\n`);
+      }
+    } catch (emailErr) {
+      console.log(`\n⚠️ Email send failed: ${emailErr.message}\n📧 OTP for ${email}: ${otp}\n`);
+    }
+
+    res.json({
+      message: emailSent
+        ? `OTP sent successfully to ${email}! Check your inbox.`
+        : `OTP generated! Your code is: ${otp}`,
+      // Only include OTP if email was NOT sent (fallback)
+      ...(emailSent ? {} : { otp_code: otp }),
+      ...(previewUrl ? { email_preview: previewUrl } : {})
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Verify OTP and login
+app.post('/api/auth/verify-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ error: 'Email and OTP are required' });
+    }
+
+    // Check OTP
+    const stored = otpStore[email];
+    if (!stored) {
+      return res.status(400).json({ error: 'No OTP found. Please request a new one.' });
+    }
+
+    if (Date.now() > stored.expiresAt) {
+      delete otpStore[email];
+      return res.status(400).json({ error: 'OTP has expired. Please request a new one.' });
+    }
+
+    if (stored.otp !== otp) {
+      return res.status(400).json({ error: 'Invalid OTP. Please try again.' });
+    }
+
+    // OTP valid - delete it
+    delete otpStore[email];
+
+    // Find user and generate token
+    const user = db.users.find(u => u.email === email && u.role === 'student');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, studentId: user.studentId },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      message: 'OTP verified successfully',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        walletAddress: user.walletAddress
       }
     });
   } catch (error) {
