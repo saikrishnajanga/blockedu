@@ -3036,3 +3036,207 @@ svg {
   overflow: hidden;
   transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease 0.1s, margin 0.3s ease 0.1s, padding 0.3s ease 0.1s;
 }
+
+/* ==================== 3D Card Tilt Effect ==================== */
+.card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  will-change: transform;
+}
+
+.card-tilt:hover {
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25), 0 0 30px rgba(118, 75, 162, 0.1);
+}
+
+.card-tilt .tilt-inner {
+  transform: translateZ(30px);
+  transition: transform 0.15s ease-out;
+}
+
+/* ==================== Animated Gradient Borders ==================== */
+.gradient-border {
+  position: relative;
+  border: none !important;
+  overflow: visible;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(60deg,
+      #667eea, #764ba2, #f093fb, #f5576c,
+      #ffc3a0, #4facfe, #00f2fe, #667eea);
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: gradient-rotate 4s ease infinite;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+@keyframes gradient-rotate {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Always-on gradient border variant */
+.gradient-border-active::before {
+  opacity: 0.7 !important;
+}
+
+/* ==================== Scroll Reveal Animations ==================== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide from left */
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale up */
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delay for children */
+.stagger-children>* {
+  transition-delay: 0s;
+}
+
+.stagger-children>*:nth-child(1) {
+  transition-delay: 0.05s;
+}
+
+.stagger-children>*:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.stagger-children>*:nth-child(3) {
+  transition-delay: 0.15s;
+}
+
+.stagger-children>*:nth-child(4) {
+  transition-delay: 0.2s;
+}
+
+.stagger-children>*:nth-child(5) {
+  transition-delay: 0.25s;
+}
+
+.stagger-children>*:nth-child(6) {
+  transition-delay: 0.3s;
+}
+
+.stagger-children>*:nth-child(7) {
+  transition-delay: 0.35s;
+}
+
+.stagger-children>*:nth-child(8) {
+  transition-delay: 0.4s;
+}
+
+/* ==================== Animated Counter ==================== */
+.animated-counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.counter-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.counter-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Counter color variants */
+.counter-value.counter-success {
+  background: linear-gradient(135deg, #38ef7d, #11998e);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.counter-value.counter-warning {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.counter-value.counter-danger {
+  background: linear-gradient(135deg, #f5576c, #ff6b6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.counter-value.counter-info {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  -webkit-background-clip: text;
+  background-clip: text;
+}

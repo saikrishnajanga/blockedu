@@ -344,7 +344,94 @@ function ProgressRing({ percentage = 0, size = 60, strokeWidth = 5, color }) {
     );
 }
 
-// Mobile Bottom Navigation
+// Animated Counter — counts from 0 to target value with easing
+function AnimatedCounter({ value, duration = 1500, prefix = '', suffix = '', colorClass = '' }) {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const observed = useRef(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && !observed.current) {
+                observed.current = true;
+                const startTime = performance.now();
+                const target = typeof value === 'number' ? value : parseInt(value) || 0;
+                const animate = (now) => {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Ease-out cubic
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    setCount(Math.floor(eased * target));
+                    if (progress < 1) requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+            }
+        }, { threshold: 0.3 });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [value, duration]);
+
+    return (
+        <span ref={ref} className="animated-counter">
+            <span className={`counter-value ${colorClass}`}>{prefix}{count.toLocaleString()}{suffix}</span>
+        </span>
+    );
+}
+
+// Scroll Reveal Hook — triggers reveal animation when element enters viewport
+function useScrollReveal(options = {}) {
+    const ref = useRef(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                el.classList.add('revealed');
+                observer.unobserve(el);
+            }
+        }, { threshold: options.threshold || 0.1, rootMargin: options.rootMargin || '0px' });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+    return ref;
+}
+
+// ScrollReveal wrapper component for easier use
+function ScrollReveal({ children, className = 'scroll-reveal', style = {} }) {
+    const ref = useScrollReveal();
+    return <div ref={ref} className={className} style={style}>{children}</div>;
+}
+
+// 3D Tilt Hook — makes element tilt toward mouse cursor
+function useTilt(maxTilt = 8) {
+    const ref = useRef(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const handleMove = (e) => {
+            const rect = el.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const rotateX = ((e.clientY - centerY) / (rect.height / 2)) * -maxTilt;
+            const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * maxTilt;
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        };
+        const handleLeave = () => {
+            el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+        };
+        el.addEventListener('mousemove', handleMove);
+        el.addEventListener('mouseleave', handleLeave);
+        return () => {
+            el.removeEventListener('mousemove', handleMove);
+            el.removeEventListener('mouseleave', handleLeave);
+        };
+    }, [maxTilt]);
+    return ref;
+}
+
+
 function MobileBottomNav({ role }) {
     const location = window.location.pathname;
     const navigate = useNavigate();
@@ -1026,61 +1113,65 @@ function DashboardPage() {
 
     return (
         <div className="dashboard">
-            <div className="dashboard-header">
-                <h1>Welcome, {user?.name}!</h1>
-                <p className="text-muted">Role: {user?.role?.toUpperCase()}</p>
+            <ScrollReveal className="scroll-reveal">
+                <div className="dashboard-header">
+                    <h1>Welcome, {user?.name}!</h1>
+                    <p className="text-muted">Role: {user?.role?.toUpperCase()}</p>
+                </div>
+            </ScrollReveal>
+
+            <div className="stats-grid stagger-children">
+                <div className="stat-card card-tilt gradient-border scroll-reveal revealed">
+                    <AnimatedCounter value={stats?.totalStudents || 0} />
+                    <div className="counter-label">Total Students</div>
+                </div>
+                <div className="stat-card success card-tilt gradient-border scroll-reveal revealed">
+                    <AnimatedCounter value={stats?.totalRecords || 0} colorClass="counter-success" />
+                    <div className="counter-label">Total Records</div>
+                </div>
+                <div className="stat-card info card-tilt gradient-border scroll-reveal revealed">
+                    <AnimatedCounter value={stats?.totalTransactions || 0} colorClass="counter-info" />
+                    <div className="counter-label">Blockchain Transactions</div>
+                </div>
+                <div className="stat-card warning card-tilt gradient-border scroll-reveal revealed">
+                    <AnimatedCounter value={stats?.totalInstitutions || 0} colorClass="counter-warning" />
+                    <div className="counter-label">Institutions</div>
+                </div>
             </div>
 
-            <div className="stats-grid">
-                <div className="stat-card">
-                    <div className="stat-value">{stats?.totalStudents || 0}</div>
-                    <div className="stat-label">Total Students</div>
-                </div>
-                <div className="stat-card success">
-                    <div className="stat-value">{stats?.totalRecords || 0}</div>
-                    <div className="stat-label">Total Records</div>
-                </div>
-                <div className="stat-card info">
-                    <div className="stat-value">{stats?.totalTransactions || 0}</div>
-                    <div className="stat-label">Blockchain Transactions</div>
-                </div>
-                <div className="stat-card warning">
-                    <div className="stat-value">{stats?.totalInstitutions || 0}</div>
-                    <div className="stat-label">Institutions</div>
-                </div>
-            </div>
-
-            <div className="section">
-                <div className="section-header">
-                    <h2 className="section-title">Recent Transactions</h2>
-                </div>
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Transaction Hash</th>
-                                <th>Action</th>
-                                <th>Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {stats?.recentTransactions?.length > 0 ? (
-                                stats.recentTransactions.map((tx, idx) => (
-                                    <tr key={idx}>
-                                        <td><code className="hash-display">{tx.txHash}</code></td>
-                                        <td><span className="badge badge-info">{tx.action}</span></td>
-                                        <td>{new Date(tx.timestamp).toLocaleString()}</td>
-                                    </tr>
-                                ))
-                            ) : (
+            <ScrollReveal className="scroll-reveal">
+                <div className="section">
+                    <div className="section-header">
+                        <h2 className="section-title">Recent Transactions</h2>
+                    </div>
+                    <div className="table-container">
+                        <table className="table">
+                            <thead>
                                 <tr>
-                                    <td colSpan="3" className="text-center text-muted">No transactions yet</td>
+                                    <th>Transaction Hash</th>
+                                    <th>Action</th>
+                                    <th>Timestamp</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {stats?.recentTransactions?.length > 0 ? (
+                                    stats.recentTransactions.map((tx, idx) => (
+                                        <tr key={idx}>
+                                            <td><code className="hash-display">{tx.txHash}</code></td>
+                                            <td><span className="badge badge-info">{tx.action}</span></td>
+                                            <td>{new Date(tx.timestamp).toLocaleString()}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="3" className="text-center text-muted">No transactions yet</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </ScrollReveal>
 
             {(user?.role === 'admin' || user?.role === 'institution') && (
                 <div className="grid-2">
@@ -5235,6 +5326,68 @@ function App() {
         document.documentElement.setAttribute('data-theme', savedTheme);
 
         return () => document.removeEventListener('click', handler);
+    }, []);
+
+    // Global 3D tilt, gradient borders, and scroll-reveal effects
+    useEffect(() => {
+        const maxTilt = 8;
+
+        // Apply 3D tilt to an element
+        const applyTilt = (el) => {
+            if (el.dataset.tiltApplied) return;
+            el.dataset.tiltApplied = 'true';
+            el.classList.add('card-tilt');
+            const handleMove = (e) => {
+                const rect = el.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const rotateX = ((e.clientY - centerY) / (rect.height / 2)) * -maxTilt;
+                const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * maxTilt;
+                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            };
+            const handleLeave = () => {
+                el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            };
+            el.addEventListener('mousemove', handleMove);
+            el.addEventListener('mouseleave', handleLeave);
+        };
+
+        // Apply scroll-reveal using IntersectionObserver
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Scan + apply effects to all matching elements
+        const applyEffects = () => {
+            // 3D tilt + gradient border on stat cards
+            document.querySelectorAll('.stat-card').forEach(el => {
+                applyTilt(el);
+                if (!el.classList.contains('gradient-border')) el.classList.add('gradient-border');
+            });
+            // Scroll reveal on sections
+            document.querySelectorAll('.section, .dashboard-header, .page-header, .stats-grid').forEach(el => {
+                if (!el.dataset.revealApplied) {
+                    el.dataset.revealApplied = 'true';
+                    el.classList.add('scroll-reveal');
+                    revealObserver.observe(el);
+                }
+            });
+        };
+
+        // Run on mount + watch for DOM changes (route navigation)
+        applyEffects();
+        const observer = new MutationObserver(() => applyEffects());
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        return () => {
+            observer.disconnect();
+            revealObserver.disconnect();
+        };
     }, []);
 
     return (
