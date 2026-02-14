@@ -1,0 +1,9 @@
+{
+    "appId": "com.blockedu.app",
+    "appName": "BlockEdu",
+    "webDir": "build",
+    "server": {
+        "url": "https://blockedu.vercel.app",
+        "cleartext": true
+    }
+}
