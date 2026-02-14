@@ -1,0 +1,22 @@
+{
+    "short_name": "BlockEdu",
+    "name": "BlockEdu - Blockchain Student Records",
+    "description": "Secure Blockchain-Based Student Records Management System",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#667eea",
+    "background_color": "#0a0a1a",
+    "orientation": "portrait-primary",
+    "categories": [
+        "education",
+        "productivity"
+    ],
+    "scope": "/"
+}

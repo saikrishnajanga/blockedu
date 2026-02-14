@@ -8,16 +8,30 @@
   <meta name="theme-color" content="#667eea" />
   <meta name="description"
     content="Secure Blockchain-Based Student Records Management System - Tamper-proof academic records with Web3 technology" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BlockEdu" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
-  <title>Portal - Student Records</title>
+  <title>BlockEdu - Student Records</title>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
+  <script>
+    // Register PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('✅ PWA Service Worker registered'))
+          .catch(err => console.log('PWA SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 
 </html>

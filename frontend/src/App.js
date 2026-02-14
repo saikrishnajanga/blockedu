@@ -128,6 +128,15 @@ function LanguageProvider({ children }) {
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
+    const [timeoutCountdown, setTimeoutCountdown] = useState(120);
+
+    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    const WARNING_BEFORE = 2 * 60 * 1000;   // Show warning 2 min before
+    const lastActivity = useRef(Date.now());
+    const timeoutTimer = useRef(null);
+    const warningTimer = useRef(null);
+    const countdownInterval = useRef(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -137,6 +146,65 @@ function AuthProvider({ children }) {
         }
         setLoading(false);
     }, []);
+
+    // Session timeout logic
+    useEffect(() => {
+        if (!user) return;
+
+        const resetTimers = () => {
+            lastActivity.current = Date.now();
+            setShowTimeoutWarning(false);
+            setTimeoutCountdown(120);
+            clearTimeout(timeoutTimer.current);
+            clearTimeout(warningTimer.current);
+            clearInterval(countdownInterval.current);
+
+            // Set warning timer
+            warningTimer.current = setTimeout(() => {
+                setShowTimeoutWarning(true);
+                setTimeoutCountdown(120);
+                countdownInterval.current = setInterval(() => {
+                    setTimeoutCountdown(prev => {
+                        if (prev <= 1) {
+                            clearInterval(countdownInterval.current);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+            }, SESSION_TIMEOUT - WARNING_BEFORE);
+
+            // Set logout timer
+            timeoutTimer.current = setTimeout(() => {
+                clearInterval(countdownInterval.current);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                setUser(null);
+                window.location.href = '/?timeout=1';
+            }, SESSION_TIMEOUT);
+        };
+
+        resetTimers();
+        const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'mousemove'];
+        const throttledReset = (() => {
+            let last = 0;
+            return () => {
+                const now = Date.now();
+                if (now - last > 10000) { // Throttle to once every 10s
+                    last = now;
+                    resetTimers();
+                }
+            };
+        })();
+
+        events.forEach(e => window.addEventListener(e, throttledReset));
+        return () => {
+            events.forEach(e => window.removeEventListener(e, throttledReset));
+            clearTimeout(timeoutTimer.current);
+            clearTimeout(warningTimer.current);
+            clearInterval(countdownInterval.current);
+        };
+    }, [user]);
 
     const login = async (email, password) => {
         const response = await api.post('/auth/login', { email, password });
@@ -172,9 +240,27 @@ function AuthProvider({ children }) {
         window.location.href = '/';
     };
 
+    const stayLoggedIn = () => {
+        setShowTimeoutWarning(false);
+        lastActivity.current = Date.now();
+    };
+
     return (
         <AuthContext.Provider value={{ user, login, walletLogin, register, logout, loading }}>
             {children}
+            {showTimeoutWarning && (
+                <div className="session-timeout-overlay">
+                    <div className="session-timeout-modal">
+                        <h2>⏱️ Session Expiring</h2>
+                        <p>You've been inactive. You'll be logged out in:</p>
+                        <div className="timeout-countdown">{Math.floor(timeoutCountdown / 60)}:{(timeoutCountdown % 60).toString().padStart(2, '0')}</div>
+                        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                            <button className="btn btn-primary" onClick={stayLoggedIn}>Stay Logged In</button>
+                            <button className="btn btn-secondary" onClick={logout}>Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AuthContext.Provider>
     );
 }
@@ -3049,6 +3135,7 @@ function EventsPage() {
 function CertificatesPage() {
     const [certificates, setCertificates] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [flippedCards, setFlippedCards] = useState(new Set());
 
     useEffect(() => {
         api.get('/certificates').then(res => {
@@ -3062,33 +3149,68 @@ function CertificatesPage() {
         return colors[type] || 'secondary';
     };
 
+    const toggleFlip = (idx) => {
+        setFlippedCards(prev => {
+            const next = new Set(prev);
+            if (next.has(idx)) next.delete(idx);
+            else next.add(idx);
+            return next;
+        });
+    };
+
     if (loading) return <SkeletonLoader rows={3} type="cards" />;
 
     return (
         <div className="dashboard">
             <div className="dashboard-header">
                 <h1>🏆 Certificates</h1>
-                <p className="text-muted">Your achievements and certifications</p>
+                <p className="text-muted">Click any certificate to verify its blockchain hash</p>
             </div>
 
             <div className="grid-2">
                 {certificates.map((cert, idx) => (
-                    <div key={idx} className="card" style={{ borderTop: `4px solid var(--${getTypeColor(cert.type)})` }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                            <span className={`badge badge-${getTypeColor(cert.type)}`}>{cert.type}</span>
-                            {cert.verified && <span className="badge badge-success">✓ Blockchain Verified</span>}
+                    <div key={idx} className={`flip-card ${flippedCards.has(idx) ? 'flipped' : ''}`}
+                        style={{ minHeight: '250px' }}
+                        onClick={() => toggleFlip(idx)}>
+                        <div className="flip-card-inner">
+                            {/* FRONT */}
+                            <div className="flip-card-front" style={{
+                                background: 'var(--bg-card)',
+                                border: '1px solid var(--border-color)',
+                                borderTop: `4px solid var(--${getTypeColor(cert.type)})`,
+                                padding: 'var(--spacing-lg)'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                    <span className={`badge badge-${getTypeColor(cert.type)}`}>{cert.type}</span>
+                                    {cert.verified && <span className="badge badge-success">✓ Verified</span>}
+                                </div>
+                                <h3 style={{ margin: 0 }}>{cert.title}</h3>
+                                <p className="text-muted" style={{ margin: '0.5rem 0' }}>{cert.description}</p>
+                                <div style={{ marginTop: '1rem' }}>
+                                    <small className="text-muted">Issued: {cert.issuedDate}</small>
+                                </div>
+                                <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    🔗 Hash: <code>{cert.blockchainHash}</code>
+                                </div>
+                                <span className="flip-hint">🔄 Click to verify</span>
+                            </div>
+
+                            {/* BACK — Verification */}
+                            <div className="flip-card-back" style={{
+                                borderTop: `4px solid var(--${getTypeColor(cert.type)})`
+                            }}>
+                                <h3 style={{ margin: 0 }}>✅ Blockchain Verified</h3>
+                                <div className="qr-code-container">
+                                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(cert.blockchainHash || cert.title)}`}
+                                        alt="Certificate QR" width="150" height="150" style={{ display: 'block' }} />
+                                </div>
+                                <div style={{ textAlign: 'center', fontSize: '0.85rem' }}>
+                                    <strong>{cert.title}</strong><br />
+                                    <small className="text-muted">{cert.issuedDate}</small>
+                                </div>
+                                <span className="flip-hint">🔄 Click to flip back</span>
+                            </div>
                         </div>
-                        <h3 style={{ margin: 0 }}>{cert.title}</h3>
-                        <p className="text-muted" style={{ margin: '0.5rem 0' }}>{cert.description}</p>
-                        <div style={{ marginTop: '1rem' }}>
-                            <small className="text-muted">Issued: {cert.issuedDate}</small>
-                        </div>
-                        <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                            🔗 Hash: <code>{cert.blockchainHash}</code>
-                        </div>
-                        <button className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
-                            📥 Download Certificate
-                        </button>
                     </div>
                 ))}
                 {certificates.length === 0 && <p className="text-muted">No certificates found</p>}
@@ -3101,6 +3223,7 @@ function CertificatesPage() {
 function IDCardPage() {
     const [idCard, setIdCard] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [flipped, setFlipped] = useState(false);
 
     useEffect(() => {
         api.get('/student/idcard').then(res => {
@@ -3112,68 +3235,96 @@ function IDCardPage() {
     if (loading) return <SkeletonLoader rows={2} type="cards" />;
     if (!idCard) return <div className="dashboard"><p className="text-muted">Unable to load ID card</p></div>;
 
+    const qrData = encodeURIComponent(JSON.stringify({
+        id: idCard.studentId,
+        name: idCard.name,
+        course: idCard.course,
+        dept: idCard.department,
+        institution: idCard.institutionName
+    }));
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}`;
+
     return (
         <div className="dashboard">
             <div className="dashboard-header">
                 <h1>📱 Student ID Card</h1>
-                <p className="text-muted">Your digital student identity card</p>
+                <p className="text-muted">Click the card to flip it — QR code on the back!</p>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div style={{
-                    width: '350px',
-                    background: 'linear-gradient(135deg, var(--primary) 0%, #1a1a2e 100%)',
-                    borderRadius: '16px',
-                    padding: '1.5rem',
-                    color: 'white',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
-                }}>
-                    <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-                        <h3 style={{ margin: 0, color: 'white' }}>🎓 {idCard.institutionName}</h3>
-                        <small style={{ opacity: 0.8 }}>Student Identity Card</small>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                        <div style={{
-                            width: '80px',
-                            height: '80px',
-                            borderRadius: '50%',
-                            background: 'rgba(255,255,255,0.2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '2.5rem',
-                            border: '3px solid white'
+                <div className={`flip-card ${flipped ? 'flipped' : ''}`}
+                    style={{ width: '350px', height: '380px' }}
+                    onClick={() => setFlipped(!flipped)}>
+                    <div className="flip-card-inner">
+                        {/* FRONT — ID Card */}
+                        <div className="flip-card-front" style={{
+                            background: 'linear-gradient(135deg, var(--primary) 0%, #1a1a2e 100%)',
+                            borderRadius: '16px',
+                            padding: '1.5rem',
+                            color: 'white',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
                         }}>
-                            {idCard.profilePicture ?
-                                <img src={idCard.profilePicture} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                                : '👤'}
-                        </div>
-                        <div>
-                            <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'white' }}>{idCard.name}</h2>
-                            <div style={{ opacity: 0.9, marginTop: '0.25rem' }}>{idCard.studentId}</div>
-                        </div>
-                    </div>
+                            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ margin: 0, color: 'white' }}>🎓 {idCard.institutionName}</h3>
+                                <small style={{ opacity: 0.8 }}>Student Identity Card</small>
+                            </div>
 
-                    <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem' }}>
-                            <div><span style={{ opacity: 0.7 }}>Course:</span> {idCard.course}</div>
-                            <div><span style={{ opacity: 0.7 }}>Dept:</span> {idCard.department}</div>
-                            <div><span style={{ opacity: 0.7 }}>Year:</span> {idCard.enrollmentYear}</div>
-                            <div><span style={{ opacity: 0.7 }}>Valid:</span> {idCard.validUntil}</div>
-                        </div>
-                    </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                <div style={{
+                                    width: '80px', height: '80px', borderRadius: '50%',
+                                    background: 'rgba(255,255,255,0.2)', display: 'flex',
+                                    alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '2.5rem', border: '3px solid white'
+                                }}>
+                                    {idCard.profilePicture ?
+                                        <img src={idCard.profilePicture} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                        : '👤'}
+                                </div>
+                                <div>
+                                    <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'white' }}>{idCard.name}</h2>
+                                    <div style={{ opacity: 0.9, marginTop: '0.25rem' }}>{idCard.studentId}</div>
+                                </div>
+                            </div>
 
-                    <div style={{ textAlign: 'center', padding: '0.5rem', background: 'white', borderRadius: '8px' }}>
-                        <div style={{ fontFamily: 'monospace', fontSize: '1.5rem', letterSpacing: '3px', color: 'black' }}>
-                            ||||| {idCard.barcode} |||||
+                            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem' }}>
+                                    <div><span style={{ opacity: 0.7 }}>Course:</span> {idCard.course}</div>
+                                    <div><span style={{ opacity: 0.7 }}>Dept:</span> {idCard.department}</div>
+                                    <div><span style={{ opacity: 0.7 }}>Year:</span> {idCard.enrollmentYear}</div>
+                                    <div><span style={{ opacity: 0.7 }}>Valid:</span> {idCard.validUntil}</div>
+                                </div>
+                            </div>
+
+                            <div style={{ textAlign: 'center', padding: '0.5rem', background: 'white', borderRadius: '8px' }}>
+                                <div style={{ fontFamily: 'monospace', fontSize: '1.5rem', letterSpacing: '3px', color: 'black' }}>
+                                    ||||| {idCard.barcode} |||||
+                                </div>
+                            </div>
+                            <span className="flip-hint">🔄 Click to flip</span>
+                        </div>
+
+                        {/* BACK — QR Code */}
+                        <div className="flip-card-back" style={{
+                            background: 'linear-gradient(135deg, #1a1a2e 0%, var(--primary) 100%)',
+                            color: 'white',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
+                        }}>
+                            <h3 style={{ margin: 0, color: 'white' }}>📲 Scan QR Code</h3>
+                            <div className="qr-code-container">
+                                <img src={qrUrl} alt="Student QR Code" width="180" height="180" style={{ display: 'block' }} />
+                            </div>
+                            <div style={{ textAlign: 'center', fontSize: '0.85rem', opacity: 0.9 }}>
+                                <strong>{idCard.name}</strong><br />
+                                {idCard.studentId} • {idCard.course}
+                            </div>
+                            <span className="flip-hint" style={{ color: 'rgba(255,255,255,0.6)' }}>🔄 Click to flip back</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                <button className="btn btn-primary" onClick={() => window.print()}>
+                <button className="btn btn-primary" onClick={(e) => { e.stopPropagation(); window.print(); }}>
                     📥 Download ID Card
                 </button>
             </div>
