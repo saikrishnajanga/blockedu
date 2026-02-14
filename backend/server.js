@@ -20,6 +20,7 @@ let emailReady = false;
 let senderEmail = '';
 let emailProvider = '';
 let resendApiKey = null;
+let brevoApiKey = null;
 
 // Auto-initialize email based on what's configured in .env
 async function initEmailTransporter() {
@@ -35,21 +36,13 @@ async function initEmailTransporter() {
     return;
   }
 
-  // Provider 2: Brevo SMTP (needs BREVO_SMTP_KEY)
-  if (process.env.BREVO_SMTP_KEY) {
-    emailTransporter = nodemailer.createTransport({
-      host: 'smtp-relay.brevo.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.BREVO_LOGIN || process.env.SMTP_EMAIL,
-        pass: process.env.BREVO_SMTP_KEY
-      }
-    });
-    senderEmail = process.env.SENDER_EMAIL || process.env.BREVO_LOGIN || process.env.SMTP_EMAIL;
+  // Provider 2: Brevo HTTP API (needs BREVO_SMTP_KEY — works as API key too)
+  if (process.env.BREVO_SMTP_KEY || process.env.BREVO_API_KEY) {
+    brevoApiKey = process.env.BREVO_API_KEY || process.env.BREVO_SMTP_KEY;
+    senderEmail = process.env.SENDER_EMAIL || process.env.BREVO_LOGIN || 'noreply@blockedu.com';
     emailProvider = 'Brevo';
     emailReady = true;
-    console.log(`\n📧 Email configured with Brevo SMTP`);
+    console.log(`\n📧 Email configured with Brevo HTTP API`);
     console.log(`   Sender: ${senderEmail}\n`);
     return;
   }
@@ -96,7 +89,7 @@ async function initEmailTransporter() {
   }
 }
 
-// Send email function - handles both Nodemailer and Resend
+// Send email function - handles Resend, Brevo HTTP API, and Nodemailer
 async function sendEmail(mailOptions) {
   if (emailProvider === 'Resend') {
     // Use Resend REST API
@@ -118,8 +111,32 @@ async function sendEmail(mailOptions) {
       throw new Error(errData.message || `Resend API error: ${response.status}`);
     }
     return { provider: 'Resend' };
+  } else if (emailProvider === 'Brevo') {
+    // Use Brevo HTTP API (bypasses SMTP port blocking on Render/Railway)
+    const senderName = (mailOptions.from && mailOptions.from.match(/"([^"]+)"/))
+      ? mailOptions.from.match(/"([^"]+)"/)[1]
+      : 'BlockEdu Portal';
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': brevoApiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email: mailOptions.to }],
+        subject: mailOptions.subject,
+        htmlContent: mailOptions.html
+      })
+    });
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.message || `Brevo API error: ${response.status}`);
+    }
+    return { provider: 'Brevo' };
   } else {
-    // Use Nodemailer (Gmail, Brevo, Ethereal)
+    // Use Nodemailer (Gmail, Ethereal)
     const info = await emailTransporter.sendMail(mailOptions);
     const previewUrl = nodemailer.getTestMessageUrl(info);
     return { provider: emailProvider, previewUrl };
