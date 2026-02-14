@@ -140,6 +140,27 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Health / email diagnostic endpoint — check email config on deployed server
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    email: {
+      ready: emailReady,
+      provider: emailProvider || 'none',
+      sender: senderEmail || 'not set',
+      envVars: {
+        BREVO_SMTP_KEY: !!process.env.BREVO_SMTP_KEY,
+        BREVO_LOGIN: !!process.env.BREVO_LOGIN,
+        SENDER_EMAIL: !!process.env.SENDER_EMAIL,
+        RESEND_API_KEY: !!process.env.RESEND_API_KEY,
+        SMTP_EMAIL: !!process.env.SMTP_EMAIL,
+        SMTP_PASSWORD: !!process.env.SMTP_PASSWORD,
+      }
+    }
+  });
+});
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads', 'papers');
 if (!fs.existsSync(uploadsDir)) {
