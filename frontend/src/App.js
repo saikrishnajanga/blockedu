@@ -724,26 +724,7 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                 {sidebarOpen ? '' : ''}
             </button>
 
-            <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                {/* Language Selector */}
-                <select
-                    className="form-control"
-                    style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
-                    onChange={(e) => {
-                        localStorage.setItem('language', e.target.value);
-                        // Dispatch storage event to trigger re-render across components
-                        window.dispatchEvent(new Event('languageChange'));
-                        window.location.reload();
-                    }}
-                    defaultValue={localStorage.getItem('language') || 'en'}
-                >
-                    <option value="en">English</option>
-                    <option value="hi">{'\u0939\u093F\u0902\u0926\u0940'}</option>
-                    <option value="te">{'\u0C24\u0C46\u0C32\u0C41\u0C17\u0C41'}</option>
-                    <option value="ta">{'\u0BA4\u0BAE\u0BBF\u0BB4\u0BCD'}</option>
-                </select>
-
-                {/* Dark Mode Toggle */}
+            <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>                {/* Dark Mode Toggle */}
                 <ThemeToggle />
 
                 {walletAddress ? (
