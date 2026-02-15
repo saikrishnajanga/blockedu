@@ -3,7 +3,7 @@
     "appName": "BlockEdu",
     "webDir": "build",
     "server": {
-        "url": "https://blockedu.vercel.app",
+        "url": "https://blockedu-tau.vercel.app",
         "cleartext": true
     }
 }

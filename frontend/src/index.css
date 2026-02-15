@@ -3376,3 +3376,200 @@ svg {
     opacity: 1;
   }
 }
+
+/* ==================== Mobile Responsive ==================== */
+@media (max-width: 768px) {
+  /* Sidebar: slide-in overlay on mobile */
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    width: 260px;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 260px;
+  }
+
+  .sidebar.collapsed .nav-text,
+  .sidebar.collapsed .sidebar-header h2 {
+    display: block;
+  }
+
+  /* Main content: full width on mobile */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  .main-content.expanded {
+    margin-left: 0 !important;
+  }
+
+  /* Dark overlay behind sidebar */
+  .sidebar.open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+
+  /* Top Bar: compact on mobile */
+  .top-bar {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .navbar-actions {
+    gap: 0.4rem !important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .navbar-actions .form-control {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.5rem !important;
+    max-width: 100px;
+  }
+
+  .navbar-actions .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem !important;
+    white-space: nowrap;
+  }
+
+  .toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .wallet-address {
+    font-size: 0.7rem;
+  }
+
+  /* Dashboard */
+  .dashboard {
+    padding: 1rem !important;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.3rem;
+  }
+
+  /* Grids: single column on mobile */
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Cards */
+  .card,
+  .stat-card {
+    padding: 1rem !important;
+  }
+
+  .stat-card h3 {
+    font-size: 1.3rem !important;
+  }
+
+  /* Tables: horizontal scroll */
+  .table-container,
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  table th,
+  table td {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Forms */
+  .form-control {
+    font-size: 0.9rem;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Flip cards: full width */
+  .flip-card {
+    width: 100% !important;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  /* Modal */
+  .modal-overlay .modal-content {
+    width: 90% !important;
+    max-width: 90% !important;
+    padding: 1.5rem !important;
+  }
+
+  /* Certificate viewer */
+  .certificate-viewer {
+    padding: 1rem;
+  }
+
+  /* Hide non-essential on small screens */
+  .wallet-address .dot {
+    display: none;
+  }
+}
+
+/* Extra small screens (phones < 480px) */
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.1rem;
+  }
+
+  .navbar-actions .btn-sm {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.4rem !important;
+  }
+
+  .navbar-actions .form-control {
+    max-width: 80px;
+    font-size: 0.7rem !important;
+  }
+
+  .top-bar {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .flip-card {
+    max-width: 100% !important;
+  }
+
+  .card {
+    border-radius: 8px !important;
+  }
+}
