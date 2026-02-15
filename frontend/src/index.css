@@ -3462,11 +3462,17 @@ svg {
     z-index: -1;
   }
 
-  /* Top Bar: compact on mobile */
+  /* Top Bar: compact + pushed below phone status bar */
   .top-bar {
     padding: 0.3rem 0.5rem;
+    padding-top: 40px;
     gap: 0.25rem;
     min-height: auto;
+  }
+
+  /* Sidebar: also pushed below phone status bar */
+  .sidebar {
+    padding-top: 40px;
   }
 
   .navbar-actions {
