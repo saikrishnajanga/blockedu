@@ -649,9 +649,9 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
     return (
         <aside className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
             <div className="sidebar-header">
-                <span className="logo-icon"></span>
+                <span className="logo-icon">🎓</span>
                 <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
-                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar"></button>
+                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar">✖</button>
             </div>
 
             <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
@@ -687,11 +687,11 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
             {user && (
                 <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
                     <div className="sidebar-link" style={{ cursor: 'default', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon"></span>
+                        <span className="nav-icon">👤</span>
                         <span className="nav-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</span>
                     </div>
                     <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon"></span>
+                        <span className="nav-icon">🚪</span>
                         <span className="nav-text">{t('logout')}</span>
                     </button>
                 </div>
@@ -4350,7 +4350,7 @@ function SystemAdminPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1> System Administration</h1>
+                <h1>🛡️ System Administration</h1>
                 <p className="text-muted">Manage users, institutions, and system settings</p>
             </div>
 
