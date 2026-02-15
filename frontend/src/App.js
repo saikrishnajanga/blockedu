@@ -650,6 +650,7 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
             <div className="sidebar-header">
                 <span className="logo-icon">🔗</span>
                 <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
+                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar">✕</button>
             </div>
 
             <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
@@ -755,17 +756,6 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                     </button>
                 )}
 
-                {/* Logout Button for Students */}
-                {user && user.role === 'student' && (
-                    <button
-                        onClick={logout}
-                        className="btn btn-danger btn-sm"
-                        style={{ padding: '0.4rem 0.8rem' }}
-                        title="Logout"
-                    >
-                        🚪 Logout
-                    </button>
-                )}
             </div>
         </div>
     );
