@@ -1986,6 +1986,7 @@ svg {
 
   .top-bar {
     padding: var(--spacing-sm) var(--spacing-md);
+    padding-top: 40px !important;
   }
 
   .top-bar .navbar-actions {
@@ -3465,7 +3466,7 @@ svg {
   /* Top Bar: compact + pushed below phone status bar */
   .top-bar {
     padding: 0.3rem 0.5rem;
-    padding-top: 40px;
+    padding-top: 40px !important;
     gap: 0.25rem;
     min-height: auto;
   }
@@ -3612,6 +3613,7 @@ svg {
 
   .top-bar {
     padding: 0.4rem 0.5rem;
+    padding-top: 40px !important;
   }
 
   .flip-card {
