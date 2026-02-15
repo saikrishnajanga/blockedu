@@ -3616,7 +3616,7 @@ function StudyBuddyChat() {
                         disabled={loading || !input.trim()}
                         style={{ minWidth: '60px' }}
                     >
-                        {loading ? '...' : ''}
+                        {loading ? '...' : '➤'}
                     </button>
                 </div>
             </div>
@@ -5691,7 +5691,7 @@ function ChatbotPage() {
                 alignItems: 'center'
             }}>
                 <div>
-                    <h2 style={{ margin: 0 }}> AI Study Buddy</h2>
+                    <h2 style={{ margin: 0 }}>🤖 AI Study Buddy</h2>
                     <small style={{ opacity: 0.9 }}>Ask me anything about your studies!</small>
                 </div>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -5708,7 +5708,7 @@ function ChatbotPage() {
                         <option style={{ color: '#333' }}>Physics</option>
                         <option style={{ color: '#333' }}>Digital Electronics</option>
                     </select>
-                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat"></Link>
+                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat">✖</Link>
                 </div>
             </div>
 
@@ -5727,7 +5727,7 @@ function ChatbotPage() {
             }}>
                 {messages.length === 0 && (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '3rem' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}></div>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤖</div>
                         <h3>Hi! I'm your AI Study Buddy</h3>
                         <p>Ask me about subjects, grades, attendance, study tips, or career advice!</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
