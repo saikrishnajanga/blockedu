@@ -47,58 +47,58 @@ const translations = {
         registerDesc: 'Register, login and pay fees', adminDesc: 'Manage students and records'
     },
     hi: {
-        dashboard: 'डैशबोर्ड', analytics: 'विश्लेषण', notifications: 'सूचनाएं',
-        schedule: 'अनुसूची', assignments: 'असाइनमेंट', results: 'परिणाम',
-        attendance: 'उपस्थिति', papers: 'पेपर', events: 'कार्यक्रम',
-        grievances: 'शिकायतें', certificates: 'प्रमाणपत्र', idCard: 'पहचान पत्र',
-        payFees: 'शुल्क भुगतान', settings: 'सेटिंग्स', aiChatbot: 'AI चैटबॉट',
-        studentsRecords: 'छात्र और रिकॉर्ड', workflows: 'कार्यप्रवाह',
-        login: 'लॉगिन', register: 'पंजीकरण', logout: 'लॉगआउट',
-        welcome: 'Portal में आपका स्वागत है', welcomeBack: 'वापसी पर स्वागत है',
-        studentPortal: 'छात्र पोर्टल', email: 'ईमेल', password: 'पासवर्ड',
-        fullName: 'पूरा नाम', studentId: 'छात्र आईडी', department: 'विभाग',
-        sendOtp: 'OTP भेजें', verifyLogin: 'सत्यापित करें और लॉगिन करें', otpSent: 'OTP आपके ईमेल पर भेजा गया!',
-        enterOtp: '6 अंकों का OTP दर्ज करें', loginWithPassword: 'पासवर्ड से लॉगिन',
-        loginWithOtp: 'OTP से लॉगिन', or: 'या', resendOtp: 'OTP पुनः भेजें',
-        securePlatform: 'सुरक्षित छात्र रिकॉर्ड प्रबंधन',
-        student: 'छात्र', admin: 'प्रशासक',
-        registerDesc: 'पंजीकरण, लॉगिन और शुल्क भुगतान', adminDesc: 'छात्रों और रिकॉर्ड का प्रबंधन'
+        dashboard: '', analytics: '', notifications: '',
+        schedule: '', assignments: '', results: '',
+        attendance: '', papers: '', events: '',
+        grievances: '', certificates: '', idCard: ' ',
+        payFees: ' ', settings: '', aiChatbot: 'AI ',
+        studentsRecords: ' ', workflows: '',
+        login: '', register: '', logout: '',
+        welcome: 'Portal ', welcomeBack: ' ',
+        studentPortal: ' ', email: '', password: '',
+        fullName: ' ', studentId: ' ', department: '',
+        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
+        enterOtp: '6 OTP ', loginWithPassword: ' ',
+        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
+        securePlatform: ' ',
+        student: '', admin: '',
+        registerDesc: ', ', adminDesc: ' '
     },
     te: {
-        dashboard: 'డాష్‌బోర్డ్', analytics: 'విశ్లేషణలు', notifications: 'నోటిఫికేషన్లు',
-        schedule: 'షెడ్యూల్', assignments: 'అసైన్‌మెంట్లు', results: 'ఫలితాలు',
-        attendance: 'హాజరు', papers: 'పేపర్లు', events: 'ఈవెంట్లు',
-        grievances: 'ఫిర్యాదులు', certificates: 'సర్టిఫికేట్లు', idCard: 'ఐడి కార్డ్',
-        payFees: 'ఫీజు చెల్లింపు', settings: 'సెట్టింగ్స్', aiChatbot: 'AI చాట్‌బాట్',
-        studentsRecords: 'విద్యార్థులు & రికార్డులు', workflows: 'వర్క్‌ఫ్లోలు',
-        login: 'లాగిన్', register: 'నమోదు', logout: 'లాగ్‌అవుట్',
-        welcome: 'Portal కు స్వాగతం', welcomeBack: 'తిరిగి స్వాగతం',
-        studentPortal: 'విద్యార్థి పోర్టల్', email: 'ఇమెయిల్', password: 'పాస్‌వర్డ్',
-        fullName: 'పూర్తి పేరు', studentId: 'విద్యార్థి ఐడి', department: 'విభాగం',
-        sendOtp: 'OTP పంపండి', verifyLogin: 'ధృవీకరించి లాగిన్ చేయండి', otpSent: 'OTP మీ ఇమెయిల్‌కు పంపబడింది!',
-        enterOtp: '6 అంకెల OTP నమోదు చేయండి', loginWithPassword: 'పాస్‌వర్డ్‌తో లాగిన్',
-        loginWithOtp: 'OTP తో లాగిన్', or: 'లేదా', resendOtp: 'OTP మళ్ళీ పంపండి',
-        securePlatform: 'సురక్షిత విద్యార్థి రికార్డుల నిర్వహణ',
-        student: 'విద్యార్థి', admin: 'అడ్మిన్',
-        registerDesc: 'నమోదు, లాగిన్ మరియు ఫీజు చెల్లింపు', adminDesc: 'విద్యార్థులు మరియు రికార్డుల నిర్వహణ'
+        dashboard: '', analytics: '', notifications: '',
+        schedule: '', assignments: '', results: '',
+        attendance: '', papers: '', events: '',
+        grievances: '', certificates: '', idCard: ' ',
+        payFees: ' ', settings: '', aiChatbot: 'AI ',
+        studentsRecords: ' & ', workflows: '',
+        login: '', register: '', logout: '',
+        welcome: 'Portal ', welcomeBack: ' ',
+        studentPortal: ' ', email: '', password: '',
+        fullName: ' ', studentId: ' ', department: '',
+        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
+        enterOtp: '6 OTP ', loginWithPassword: ' ',
+        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
+        securePlatform: ' ',
+        student: '', admin: '',
+        registerDesc: ', ', adminDesc: ' '
     },
     ta: {
-        dashboard: 'டாஷ்போர்ட்', analytics: 'பகுப்பாய்வு', notifications: 'அறிவிப்புகள்',
-        schedule: 'அட்டவணை', assignments: 'பணிகள்', results: 'முடிவுகள்',
-        attendance: 'வருகை', papers: 'தாள்கள்', events: 'நிகழ்வுகள்',
-        grievances: 'புகார்கள்', certificates: 'சான்றிதழ்கள்', idCard: 'அடையாள அட்டை',
-        payFees: 'கட்டணம் செலுத்து', settings: 'அமைப்புகள்', aiChatbot: 'AI சாட்பாட்',
-        studentsRecords: 'மாணவர்கள் & பதிவுகள்', workflows: 'பணிப்பாய்வுகள்',
-        login: 'உள்நுழைவு', register: 'பதிவு', logout: 'வெளியேறு',
-        welcome: 'Portal க்கு வரவேற்கிறோம்', welcomeBack: 'மீண்டும் வரவேற்கிறோம்',
-        studentPortal: 'மாணவர் போர்டல்', email: 'மின்னஞ்சல்', password: 'கடவுச்சொல்',
-        fullName: 'முழு பெயர்', studentId: 'மாணவர் ஐடி', department: 'துறை',
-        sendOtp: 'OTP அனுப்பு', verifyLogin: 'சரிபார்த்து உள்நுழையவும்', otpSent: 'OTP உங்கள் மின்னஞ்சலுக்கு அனுப்பப்பட்டது!',
-        enterOtp: '6 இலக்க OTP உள்ளிடவும்', loginWithPassword: 'கடவுச்சொல்லுடன் உள்நுழையவும்',
-        loginWithOtp: 'OTP உடன் உள்நுழையவும்', or: 'அல்லது', resendOtp: 'OTP மீண்டும் அனுப்பு',
-        securePlatform: 'பாதுகாப்பான மாணவர் பதிவு மேலாண்மை',
-        student: 'மாணவர்', admin: 'நிர்வாகி',
-        registerDesc: 'பதிவு, உள்நுழைவு மற்றும் கட்டணம் செலுத்துதல்', adminDesc: 'மாணவர்கள் மற்றும் பதிவுகளை நிர்வகிக்கவும்'
+        dashboard: '', analytics: '', notifications: '',
+        schedule: '', assignments: '', results: '',
+        attendance: '', papers: '', events: '',
+        grievances: '', certificates: '', idCard: ' ',
+        payFees: ' ', settings: '', aiChatbot: 'AI ',
+        studentsRecords: ' & ', workflows: '',
+        login: '', register: '', logout: '',
+        welcome: 'Portal ', welcomeBack: ' ',
+        studentPortal: ' ', email: '', password: '',
+        fullName: ' ', studentId: ' ', department: '',
+        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
+        enterOtp: '6 OTP ', loginWithPassword: ' ',
+        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
+        securePlatform: ' ',
+        student: '', admin: '',
+        registerDesc: ', ', adminDesc: ' '
     }
 };
 
@@ -132,7 +132,7 @@ function AuthProvider({ children }) {
     const [timeoutCountdown, setTimeoutCountdown] = useState(120);
 
     const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-    const WARNING_BEFORE = 2 * 60 * 1000;   // Show warning 2 min before
+    const WARNING_BEFORE = 2 * 60 * 1000; // Show warning 2 min before
     const lastActivity = useRef(Date.now());
     const timeoutTimer = useRef(null);
     const warningTimer = useRef(null);
@@ -251,7 +251,7 @@ function AuthProvider({ children }) {
             {showTimeoutWarning && (
                 <div className="session-timeout-overlay">
                     <div className="session-timeout-modal">
-                        <h2>⏱️ Session Expiring</h2>
+                        <h2> Session Expiring</h2>
                         <p>You've been inactive. You'll be logged out in:</p>
                         <div className="timeout-countdown">{Math.floor(timeoutCountdown / 60)}:{(timeoutCountdown % 60).toString().padStart(2, '0')}</div>
                         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
@@ -339,7 +339,7 @@ function ThemeToggle() {
 
     return (
         <button className="theme-toggle" onClick={() => setIsDark(!isDark)} title={isDark ? 'Switch to Light' : 'Switch to Dark'}>
-            <span>{isDark ? '🌙' : '☀️'}</span>
+            <span>{isDark ? '' : ''}</span>
             <div className={`theme-toggle-track ${!isDark ? 'active' : ''}`}>
                 <div className="theme-toggle-thumb"></div>
             </div>
@@ -430,7 +430,7 @@ function ProgressRing({ percentage = 0, size = 60, strokeWidth = 5, color }) {
     );
 }
 
-// Animated Counter — counts from 0 to target value with easing
+// Animated Counter counts from 0 to target value with easing
 function AnimatedCounter({ value, duration = 1500, prefix = '', suffix = '', colorClass = '' }) {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
@@ -466,7 +466,7 @@ function AnimatedCounter({ value, duration = 1500, prefix = '', suffix = '', col
     );
 }
 
-// Scroll Reveal Hook — triggers reveal animation when element enters viewport
+// Scroll Reveal Hook triggers reveal animation when element enters viewport
 function useScrollReveal(options = {}) {
     const ref = useRef(null);
     useEffect(() => {
@@ -490,7 +490,7 @@ function ScrollReveal({ children, className = 'scroll-reveal', style = {} }) {
     return <div ref={ref} className={className} style={style}>{children}</div>;
 }
 
-// 3D Tilt Hook — makes element tilt toward mouse cursor
+// 3D Tilt Hook makes element tilt toward mouse cursor
 function useTilt(maxTilt = 8) {
     const ref = useRef(null);
     useEffect(() => {
@@ -523,18 +523,18 @@ function MobileBottomNav({ role }) {
     const navigate = useNavigate();
 
     const studentItems = [
-        { path: '/dashboard', icon: '🏠', label: 'Home' },
-        { path: '/papers', icon: '📚', label: 'Papers' },
-        { path: '/attendance', icon: '📊', label: 'Attend.' },
-        { path: '/notifications', icon: '🔔', label: 'Alerts' },
-        { path: '/settings', icon: '⚙️', label: 'Settings' },
+        { path: '/dashboard', icon: '\u{1F3E0}', label: 'Home' },
+        { path: '/papers', icon: '\u{1F3E0}', label: 'Papers' },
+        { path: '/attendance', icon: '\u{1F4CC}', label: 'Attend.' },
+        { path: '/notifications', icon: '\u{2699}', label: 'Alerts' },
+        { path: '/settings', icon: '\u{1F3E0}', label: 'Settings' },
     ];
 
     const adminItems = [
-        { path: '/dashboard', icon: '🏠', label: 'Home' },
-        { path: '/admin', icon: '⚙️', label: 'Admin' },
-        { path: '/notifications', icon: '🔔', label: 'Alerts' },
-        { path: '/settings', icon: '👤', label: 'Profile' },
+        { path: '/dashboard', icon: '\u{1F3E0}', label: 'Home' },
+        { path: '/admin', icon: '\u{1F3E0}', label: 'Admin' },
+        { path: '/notifications', icon: '\u{1F464}', label: 'Alerts' },
+        { path: '/settings', icon: '\u{1F393}', label: 'Profile' },
     ];
 
     const items = role === 'admin' ? adminItems : studentItems;
@@ -579,55 +579,56 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
         {
             title: null,
             links: [
-                { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+                { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
             ]
         },
         {
             title: 'Academics',
             links: [
-                { path: '/results', icon: '📝', label: t('results') },
-                { path: '/attendance', icon: '📅', label: t('attendance') },
-                { path: '/schedule', icon: '🗓️', label: t('schedule') },
-                { path: '/assignments', icon: '📄', label: t('assignments') },
-                { path: '/papers', icon: '📚', label: t('papers') },
-                { path: '/certificates', icon: '🏆', label: t('certificates') },
+                { path: '/results', icon: '\u{1F4C8}', label: t('results') },
+                { path: '/attendance', icon: '\u{1F4CB}', label: t('attendance') },
+                { path: '/schedule', icon: '\u{1F4C5}', label: t('schedule') },
+                { path: '/assignments', icon: '\u{1F4DD}', label: t('assignments') },
+                { path: '/papers', icon: '\u{1F4C4}', label: t('papers') },
+                { path: '/certificates', icon: '\u{1F393}', label: t('certificates') },
             ]
         },
         {
             title: 'Services',
             links: [
-                { path: '/notifications', icon: '🔔', label: t('notifications') },
-                { path: '/events', icon: '📢', label: t('events') },
-                { path: '/grievances', icon: '💬', label: t('grievances') },
-                { path: '/payments', icon: '💳', label: t('payFees') },
-                { path: '/chatbot', icon: '🤖', label: t('aiChatbot') },
+                { path: '/notifications', icon: '\u{1F514}', label: t('notifications') },
+                { path: '/events', icon: '\u{1F389}', label: t('events') },
+                { path: '/grievances', icon: '\u{1F4E9}', label: t('grievances') },
+                { path: '/payments', icon: '\u{1F4B0}', label: t('payFees') },
+                { path: '/chatbot', icon: '\u{1F916}', label: t('aiChatbot') },
             ]
         },
         {
             title: 'Account',
             links: [
-                { path: '/analytics', icon: '📊', label: t('analytics') },
-                { path: '/idcard', icon: '📱', label: t('idCard') },
-                { path: '/settings', icon: '⚙️', label: t('settings') },
+                { path: '/analytics', icon: '\u{1F4CA}', label: t('analytics') },
+                { path: '/idcard', icon: '\u{1F4B3}', label: t('idCard') },
+                { path: '/settings', icon: '\u{2699}', label: t('settings') },
             ]
         },
     ];
 
     // Admin links - includes student management, NO system admin
     const adminLinks = [
-        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
-        { path: '/admin', icon: '👥', label: t('studentsRecords') },
-        { path: '/admin/analytics', icon: '📊', label: t('analytics') },
-        { path: '/admin/certificates', icon: '🎓', label: t('certificates') },
-        { path: '/admin/workflows', icon: '📋', label: t('workflows') },
-        { path: '/settings', icon: '🔧', label: t('settings') },
+        { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
+        { path: '/admin', icon: '\u{1F465}', label: t('studentsRecords') },
+        { path: '/admin/attendance', icon: '\u{1F4C5}', label: 'Attendance' },
+        { path: '/admin/analytics', icon: '\u{1F4CA}', label: t('analytics') },
+        { path: '/admin/certificates', icon: '\u{1F393}', label: t('certificates') },
+        { path: '/admin/workflows', icon: '\u{1F4CB}', label: t('workflows') },
+        { path: '/settings', icon: '\u{2699}', label: t('settings') },
     ];
 
     // Institution links
     const institutionLinks = [
-        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
-        { path: '/admin', icon: '👥', label: t('studentsRecords') },
-        { path: '/settings', icon: '⚙️', label: t('settings') },
+        { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
+        { path: '/admin', icon: '\u{1F3E0}', label: t('studentsRecords') },
+        { path: '/settings', icon: '\u{2699}', label: t('settings') },
     ];
 
     const isStudent = user && user.role === 'student';
@@ -648,9 +649,9 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
     return (
         <aside className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
             <div className="sidebar-header">
-                <span className="logo-icon">🔗</span>
+                <span className="logo-icon"></span>
                 <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
-                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar">✕</button>
+                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar"></button>
             </div>
 
             <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
@@ -686,11 +687,11 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
             {user && (
                 <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
                     <div className="sidebar-link" style={{ cursor: 'default', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon">👤</span>
+                        <span className="nav-icon"></span>
                         <span className="nav-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</span>
                     </div>
                     <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon">🚪</span>
+                        <span className="nav-icon"></span>
                         <span className="nav-text">{t('logout')}</span>
                     </button>
                 </div>
@@ -720,7 +721,7 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
     return (
         <div className="top-bar">
             <button className="toggle-btn" onClick={onToggleSidebar}>
-                {sidebarOpen ? '◀' : '☰'}
+                {sidebarOpen ? '' : ''}
             </button>
 
             <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -736,10 +737,10 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                     }}
                     defaultValue={localStorage.getItem('language') || 'en'}
                 >
-                    <option value="en">🇬🇧 English</option>
-                    <option value="hi">🇮🇳 हिंदी</option>
-                    <option value="te">🇮🇳 తెలుగు</option>
-                    <option value="ta">🇮🇳 தமிழ்</option>
+                    <option value="en">English</option>
+                    <option value="hi">{'\u0939\u093F\u0902\u0926\u0940'}</option>
+                    <option value="te">{'\u0C24\u0C46\u0C32\u0C41\u0C17\u0C41'}</option>
+                    <option value="ta">{'\u0BA4\u0BAE\u0BBF\u0BB4\u0BCD'}</option>
                 </select>
 
                 {/* Dark Mode Toggle */}
@@ -752,7 +753,7 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
                     </div>
                 ) : (
                     <button onClick={connectWallet} className="btn btn-secondary btn-sm">
-                        🦊 Connect Wallet
+                        Connect Wallet
                     </button>
                 )}
 
@@ -774,8 +775,8 @@ function HomePage() {
     const t = useLanguage();
 
     const roles = [
-        { id: 'student', icon: '🎓', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
-        { id: 'admin', icon: '👨‍💼', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
+        { id: 'student', icon: '\u{1F393}', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
+        { id: 'admin', icon: '\u{1F393}', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
     ];
 
     if (user) {
@@ -786,7 +787,7 @@ function HomePage() {
     return (
         <div className="role-selection-page">
             <div className="role-hero">
-                <div className="logo-large">🔗</div>
+                <div className="logo-large"></div>
                 <h1>{t('welcome')}</h1>
                 <p>{t('securePlatform')}</p>
             </div>
@@ -796,7 +797,7 @@ function HomePage() {
                         <div className="role-icon">{role.icon}</div>
                         <h3>{role.title}</h3>
                         <p>{role.desc}</p>
-                        <button className="btn btn-primary">Continue →</button>
+                        <button className="btn btn-primary">Continue </button>
                     </div>
                 ))}
             </div>
@@ -818,8 +819,8 @@ function StudentPortalPage() {
     return (
         <div className="student-portal">
             <div className="portal-header">
-                <button className="btn btn-outline btn-sm" onClick={() => navigate('/')}>← Back</button>
-                <h1>🎓 {useLanguage()('studentPortal')}</h1>
+                <button className="btn btn-outline btn-sm" onClick={() => navigate('/')}> Back</button>
+                <h1> {useLanguage()('studentPortal')}</h1>
             </div>
             <div className="portal-tabs">
                 <button className={`tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>{useLanguage()('login')}</button>
@@ -930,7 +931,7 @@ function StudentLoginForm() {
             {otpMessage && <div className="alert alert-success">{otpMessage}</div>}
 
             <button type="button" onClick={handleMetaMaskLogin} disabled={walletLoading} className="btn btn-metamask" style={{ width: '100%', marginBottom: '1.5rem' }}>
-                {walletLoading ? 'Connecting...' : '🦊 Sign in with MetaMask'}
+                {walletLoading ? 'Connecting...' : ' Sign in with MetaMask'}
             </button>
 
             <div className="divider"><span>{t('or')} use email</span></div>
@@ -943,7 +944,7 @@ function StudentLoginForm() {
                     style={{ flex: 1, fontSize: '0.9rem' }}
                     onClick={() => { setLoginMode('password'); setError(''); setOtpMessage(''); }}
                 >
-                    🔑 {t('loginWithPassword')}
+                    {t('loginWithPassword')}
                 </button>
                 <button
                     type="button"
@@ -951,7 +952,7 @@ function StudentLoginForm() {
                     style={{ flex: 1, fontSize: '0.9rem' }}
                     onClick={() => { setLoginMode('otp'); setError(''); setOtpMessage(''); }}
                 >
-                    📧 {t('loginWithOtp')}
+                    {t('loginWithOtp')}
                 </button>
             </div>
 
@@ -977,7 +978,7 @@ function StudentLoginForm() {
                     </div>
                     {!otpSent ? (
                         <button type="button" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }} onClick={handleSendOtp}>
-                            {loading ? 'Sending...' : `📧 ${t('sendOtp')}`}
+                            {loading ? 'Sending...' : ` ${t('sendOtp')}`}
                         </button>
                     ) : (
                         <form onSubmit={handleVerifyOtp}>
@@ -995,14 +996,14 @@ function StudentLoginForm() {
                                 />
                             </div>
                             <button type="submit" className="btn btn-primary btn-lg" disabled={loading || otpData.otp.length !== 6} style={{ width: '100%' }}>
-                                {loading ? 'Verifying...' : `✅ ${t('verifyLogin')}`}
+                                {loading ? 'Verifying...' : ` ${t('verifyLogin')}`}
                             </button>
                             <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                                 {countdown > 0 ? (
                                     <span className="text-muted">{t('resendOtp')} in {countdown}s</span>
                                 ) : (
                                     <button type="button" className="btn btn-secondary btn-sm" onClick={handleSendOtp} disabled={loading}>
-                                        🔄 {t('resendOtp')}
+                                        {t('resendOtp')}
                                     </button>
                                 )}
                             </div>
@@ -1138,7 +1139,7 @@ function LoginPage() {
                             className="form-control"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
+                            placeholder=""
                             required
                         />
                     </div>
@@ -1150,7 +1151,7 @@ function LoginPage() {
                 <div className="text-center mt-2">
                     <p className="text-muted">or continue with</p>
                     <button onClick={handleWalletLogin} className="btn btn-secondary" style={{ width: '100%' }} disabled={loading}>
-                        🦊 Connect with MetaMask
+                        Connect with MetaMask
                     </button>
                 </div>
 
@@ -1403,7 +1404,7 @@ function RecordForm({ onSuccess }) {
     return (
         <div className="card">
             <div className="card-header">
-                <h3 className="card-title">📄 Upload Record to Blockchain</h3>
+                <h3 className="card-title"> Upload Record to Blockchain</h3>
             </div>
             {message.text && (
                 <div className={`alert alert-${message.type}`}>{message.text}</div>
@@ -1450,13 +1451,13 @@ function RecordForm({ onSuccess }) {
                     </small>
                     {pdfFile && (
                         <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-                            <span>📎 {pdfFile.name} ({(pdfFile.size / 1024).toFixed(1)} KB)</span>
-                            <button type="button" className="btn btn-sm btn-error" onClick={handleRemoveFile}>✕ Remove</button>
+                            <span> {pdfFile.name} ({(pdfFile.size / 1024).toFixed(1)} KB)</span>
+                            <button type="button" className="btn btn-sm btn-error" onClick={handleRemoveFile}> Remove</button>
                         </div>
                     )}
                 </div>
                 <button type="submit" className="btn btn-success" disabled={loading}>
-                    {loading ? 'Uploading...' : '🔗 Upload to Blockchain'}
+                    {loading ? 'Uploading...' : ' Upload to Blockchain'}
                 </button>
             </form>
         </div>
@@ -1506,7 +1507,7 @@ function VerifyPage() {
                         />
                     </div>
                     <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }} disabled={loading}>
-                        {loading ? 'Verifying...' : '🔍 Verify Records'}
+                        {loading ? 'Verifying...' : ' Verify Records'}
                     </button>
                 </form>
 
@@ -1527,7 +1528,7 @@ function VerifyPage() {
                         <div className="flex-between mb-2">
                             <h3>Verification Result</h3>
                             <div className={`verification-badge ${result.verified ? 'verified' : 'unverified'}`}>
-                                {result.verified ? '✓ Verified' : '✗ Not Verified'}
+                                {result.verified ? ' Verified' : ' Not Verified'}
                             </div>
                         </div>
 
@@ -1563,9 +1564,9 @@ function VerifyPage() {
                                             <td><span className="badge badge-info">{record.type}</span></td>
                                             <td>
                                                 {record.verified ? (
-                                                    <span className="badge badge-success">✓ Verified</span>
+                                                    <span className="badge badge-success"> Verified</span>
                                                 ) : (
-                                                    <span className="badge badge-error">⚠ Tampered</span>
+                                                    <span className="badge badge-error"> Tampered</span>
                                                 )}
                                             </td>
                                             <td><code className="hash-display">{record.blockchainTxHash?.slice(0, 20)}...</code></td>
@@ -1656,12 +1657,12 @@ function AdminPage() {
             setPapers([res.data.paper, ...papers]);
             setPaperFile(null);
             setPaperMeta({ subject: '', code: '', year: new Date().getFullYear(), semester: 'End Sem', department: '' });
-            setPaperMsg('✅ Paper uploaded successfully!');
+            setPaperMsg(' Paper uploaded successfully!');
             const fi = document.getElementById('paper-file-input');
             if (fi) fi.value = '';
             setTimeout(() => setPaperMsg(''), 3000);
         } catch (err) {
-            setPaperMsg('❌ ' + (err.response?.data?.error || 'Upload failed'));
+            setPaperMsg(' ' + (err.response?.data?.error || 'Upload failed'));
         } finally {
             setPaperUploading(false);
             setUploadProgress(0);
@@ -1686,7 +1687,7 @@ function AdminPage() {
             await api.post('/admin/papers/bulk-delete', { ids: selectedPapers });
             setPapers(papers.filter(p => !selectedPapers.includes(p.id)));
             setSelectedPapers([]);
-            setPaperMsg(`✅ ${selectedPapers.length} paper(s) deleted successfully!`);
+            setPaperMsg(` ${selectedPapers.length} paper(s) deleted successfully!`);
             setTimeout(() => setPaperMsg(''), 3000);
         } catch (err) {
             alert('Failed to delete papers');
@@ -1715,7 +1716,7 @@ function AdminPage() {
             const res = await api.put(`/admin/papers/${editPaper}`, editData);
             setPapers(papers.map(p => p.id === editPaper ? { ...p, ...res.data.paper } : p));
             setEditPaper(null);
-            setPaperMsg('✅ Paper updated successfully!');
+            setPaperMsg(' Paper updated successfully!');
             setTimeout(() => setPaperMsg(''), 3000);
         } catch (err) {
             alert('Failed to update paper');
@@ -1833,19 +1834,19 @@ function AdminPage() {
 
             <div className="tabs">
                 <button className={`tab ${activeTab === 'students' ? 'active' : ''}`} onClick={() => setActiveTab('students')}>
-                    👥 Students
+                    Students
                 </button>
                 <button className={`tab ${activeTab === 'bulk' ? 'active' : ''}`} onClick={() => setActiveTab('bulk')}>
-                    📊 Bulk Upload
+                    Bulk Upload
                 </button>
                 <button className={`tab ${activeTab === 'verify' ? 'active' : ''}`} onClick={() => setActiveTab('verify')}>
-                    🔍 Verify
+                    Verify
                 </button>
                 <button className={`tab ${activeTab === 'transactions' ? 'active' : ''}`} onClick={() => setActiveTab('transactions')}>
-                    🔗 Transactions
+                    Transactions
                 </button>
                 <button className={`tab ${activeTab === 'papers' ? 'active' : ''}`} onClick={() => setActiveTab('papers')}>
-                    📚 Academic Papers
+                    Academic Papers
                 </button>
             </div>
 
@@ -1853,7 +1854,7 @@ function AdminPage() {
                 <div className="section">
                     <div className="card">
                         <div className="card-header">
-                            <h3 className="card-title">📊 Bulk Upload Students from Excel</h3>
+                            <h3 className="card-title"> Bulk Upload Students from Excel</h3>
                         </div>
 
                         <div className="form-group">
@@ -1878,7 +1879,7 @@ function AdminPage() {
                         {excelData.length > 0 && (
                             <>
                                 <div className="alert alert-info">
-                                    📋 Found {excelData.length} students in the Excel file
+                                    Found {excelData.length} students in the Excel file
                                 </div>
 
                                 <div className="table-container" style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
@@ -1919,10 +1920,10 @@ function AdminPage() {
                                         onClick={handleBulkUpload}
                                         disabled={uploadLoading}
                                     >
-                                        {uploadLoading ? 'Uploading...' : `✅ Upload ${excelData.length} Students`}
+                                        {uploadLoading ? 'Uploading...' : ` Upload ${excelData.length} Students`}
                                     </button>
                                     <button className="btn btn-secondary" onClick={clearExcelData}>
-                                        ✕ Clear
+                                        Clear
                                     </button>
                                 </div>
                             </>
@@ -1930,7 +1931,7 @@ function AdminPage() {
 
                         {uploadResult && (
                             <div className="alert alert-success" style={{ marginTop: '1rem' }}>
-                                <strong>✅ {uploadResult.message}</strong>
+                                <strong> {uploadResult.message}</strong>
                                 <div style={{ marginTop: '0.5rem' }}>
                                     <span className="badge badge-success" style={{ marginRight: '0.5rem' }}>
                                         {uploadResult.results.success.length} Successful
@@ -1951,7 +1952,7 @@ function AdminPage() {
                 <div className="section">
                     <div className="card" style={{ maxWidth: '600px' }}>
                         <div className="card-header">
-                            <h3 className="card-title">🔍 Verify Student by Roll Number</h3>
+                            <h3 className="card-title"> Verify Student by Roll Number</h3>
                         </div>
                         <form onSubmit={handleVerifyStudent}>
                             <div className="form-group">
@@ -1966,7 +1967,7 @@ function AdminPage() {
                                 />
                             </div>
                             <button type="submit" className="btn btn-primary" disabled={verifyLoading}>
-                                {verifyLoading ? 'Searching...' : '🔍 Search Student'}
+                                {verifyLoading ? 'Searching...' : ' Search Student'}
                             </button>
                         </form>
                     </div>
@@ -1980,9 +1981,9 @@ function AdminPage() {
                     {verifyResult && (
                         <div className="card" style={{ marginTop: '1.5rem' }}>
                             <div className="flex-between mb-2">
-                                <h3>📋 Student Details</h3>
+                                <h3> Student Details</h3>
                                 <div className={`verification-badge ${verifyResult.verified ? 'verified' : 'unverified'}`}>
-                                    {verifyResult.verified ? '✓ Verified' : '✗ Unverified'}
+                                    {verifyResult.verified ? ' Verified' : ' Unverified'}
                                 </div>
                             </div>
 
@@ -2010,7 +2011,7 @@ function AdminPage() {
                                 <div><strong>Institution:</strong> {verifyResult.student?.institution || 'N/A'}</div>
                             </div>
 
-                            <h4 style={{ marginBottom: '1rem' }}>📄 Records ({verifyResult.records?.length || 0})</h4>
+                            <h4 style={{ marginBottom: '1rem' }}> Records ({verifyResult.records?.length || 0})</h4>
                             {verifyResult.records?.length > 0 ? (
                                 <div className="table-container">
                                     <table className="table">
@@ -2029,9 +2030,9 @@ function AdminPage() {
                                                     <td><span className="badge badge-info">{record.type}</span></td>
                                                     <td>
                                                         {record.verified ? (
-                                                            <span className="badge badge-success">✓ Verified</span>
+                                                            <span className="badge badge-success"> Verified</span>
                                                         ) : (
-                                                            <span className="badge badge-error">⚠ Tampered</span>
+                                                            <span className="badge badge-error"> Tampered</span>
                                                         )}
                                                     </td>
                                                     <td><code className="hash-display">{record.blockchainTxHash?.slice(0, 16)}...</code></td>
@@ -2042,7 +2043,7 @@ function AdminPage() {
                                 </div>
                             ) : (
                                 <div className="empty-state">
-                                    <div className="empty-state-icon">📭</div>
+                                    <div className="empty-state-icon"></div>
                                     <p>No records found for this student</p>
                                 </div>
                             )}
@@ -2127,7 +2128,7 @@ function AdminPage() {
                 <div className="section">
                     <div className="card" style={{ marginBottom: '1.5rem' }}>
                         <div className="card-header">
-                            <h3 className="card-title">📚 Upload Academic Paper / Study Material</h3>
+                            <h3 className="card-title"> Upload Academic Paper / Study Material</h3>
                         </div>
                         <form onSubmit={handlePaperUpload}>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
@@ -2164,9 +2165,9 @@ function AdminPage() {
                                 <label className="form-label">PDF File * (max 20MB)</label>
                                 <input id="paper-file-input" type="file" className="form-control" accept=".pdf" onChange={(e) => setPaperFile(e.target.files[0])} style={{ padding: '0.5rem' }} required />
                             </div>
-                            {paperMsg && <div className={`alert ${paperMsg.startsWith('✅') ? 'alert-success' : 'alert-error'}`} style={{ marginBottom: '1rem' }}>{paperMsg}</div>}
+                            {paperMsg && <div className={`alert ${paperMsg.startsWith('') ? 'alert-success' : 'alert-error'}`} style={{ marginBottom: '1rem' }}>{paperMsg}</div>}
                             <button type="submit" className="btn btn-primary" disabled={paperUploading}>
-                                {paperUploading ? `Uploading... ${uploadProgress}%` : '📤 Upload Paper'}
+                                {paperUploading ? `Uploading... ${uploadProgress}%` : ' Upload Paper'}
                             </button>
                             {paperUploading && uploadProgress > 0 && (
                                 <div style={{ marginTop: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px', overflow: 'hidden', height: '8px' }}>
@@ -2179,10 +2180,10 @@ function AdminPage() {
                     {papers.length > 0 && (
                         <div className="card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-                                <h3 style={{ margin: 0 }}>📄 Uploaded Papers ({papers.length})</h3>
+                                <h3 style={{ margin: 0 }}> Uploaded Papers ({papers.length})</h3>
                                 {selectedPapers.length > 0 && (
                                     <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={handleBulkDelete}>
-                                        🗑️ Delete Selected ({selectedPapers.length})
+                                        Delete Selected ({selectedPapers.length})
                                     </button>
                                 )}
                             </div>
@@ -2214,19 +2215,19 @@ function AdminPage() {
                                                 <td>{p.year}</td>
                                                 <td><span className="badge badge-info">{p.semester}</span></td>
                                                 <td style={{ fontSize: '0.85rem' }}>{p.fileName || 'PDF'}</td>
-                                                <td><span className="badge badge-secondary" style={{ fontSize: '0.85rem' }}>📥 {p.downloads || 0}</span></td>
+                                                <td><span className="badge badge-secondary" style={{ fontSize: '0.85rem' }}> {p.downloads || 0}</span></td>
                                                 <td>
                                                     {p.avgRating > 0 ? (
-                                                        <span style={{ fontSize: '0.85rem' }}>⭐ {p.avgRating} ({p.totalRatings})</span>
+                                                        <span style={{ fontSize: '0.85rem' }}> {p.avgRating} ({p.totalRatings})</span>
                                                     ) : (
                                                         <span className="text-muted" style={{ fontSize: '0.8rem' }}>No ratings</span>
                                                     )}
                                                 </td>
                                                 <td>
                                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                        <a href={`http://localhost:5000${p.fileUrl}`} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm">👁️</a>
-                                                        <button className="btn btn-sm" style={{ background: '#667eea', color: 'white', border: 'none' }} onClick={() => startEditPaper(p)} title="Edit">✏️</button>
-                                                        <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={() => handleDeletePaper(p.id)} title="Delete">🗑️</button>
+                                                        <a href={`http://localhost:5000${p.fileUrl}`} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm"></a>
+                                                        <button className="btn btn-sm" style={{ background: '#667eea', color: 'white', border: 'none' }} onClick={() => startEditPaper(p)} title="Edit"></button>
+                                                        <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={() => handleDeletePaper(p.id)} title="Delete"></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -2241,7 +2242,7 @@ function AdminPage() {
                     {editPaper && (
                         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }} onClick={() => setEditPaper(null)}>
                             <div className="card" style={{ width: '500px', maxWidth: '90vw', maxHeight: '80vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-                                <h3 style={{ marginBottom: '1rem' }}>✏️ Edit Paper Details</h3>
+                                <h3 style={{ marginBottom: '1rem' }}> Edit Paper Details</h3>
                                 <div className="form-group">
                                     <label className="form-label">Subject Name *</label>
                                     <input className="form-control" value={editData.subject} onChange={e => setEditData({ ...editData, subject: e.target.value })} />
@@ -2271,7 +2272,7 @@ function AdminPage() {
                                     </select>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-                                    <button className="btn btn-primary" onClick={handleSaveEdit}>💾 Save Changes</button>
+                                    <button className="btn btn-primary" onClick={handleSaveEdit}> Save Changes</button>
                                     <button className="btn btn-secondary" onClick={() => setEditPaper(null)}>Cancel</button>
                                 </div>
                             </div>
@@ -2326,7 +2327,7 @@ function NotificationsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>🔔 Notifications</h1>
+                <h1> Notifications</h1>
                 <p className="text-muted">Stay updated with college announcements</p>
             </div>
 
@@ -2421,7 +2422,7 @@ function ResultsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📊 Academic Results</h1>
+                <h1> Academic Results</h1>
                 <p className="text-muted">View your semester-wise academic performance</p>
             </div>
 
@@ -2447,10 +2448,10 @@ function ResultsPage() {
                             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
                             onClick={() => setSelectedSemester(selectedSemester === sem.semester ? null : sem.semester)}
                         >
-                            <h3 style={{ margin: 0 }}>📚 Semester {sem.semester} ({sem.year})</h3>
+                            <h3 style={{ margin: 0 }}> Semester {sem.semester} ({sem.year})</h3>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                 <span className="badge badge-success">SGPA: {sem.sgpa}</span>
-                                <span>{selectedSemester === sem.semester ? '▲' : '▼'}</span>
+                                <span>{selectedSemester === sem.semester ? '' : ''}</span>
                             </div>
                         </div>
 
@@ -2527,7 +2528,7 @@ function AttendancePage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📅 Attendance Report</h1>
+                <h1> Attendance Report</h1>
                 <p className="text-muted">View your monthly attendance breakdown</p>
             </div>
 
@@ -2568,7 +2569,7 @@ function AttendancePage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
                             <small className="text-muted">0%</small>
                             <small style={{ color: overallPercentage >= 75 ? 'var(--success)' : 'var(--error)' }}>
-                                {overallPercentage >= 75 ? '✅ Eligible for exams' : '⚠️ Below 75% - Shortage'}
+                                {overallPercentage >= 75 ? ' Eligible for exams' : ' Below 75% - Shortage'}
                             </small>
                             <small className="text-muted">100%</small>
                         </div>
@@ -2685,7 +2686,7 @@ function PapersPage() {
                     key={star}
                     onClick={() => handleRate(paper, star)}
                     style={{ cursor: 'pointer', fontSize: '1rem', color: star <= (paper.userRating || 0) ? '#f6ad55' : '#cbd5e0', transition: 'color 0.2s' }}
-                >★</span>
+                ></span>
             ))}
             {paper.avgRating > 0 && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '4px' }}>{paper.avgRating} ({paper.totalRatings})</span>}
         </div>
@@ -2693,10 +2694,10 @@ function PapersPage() {
 
     const PaperCard = ({ paper, showBadge }) => (
         <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
-            {showBadge && <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'linear-gradient(135deg, #48bb78, #38a169)', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600 }}>🆕 New</span>}
+            {showBadge && <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'linear-gradient(135deg, #48bb78, #38a169)', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600 }}> New</span>}
             <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-                    <span style={{ fontSize: '2rem' }}>📄</span>
+                    <span style={{ fontSize: '2rem' }}></span>
                     <div style={{ flex: 1 }}>
                         <h4 style={{ margin: 0 }}>{paper.subject}</h4>
                         {paper.code && <code style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{paper.code}</code>}
@@ -2706,7 +2707,7 @@ function PapersPage() {
                         style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', padding: '4px', transition: 'transform 0.2s' }}
                         title={paper.bookmarked ? 'Remove Bookmark' : 'Bookmark'}
                     >
-                        {paper.bookmarked ? '🔖' : '🏷️'}
+                        {paper.bookmarked ? '' : ''}
                     </button>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
@@ -2716,16 +2717,16 @@ function PapersPage() {
                 </div>
                 <StarRating paper={paper} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                    {paper.fileName && <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>📎 {paper.fileName} {formatSize(paper.fileSize) && `(${formatSize(paper.fileSize)})`}</p>}
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>📥 {paper.downloads || 0}</span>
+                    {paper.fileName && <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}> {paper.fileName} {formatSize(paper.fileSize) && `(${formatSize(paper.fileSize)})`}</p>}
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}> {paper.downloads || 0}</span>
                 </div>
             </div>
             {paper.fileUrl ? (
                 <button onClick={() => handleDownload(paper)} className="btn btn-primary btn-sm" style={{ width: '100%', marginTop: '0.75rem' }}>
-                    📥 View / Download PDF
+                    View / Download PDF
                 </button>
             ) : (
-                <button className="btn btn-secondary btn-sm" disabled style={{ width: '100%', marginTop: '0.75rem' }}>📥 Not Available</button>
+                <button className="btn btn-secondary btn-sm" disabled style={{ width: '100%', marginTop: '0.75rem' }}> Not Available</button>
             )}
         </div>
     );
@@ -2735,16 +2736,16 @@ function PapersPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📚 Academic Papers & Study Materials</h1>
+                <h1> Academic Papers & Study Materials</h1>
                 <p className="text-muted">Download question papers, notes, and reference materials uploaded by your institution</p>
             </div>
 
             {/* View tabs */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                 {[
-                    { key: 'all', label: `📚 All (${papers.length})` },
-                    { key: 'recent', label: `🆕 Recently Added (${recentPapers.length})` },
-                    { key: 'bookmarked', label: `🔖 Bookmarked (${papers.filter(p => p.bookmarked).length})` }
+                    { key: 'all', label: ` All (${papers.length})` },
+                    { key: 'recent', label: ` Recently Added (${recentPapers.length})` },
+                    { key: 'bookmarked', label: ` Bookmarked (${papers.filter(p => p.bookmarked).length})` }
                 ].map(tab => (
                     <button
                         key={tab.key}
@@ -2762,7 +2763,7 @@ function PapersPage() {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="🔍 Search by subject, code, or department..."
+                        placeholder=" Search by subject, code, or department..."
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
@@ -2774,7 +2775,7 @@ function PapersPage() {
 
             {papers.length === 0 ? (
                 <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📭</div>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}></div>
                     <h3>No Papers Available Yet</h3>
                     <p className="text-muted">Your institution hasn't uploaded any academic papers yet. Check back later!</p>
                 </div>
@@ -2815,7 +2816,7 @@ function SchedulePage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>🗓️ Class Schedule</h1>
+                <h1> Class Schedule</h1>
                 <p className="text-muted">Your weekly timetable</p>
             </div>
 
@@ -2837,7 +2838,7 @@ function SchedulePage() {
                                         <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>{cls.subject}</div>
                                         <div className="text-muted" style={{ fontSize: '0.9rem' }}>{cls.faculty}</div>
                                         <div style={{ marginTop: '0.5rem' }}>
-                                            <span className="badge badge-info">📍 {cls.room}</span>
+                                            <span className="badge badge-info"> {cls.room}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -2892,7 +2893,7 @@ function AssignmentsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📝 Assignments</h1>
+                <h1> Assignments</h1>
                 <p className="text-muted">View and submit your assignments</p>
             </div>
 
@@ -2930,7 +2931,7 @@ function AssignmentsPage() {
                         {assignment.status === 'pending' && (
                             <div style={{ marginTop: '1rem' }}>
                                 <button className="btn btn-primary" onClick={() => handleSubmit(assignment.id)}>
-                                    📤 Submit Assignment
+                                    Submit Assignment
                                 </button>
                             </div>
                         )}
@@ -2994,11 +2995,11 @@ function GrievancesPage() {
             <div className="dashboard-header">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
-                        <h1>💬 Grievances</h1>
+                        <h1> Grievances</h1>
                         <p className="text-muted">Submit and track your complaints</p>
                     </div>
                     <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-                        {showForm ? '✕ Cancel' : '➕ New Grievance'}
+                        {showForm ? ' Cancel' : ' New Grievance'}
                     </button>
                 </div>
             </div>
@@ -3088,7 +3089,7 @@ function EventsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📢 Events</h1>
+                <h1> Events</h1>
                 <p className="text-muted">Upcoming events and workshops</p>
             </div>
 
@@ -3097,14 +3098,14 @@ function EventsPage() {
                     <div key={idx} className="card">
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                             <span className={`badge badge-${getCategoryColor(event.category)}`}>{event.category}</span>
-                            {event.isRegistered && <span className="badge badge-success">✓ Registered</span>}
+                            {event.isRegistered && <span className="badge badge-success"> Registered</span>}
                         </div>
                         <h3 style={{ margin: 0 }}>{event.title}</h3>
                         <p className="text-muted" style={{ margin: '0.5rem 0' }}>{event.description}</p>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-                            <span>📅 {event.date}</span>
-                            <span>⏰ {event.time}</span>
-                            <span>📍 {event.venue}</span>
+                            <span> {event.date}</span>
+                            <span> {event.time}</span>
+                            <span> {event.venue}</span>
                         </div>
                         {!event.isRegistered && event.registrationOpen && (
                             <button className="btn btn-primary" style={{ marginTop: '1rem' }} onClick={() => handleRegister(event.id)}>
@@ -3153,7 +3154,7 @@ function CertificatesPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>🏆 Certificates</h1>
+                <h1> Certificates</h1>
                 <p className="text-muted">Click any certificate to verify its blockchain hash</p>
             </div>
 
@@ -3172,7 +3173,7 @@ function CertificatesPage() {
                             }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                                     <span className={`badge badge-${getTypeColor(cert.type)}`}>{cert.type}</span>
-                                    {cert.verified && <span className="badge badge-success">✓ Verified</span>}
+                                    {cert.verified && <span className="badge badge-success"> Verified</span>}
                                 </div>
                                 <h3 style={{ margin: 0 }}>{cert.title}</h3>
                                 <p className="text-muted" style={{ margin: '0.5rem 0' }}>{cert.description}</p>
@@ -3180,16 +3181,16 @@ function CertificatesPage() {
                                     <small className="text-muted">Issued: {cert.issuedDate}</small>
                                 </div>
                                 <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    🔗 Hash: <code>{cert.blockchainHash}</code>
+                                    Hash: <code>{cert.blockchainHash}</code>
                                 </div>
-                                <span className="flip-hint">🔄 Click to verify</span>
+                                <span className="flip-hint"> Click to verify</span>
                             </div>
 
-                            {/* BACK — Verification */}
+                            {/* BACK Verification */}
                             <div className="flip-card-back" style={{
                                 borderTop: `4px solid var(--${getTypeColor(cert.type)})`
                             }}>
-                                <h3 style={{ margin: 0 }}>✅ Blockchain Verified</h3>
+                                <h3 style={{ margin: 0 }}> Blockchain Verified</h3>
                                 <div className="qr-code-container">
                                     <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(cert.blockchainHash || cert.title)}`}
                                         alt="Certificate QR" width="150" height="150" style={{ display: 'block' }} />
@@ -3198,7 +3199,7 @@ function CertificatesPage() {
                                     <strong>{cert.title}</strong><br />
                                     <small className="text-muted">{cert.issuedDate}</small>
                                 </div>
-                                <span className="flip-hint">🔄 Click to flip back</span>
+                                <span className="flip-hint"> Click to flip back</span>
                             </div>
                         </div>
                     </div>
@@ -3237,8 +3238,8 @@ function IDCardPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📱 Student ID Card</h1>
-                <p className="text-muted">Click the card to flip it — QR code on the back!</p>
+                <h1> Student ID Card</h1>
+                <p className="text-muted">Click the card to flip it QR code on the back!</p>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -3246,7 +3247,7 @@ function IDCardPage() {
                     style={{ width: '350px', height: '380px' }}
                     onClick={() => setFlipped(!flipped)}>
                     <div className="flip-card-inner">
-                        {/* FRONT — ID Card */}
+                        {/* FRONT ID Card */}
                         <div className="flip-card-front" style={{
                             background: 'linear-gradient(135deg, var(--primary) 0%, #1a1a2e 100%)',
                             borderRadius: '16px',
@@ -3255,7 +3256,7 @@ function IDCardPage() {
                             boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
                         }}>
                             <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-                                <h3 style={{ margin: 0, color: 'white' }}>🎓 {idCard.institutionName}</h3>
+                                <h3 style={{ margin: 0, color: 'white' }}> {idCard.institutionName}</h3>
                                 <small style={{ opacity: 0.8 }}>Student Identity Card</small>
                             </div>
 
@@ -3268,7 +3269,7 @@ function IDCardPage() {
                                 }}>
                                     {idCard.profilePicture ?
                                         <img src={idCard.profilePicture} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                                        : '👤'}
+                                        : ''}
                                 </div>
                                 <div>
                                     <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'white' }}>{idCard.name}</h2>
@@ -3290,24 +3291,24 @@ function IDCardPage() {
                                     ||||| {idCard.barcode} |||||
                                 </div>
                             </div>
-                            <span className="flip-hint">🔄 Click to flip</span>
+                            <span className="flip-hint"> Click to flip</span>
                         </div>
 
-                        {/* BACK — QR Code */}
+                        {/* BACK QR Code */}
                         <div className="flip-card-back" style={{
                             background: 'linear-gradient(135deg, #1a1a2e 0%, var(--primary) 100%)',
                             color: 'white',
                             boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
                         }}>
-                            <h3 style={{ margin: 0, color: 'white' }}>📲 Scan QR Code</h3>
+                            <h3 style={{ margin: 0, color: 'white' }}> Scan QR Code</h3>
                             <div className="qr-code-container">
                                 <img src={qrUrl} alt="Student QR Code" width="180" height="180" style={{ display: 'block' }} />
                             </div>
                             <div style={{ textAlign: 'center', fontSize: '0.85rem', opacity: 0.9 }}>
                                 <strong>{idCard.name}</strong><br />
-                                {idCard.studentId} • {idCard.course}
+                                {idCard.studentId} {idCard.course}
                             </div>
-                            <span className="flip-hint" style={{ color: 'rgba(255,255,255,0.6)' }}>🔄 Click to flip back</span>
+                            <span className="flip-hint" style={{ color: 'rgba(255,255,255,0.6)' }}> Click to flip back</span>
                         </div>
                     </div>
                 </div>
@@ -3315,7 +3316,7 @@ function IDCardPage() {
 
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
                 <button className="btn btn-primary" onClick={(e) => { e.stopPropagation(); window.print(); }}>
-                    📥 Download ID Card
+                    Download ID Card
                 </button>
             </div>
         </div>
@@ -3338,9 +3339,9 @@ function AnalyticsPage() {
     if (!analytics) return <div className="dashboard"><p className="text-muted">No performance data available</p></div>;
 
     const getTrendIcon = (trend) => {
-        if (trend === 'improving') return '📈';
-        if (trend === 'declining') return '📉';
-        return '➡️';
+        if (trend === 'improving') return '';
+        if (trend === 'declining') return '';
+        return '';
     };
 
     const getTrendColor = (trend) => {
@@ -3352,7 +3353,7 @@ function AnalyticsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>📈 Performance Analytics</h1>
+                <h1> Performance Analytics</h1>
                 <p className="text-muted">AI-powered insights and predictions</p>
             </div>
 
@@ -3372,7 +3373,7 @@ function AnalyticsPage() {
                     <h3 style={{ margin: 0, opacity: 0.9 }}>Attendance</h3>
                     <div style={{ fontSize: '3rem', fontWeight: 'bold', margin: '1rem 0' }}>{analytics.attendancePercentage}%</div>
                     <div style={{ opacity: 0.9 }}>
-                        {analytics.attendancePercentage >= 75 ? '✅ Eligible' : '⚠️ Shortage'}
+                        {analytics.attendancePercentage >= 75 ? ' Eligible' : ' Shortage'}
                     </div>
                 </div>
 
@@ -3386,7 +3387,7 @@ function AnalyticsPage() {
             {/* Recommendations */}
             {analytics.recommendations.length > 0 && (
                 <div className="card" style={{ marginBottom: '2rem' }}>
-                    <h3>💡 Personalized Recommendations</h3>
+                    <h3> Personalized Recommendations</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
                         {analytics.recommendations.map((rec, idx) => (
                             <div key={idx} className={`badge badge-${rec.type}`} style={{ padding: '0.75rem', fontSize: '0.95rem', textAlign: 'left' }}>
@@ -3400,7 +3401,7 @@ function AnalyticsPage() {
             {/* Performance Trend */}
             <div className="grid-2">
                 <div className="card">
-                    <h3>📊 Semester Performance</h3>
+                    <h3> Semester Performance</h3>
                     <div style={{ marginTop: '1.5rem' }}>
                         {analytics.semesterPerformance.map((sem, idx) => (
                             <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', marginBottom: '0.5rem' }}>
@@ -3417,7 +3418,7 @@ function AnalyticsPage() {
                 </div>
 
                 <div className="card">
-                    <h3>⚠️ Weak Subjects</h3>
+                    <h3> Weak Subjects</h3>
                     {analytics.weakSubjects.length > 0 ? (
                         <div style={{ marginTop: '1.5rem' }}>
                             {analytics.weakSubjects.map((sub, idx) => (
@@ -3433,14 +3434,14 @@ function AnalyticsPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-muted" style={{ marginTop: '1rem' }}>No weak subjects - Great job! 🎉</p>
+                        <p className="text-muted" style={{ marginTop: '1rem' }}>No weak subjects - Great job! </p>
                     )}
                 </div>
             </div>
 
             {/* Predictions */}
             <div className="card" style={{ marginTop: '2rem' }}>
-                <h3>🔮 Future Predictions</h3>
+                <h3> Future Predictions</h3>
                 <div className="grid-2" style={{ marginTop: '1.5rem' }}>
                     <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
                         <div className="text-muted">Expected Next Semester SGPA</div>
@@ -3520,7 +3521,7 @@ function StudyBuddyChat() {
                 onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
                 onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
             >
-                🤖
+
             </button>
         );
     }
@@ -3551,14 +3552,14 @@ function StudyBuddyChat() {
                 alignItems: 'center'
             }}>
                 <div>
-                    <h3 style={{ margin: 0 }}>🤖 AI Study Buddy</h3>
+                    <h3 style={{ margin: 0 }}> AI Study Buddy</h3>
                     <small style={{ opacity: 0.9 }}>Ask me anything!</small>
                 </div>
                 <button
                     onClick={() => setIsOpen(false)}
                     style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}
                 >
-                    ✕
+
                 </button>
             </div>
 
@@ -3583,7 +3584,7 @@ function StudyBuddyChat() {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {messages.length === 0 && (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem' }}>
-                        <div style={{ fontSize: '3rem' }}>👋</div>
+                        <div style={{ fontSize: '3rem' }}></div>
                         <p>Hi! I'm your AI Study Buddy. Ask me about subjects, grades, or study tips!</p>
                     </div>
                 )}
@@ -3634,7 +3635,7 @@ function StudyBuddyChat() {
                         disabled={loading || !input.trim()}
                         style={{ minWidth: '60px' }}
                     >
-                        {loading ? '...' : '📤'}
+                        {loading ? '...' : ''}
                     </button>
                 </div>
             </div>
@@ -3748,26 +3749,26 @@ function SettingsPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>⚙️ Settings</h1>
+                <h1> Settings</h1>
                 <p className="text-muted">Manage your account settings and preferences</p>
             </div>
 
             <div className="tabs">
                 {isStudent && (
                     <button className={`tab ${activeTab === 'profile-info' ? 'active' : ''}`} onClick={() => setActiveTab('profile-info')}>
-                        🎓 Profile Info
+                        Profile Info
                     </button>
                 )}
                 {isStudent && (
                     <button className={`tab ${activeTab === 'picture' ? 'active' : ''}`} onClick={() => setActiveTab('picture')}>
-                        📷 Profile Picture
+                        Profile Picture
                     </button>
                 )}
                 <button className={`tab ${activeTab === 'password' ? 'active' : ''}`} onClick={() => setActiveTab('password')}>
-                    🔐 Password
+                    Password
                 </button>
                 <button className={`tab ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
-                    👤 Edit Profile
+                    Edit Profile
                 </button>
             </div>
 
@@ -3867,7 +3868,7 @@ function SettingsPage() {
                             </div>
                             <div style={{ marginTop: '1.5rem' }}>
                                 <button type="submit" className="btn btn-primary" disabled={loading}>
-                                    {loading ? 'Saving...' : '💾 Save Changes'}
+                                    {loading ? 'Saving...' : ' Save Changes'}
                                 </button>
                             </div>
                         </form>
@@ -3898,19 +3899,19 @@ function SettingsPage() {
                             {picturePreview ? (
                                 <img src={picturePreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
-                                <span style={{ fontSize: '4rem' }}>👤</span>
+                                <span style={{ fontSize: '4rem' }}></span>
                             )}
                         </div>
                         <div className="form-group">
                             <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
-                                📁 Choose Photo
+                                Choose Photo
                                 <input type="file" accept="image/*" onChange={handlePictureChange} style={{ display: 'none' }} />
                             </label>
                             <p className="text-muted" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Max size: 2MB. Formats: JPG, PNG</p>
                         </div>
                         {picturePreview && (
                             <button className="btn btn-primary" onClick={handlePictureUpload} disabled={loading}>
-                                {loading ? 'Uploading...' : '💾 Save Picture'}
+                                {loading ? 'Uploading...' : ' Save Picture'}
                             </button>
                         )}
                     </div>
@@ -4011,7 +4012,7 @@ function StudentRegisterPage() {
         <div className="app-container flex-center" style={{ minHeight: 'calc(100vh - 80px)', padding: '2rem' }}>
             <div className="card" style={{ width: '100%', maxWidth: '600px' }}>
                 <div className="text-center mb-2">
-                    <h2>🎓 Student Registration</h2>
+                    <h2> Student Registration</h2>
                     <p className="text-muted">Create your account to access student services</p>
                 </div>
 
@@ -4053,7 +4054,7 @@ function StudentRegisterPage() {
                         </div>
                     </div>
                     <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }} disabled={loading}>
-                        {loading ? 'Creating Account...' : '📝 Register as Student'}
+                        {loading ? 'Creating Account...' : ' Register as Student'}
                     </button>
                 </form>
 
@@ -4078,11 +4079,11 @@ function PaymentPage() {
     const [showConfetti, setShowConfetti] = useState(false);
 
     const feeTypes = [
-        { id: 'tuition_fee', name: 'Tuition Fee', amount: 50000, icon: '🎓', description: 'Semester tuition charges' },
-        { id: 'crt_fee', name: 'CRT Fee', amount: 5000, icon: '💼', description: 'Campus Recruitment Training' },
-        { id: 'bus_fee', name: 'Bus Fee', amount: 12000, icon: '🚌', description: 'Annual transportation charges' },
-        { id: 'hostel_fee', name: 'Hostel Fee', amount: 35000, icon: '🏠', description: 'Hostel accommodation per semester' },
-        { id: 'other_fee', name: 'Other Fees', amount: 2500, icon: '📋', description: 'Lab, Library & Activities' }
+        { id: 'tuition_fee', name: 'Tuition Fee', amount: 50000, icon: '\u{1F4DA}', description: 'Semester tuition charges' },
+        { id: 'crt_fee', name: 'CRT Fee', amount: 5000, icon: '\u{1F4B0}', description: 'Campus Recruitment Training' },
+        { id: 'bus_fee', name: 'Bus Fee', amount: 12000, icon: '\u{1F4B0}', description: 'Annual transportation charges' },
+        { id: 'hostel_fee', name: 'Hostel Fee', amount: 35000, icon: '\u{1F3E2}', description: 'Hostel accommodation per semester' },
+        { id: 'other_fee', name: 'Other Fees', amount: 2500, icon: '\u{1F4B0}', description: 'Lab, Library & Activities' }
     ];
 
     const UPI_ID = 'college@upi';
@@ -4156,7 +4157,7 @@ function PaymentPage() {
         <div className="dashboard">
             <ConfettiEffect trigger={showConfetti} />
             <div className="dashboard-header">
-                <h1>💳 Fee Payments</h1>
+                <h1> Fee Payments</h1>
                 <p className="text-muted">Select fees and pay securely via UPI</p>
             </div>
 
@@ -4189,7 +4190,7 @@ function PaymentPage() {
                             <span className="total-amount">Total: {formatINR(getTotalAmount())}</span>
                         </div>
                         <button className="btn btn-primary btn-lg" onClick={handleProceedToPayment}>
-                            Proceed to Pay →
+                            Proceed to Pay
                         </button>
                     </div>
                 )}
@@ -4228,7 +4229,7 @@ function PaymentPage() {
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h3>Select Payment Method</h3>
-                            <button className="modal-close" onClick={() => setShowPaymentModal(false)}>×</button>
+                            <button className="modal-close" onClick={() => setShowPaymentModal(false)}></button>
                         </div>
                         <div className="modal-body">
                             <div className="payment-summary">
@@ -4240,10 +4241,10 @@ function PaymentPage() {
                             </div>
                             <div className="payment-methods">
                                 <button className="btn btn-success btn-lg" style={{ width: '100%', marginBottom: '1rem' }} onClick={handleUPIPayment}>
-                                    📱 Pay via UPI
+                                    Pay via UPI
                                 </button>
                                 <button className="btn btn-secondary btn-lg" style={{ width: '100%' }} onClick={() => handleConfirmPayment('card')} disabled={paymentLoading}>
-                                    💳 Pay with Card
+                                    Pay with Card
                                 </button>
                             </div>
                         </div>
@@ -4255,8 +4256,8 @@ function PaymentPage() {
                 <div className="modal-overlay" onClick={() => setShowUPIModal(false)}>
                     <div className="modal upi-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h3>📱 UPI Payment</h3>
-                            <button className="modal-close" onClick={() => setShowUPIModal(false)}>×</button>
+                            <h3> UPI Payment</h3>
+                            <button className="modal-close" onClick={() => setShowUPIModal(false)}></button>
                         </div>
                         <div className="modal-body">
                             <div className="upi-details">
@@ -4274,7 +4275,7 @@ function PaymentPage() {
                                     <p>3. Click "I Have Paid" after successful payment</p>
                                 </div>
                                 <button className="btn btn-success btn-lg" style={{ width: '100%' }} onClick={() => handleConfirmPayment('upi')} disabled={paymentLoading}>
-                                    {paymentLoading ? 'Processing...' : '✓ I Have Paid'}
+                                    {paymentLoading ? 'Processing...' : ' I Have Paid'}
                                 </button>
                             </div>
                         </div>
@@ -4368,18 +4369,18 @@ function SystemAdminPage() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>⚙️ System Administration</h1>
+                <h1> System Administration</h1>
                 <p className="text-muted">Manage users, institutions, and system settings</p>
             </div>
 
             {message.text && <div className={`alert alert-${message.type}`}>{message.text}</div>}
 
             <div className="tabs">
-                <button className={`tab ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}>👥 Users</button>
-                <button className={`tab ${activeTab === 'institutions' ? 'active' : ''}`} onClick={() => setActiveTab('institutions')}>🏛️ Institutions</button>
-                <button className={`tab ${activeTab === 'payments' ? 'active' : ''}`} onClick={() => setActiveTab('payments')}>💰 Payments</button>
-                <button className={`tab ${activeTab === 'logs' ? 'active' : ''}`} onClick={() => setActiveTab('logs')}>📋 Logs</button>
-                <button className={`tab ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>📊 Statistics</button>
+                <button className={`tab ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}> Users</button>
+                <button className={`tab ${activeTab === 'institutions' ? 'active' : ''}`} onClick={() => setActiveTab('institutions')}> Institutions</button>
+                <button className={`tab ${activeTab === 'payments' ? 'active' : ''}`} onClick={() => setActiveTab('payments')}> Payments</button>
+                <button className={`tab ${activeTab === 'logs' ? 'active' : ''}`} onClick={() => setActiveTab('logs')}> Logs</button>
+                <button className={`tab ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}> Statistics</button>
             </div>
 
             {activeTab === 'users' && (
@@ -4550,7 +4551,7 @@ function SystemAdminPage() {
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h3>Edit User</h3>
-                            <button className="modal-close" onClick={() => setEditingUser(null)}>×</button>
+                            <button className="modal-close" onClick={() => setEditingUser(null)}></button>
                         </div>
                         <div className="modal-body">
                             <div className="form-group">
@@ -4607,7 +4608,7 @@ function AdminAnalyticsPage() {
         <div className="page-container">
             <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    📊 Real-Time Analytics Dashboard
+                    Real-Time Analytics Dashboard
                 </h1>
                 <select
                     className="form-control"
@@ -4645,7 +4646,7 @@ function AdminAnalyticsPage() {
             <div className="grid grid-2" style={{ gap: '1.5rem', marginBottom: '2rem' }}>
                 {/* Department Performance */}
                 <div className="card">
-                    <h3>📈 Department Performance</h3>
+                    <h3> Department Performance</h3>
                     <div style={{ marginTop: '1rem' }}>
                         {analytics?.departmentStats?.map((dept, i) => (
                             <div key={i} style={{ marginBottom: '1rem' }}>
@@ -4668,7 +4669,7 @@ function AdminAnalyticsPage() {
 
                 {/* Fee Collection */}
                 <div className="card">
-                    <h3>💰 Fee Collection Status</h3>
+                    <h3> Fee Collection Status</h3>
                     <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                         <div style={{
                             width: '150px', height: '150px', borderRadius: '50%',
@@ -4682,11 +4683,11 @@ function AdminAnalyticsPage() {
                         </div>
                         <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                             <div>
-                                <div style={{ color: '#38ef7d', fontWeight: 'bold' }}>₹{((analytics?.feeCollection?.collected || 0) / 100000).toFixed(1)}L</div>
+                                <div style={{ color: '#38ef7d', fontWeight: 'bold' }}>{((analytics?.feeCollection?.collected || 0) / 100000).toFixed(1)}L</div>
                                 <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>Collected</div>
                             </div>
                             <div>
-                                <div style={{ color: '#f5576c', fontWeight: 'bold' }}>₹{((analytics?.feeCollection?.pending || 0) / 100000).toFixed(1)}L</div>
+                                <div style={{ color: '#f5576c', fontWeight: 'bold' }}>{((analytics?.feeCollection?.pending || 0) / 100000).toFixed(1)}L</div>
                                 <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>Pending</div>
                             </div>
                         </div>
@@ -4697,7 +4698,7 @@ function AdminAnalyticsPage() {
             <div className="grid grid-2" style={{ gap: '1.5rem', marginBottom: '2rem' }}>
                 {/* Attendance Distribution */}
                 <div className="card">
-                    <h3>📅 Attendance Distribution</h3>
+                    <h3> Attendance Distribution</h3>
                     <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '1.5rem' }}>
                         <div style={{ textAlign: 'center' }}>
                             <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #11998e, #38ef7d)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>
@@ -4722,7 +4723,7 @@ function AdminAnalyticsPage() {
 
                 {/* Recent Activity */}
                 <div className="card">
-                    <h3>⚡ Recent Activity</h3>
+                    <h3> Recent Activity</h3>
                     <div style={{ marginTop: '1rem' }}>
                         {analytics?.recentActivities?.map((activity, i) => (
                             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
@@ -4736,7 +4737,7 @@ function AdminAnalyticsPage() {
 
             {/* Monthly Trend */}
             <div className="card">
-                <h3>📊 Monthly Trend</h3>
+                <h3> Monthly Trend</h3>
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '200px', marginTop: '1.5rem', paddingBottom: '1rem' }}>
                     {analytics?.monthlyTrend?.map((month, i) => (
                         <div key={i} style={{ textAlign: 'center', flex: 1 }}>
@@ -4763,7 +4764,7 @@ function AdminAnalyticsPage() {
             {/* Export Button */}
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
                 <button className="btn btn-primary" onClick={() => alert('PDF Export feature - would generate report')}>
-                    📄 Export Analytics Report (PDF)
+                    Export Analytics Report (PDF)
                 </button>
             </div>
         </div>
@@ -4783,18 +4784,18 @@ function CertificateGeneratorPage() {
 
     // Pre-existing certificate templates
     const certTemplates = [
-        { id: 'bonafide', name: '🏛️ Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
-        { id: 'course_completion', name: '📜 Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
-        { id: 'transfer', name: '🔄 Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
-        { id: 'migration', name: '✈️ Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
-        { id: 'merit', name: '🏆 Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
-        { id: 'participation', name: '🎪 Participation Certificate', color: '#48bb78', border: '#2f9e5f', fields: ['studentName', 'eventName', 'eventDate', 'organizer', 'venue'] },
-        { id: 'internship', name: '💼 Internship Certificate', color: '#ed64a6', border: '#d53f8c', fields: ['studentName', 'company', 'role', 'duration', 'startDate', 'endDate', 'supervisor'] },
-        { id: 'character', name: '📋 Character Certificate', color: '#319795', border: '#2c7a7b', fields: ['studentName', 'fatherName', 'department', 'enrollmentYear', 'conduct', 'character'] },
-        { id: 'study', name: '📖 Study Certificate', color: '#d69e2e', border: '#b7791f', fields: ['studentName', 'fatherName', 'course', 'department', 'fromDate', 'toDate', 'enrollmentYear'] },
-        { id: 'medical_fitness', name: '🏥 Medical Fitness Certificate', color: '#38a169', border: '#2f855a', fields: ['studentName', 'fatherName', 'age', 'bloodGroup', 'fitnessStatus', 'remarks'] },
-        { id: 'sports', name: '⚽ Sports Certificate', color: '#dd6b20', border: '#c05621', fields: ['studentName', 'sportName', 'eventLevel', 'position', 'eventDate', 'venue', 'year'] },
-        { id: 'provisional', name: '🎓 Provisional Degree Certificate', color: '#553c9a', border: '#44337a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'passingYear', 'grade', 'division'] },
+        { id: 'bonafide', name: ' Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
+        { id: 'course_completion', name: ' Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
+        { id: 'transfer', name: ' Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
+        { id: 'migration', name: ' Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
+        { id: 'merit', name: ' Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
+        { id: 'participation', name: ' Participation Certificate', color: '#48bb78', border: '#2f9e5f', fields: ['studentName', 'eventName', 'eventDate', 'organizer', 'venue'] },
+        { id: 'internship', name: ' Internship Certificate', color: '#ed64a6', border: '#d53f8c', fields: ['studentName', 'company', 'role', 'duration', 'startDate', 'endDate', 'supervisor'] },
+        { id: 'character', name: ' Character Certificate', color: '#319795', border: '#2c7a7b', fields: ['studentName', 'fatherName', 'department', 'enrollmentYear', 'conduct', 'character'] },
+        { id: 'study', name: ' Study Certificate', color: '#d69e2e', border: '#b7791f', fields: ['studentName', 'fatherName', 'course', 'department', 'fromDate', 'toDate', 'enrollmentYear'] },
+        { id: 'medical_fitness', name: ' Medical Fitness Certificate', color: '#38a169', border: '#2f855a', fields: ['studentName', 'fatherName', 'age', 'bloodGroup', 'fitnessStatus', 'remarks'] },
+        { id: 'sports', name: ' Sports Certificate', color: '#dd6b20', border: '#c05621', fields: ['studentName', 'sportName', 'eventLevel', 'position', 'eventDate', 'venue', 'year'] },
+        { id: 'provisional', name: ' Provisional Degree Certificate', color: '#553c9a', border: '#44337a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'passingYear', 'grade', 'division'] },
     ];
 
     const fieldLabels = {
@@ -4872,16 +4873,16 @@ function CertificateGeneratorPage() {
         if (!printContent) return;
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
-            <html><head><title>${selectedTemplate.name} - ${formData.studentName}</title>
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
-                body { margin: 0; padding: 0; }
-                @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-            </style></head><body>
-            ${printContent.outerHTML}
-            <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
-            </body></html>
-        `);
+ <html><head><title>${selectedTemplate.name} - ${formData.studentName}</title>
+ <style>
+ @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+ body { margin: 0; padding: 0; }
+ @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+ </style></head><body>
+ ${printContent.outerHTML}
+ <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
+ </body></html>
+ `);
         printWindow.document.close();
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 3000);
@@ -4979,7 +4980,7 @@ function CertificateGeneratorPage() {
             <ConfettiEffect trigger={showConfetti} />
             <div className="page-header">
                 <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    🎓 Certificate Generator
+                    Certificate Generator
                 </h1>
             </div>
 
@@ -5046,7 +5047,7 @@ function CertificateGeneratorPage() {
 
                             <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                                 <button className="btn btn-primary btn-lg" onClick={() => setShowPreview(true)}>
-                                    👁️ Preview &amp; Generate PDF
+                                    Preview &amp; Generate PDF
                                 </button>
                             </div>
                         </div>
@@ -5056,8 +5057,8 @@ function CertificateGeneratorPage() {
                 /* Certificate Preview */
                 <>
                     <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <button className="btn btn-secondary" onClick={() => setShowPreview(false)}>← Back to Edit</button>
-                        <button className="btn btn-primary" onClick={handleDownloadPDF}>📄 Download PDF</button>
+                        <button className="btn btn-secondary" onClick={() => setShowPreview(false)}> Back to Edit</button>
+                        <button className="btn btn-primary" onClick={handleDownloadPDF}> Download PDF</button>
                     </div>
                     <div style={{ background: '#f5f5f5', padding: '2rem', borderRadius: '10px', overflowX: 'auto' }}>
                         {renderCertificate()}
@@ -5068,7 +5069,381 @@ function CertificateGeneratorPage() {
     );
 }
 
-// Workflow Manager Page with Kanban Board
+// Admin Attendance Marking Page Excel Upload (B) + Period-wise (C)
+function AdminAttendancePage() {
+    const [activeTab, setActiveTab] = useState('period'); // 'period', 'upload', 'history'
+    // Period-wise state
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [period, setPeriod] = useState(1);
+    const [subject, setSubject] = useState('');
+    const [department, setDepartment] = useState('All');
+    const [subjects, setSubjects] = useState([]);
+    const [departments, setDepartments] = useState([]);
+    const [students, setStudents] = useState([]);
+    const [attendance, setAttendance] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [message, setMessage] = useState('');
+    const [history, setHistory] = useState([]);
+    // Excel upload state
+    const [excelData, setExcelData] = useState([]);
+    const [excelFile, setExcelFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    const PERIODS = [
+        { num: 1, time: '9:00 9:50' }, { num: 2, time: '9:50 10:40' },
+        { num: 3, time: '10:50 11:40' }, { num: 4, time: '11:40 12:30' },
+        { num: 5, time: '1:30 2:20' }, { num: 6, time: '2:20 3:10' },
+        { num: 7, time: '3:20 4:10' }, { num: 8, time: '4:10 5:00' }
+    ];
+
+    useEffect(() => {
+        const fetchSubjects = async () => {
+            try {
+                const res = await api.get('/admin/subjects');
+                setSubjects(res.data.subjects);
+                setDepartments(['All', ...res.data.departments]);
+                if (res.data.subjects.length > 0) setSubject(res.data.subjects[0]);
+            } catch (err) { console.error('Failed to load subjects'); }
+        };
+        fetchSubjects();
+        fetchHistory();
+    }, []);
+
+    useEffect(() => {
+        if (activeTab === 'period') fetchStudents();
+    }, [department, activeTab]);
+
+    const fetchStudents = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get(`/admin/attendance/students?department=${department}`);
+            setStudents(res.data.students);
+            const def = {};
+            res.data.students.forEach(s => { def[s.studentId] = 'present'; });
+            setAttendance(def);
+        } catch (err) { console.error('Failed to load students'); }
+        setLoading(false);
+    };
+
+    const fetchHistory = async () => {
+        try {
+            const res = await api.get('/admin/attendance/records');
+            setHistory(res.data.summary || []);
+        } catch (err) { /* ignore */ }
+    };
+
+    const toggleAttendance = (studentId) => {
+        setAttendance(prev => ({ ...prev, [studentId]: prev[studentId] === 'present' ? 'absent' : 'present' }));
+    };
+
+    const markAll = (status) => {
+        const updated = {};
+        students.forEach(s => { updated[s.studentId] = status; });
+        setAttendance(updated);
+    };
+
+    // Period-wise submit
+    const handlePeriodSubmit = async () => {
+        if (!date || !subject) { setMessage(' Select date and subject'); return; }
+        if (students.length === 0) { setMessage(' No students to mark'); return; }
+        setSubmitting(true); setMessage('');
+        try {
+            const records = students.map(s => ({
+                studentId: s.studentId, studentName: s.name,
+                status: attendance[s.studentId] || 'absent'
+            }));
+            const res = await api.post('/admin/attendance/mark', { date, subject, department, period, records });
+            setMessage(` ${res.data.message}`);
+            fetchHistory();
+        } catch (err) { setMessage(' Failed to mark attendance'); }
+        setSubmitting(false);
+    };
+
+    // Excel file handler
+    const handleExcelFile = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setExcelFile(file);
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                const workbook = XLSX.read(evt.target.result, { type: 'binary' });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const data = XLSX.utils.sheet_to_json(sheet);
+                // Normalize column names
+                const normalized = data.map(row => {
+                    const keys = Object.keys(row);
+                    const find = (patterns) => {
+                        const k = keys.find(k => patterns.some(p => k.toLowerCase().includes(p)));
+                        return k ? row[k] : '';
+                    };
+                    return {
+                        studentId: find(['studentid', 'student_id', 'rollno', 'roll', 'id']),
+                        studentName: find(['name', 'student']),
+                        subject: find(['subject', 'course']),
+                        date: find(['date']),
+                        period: find(['period', 'hour', 'slot']),
+                        status: find(['status', 'attendance', 'present'])
+                    };
+                }).filter(r => r.studentId && r.status);
+                setExcelData(normalized);
+                if (normalized.length > 0) setMessage(` Parsed ${normalized.length} records from Excel`);
+                else setMessage(' No valid records found. Ensure columns: StudentID, Subject, Date, Period, Status');
+            } catch (err) {
+                setMessage(' Failed to parse Excel file');
+                setExcelData([]);
+            }
+        };
+        reader.readAsBinaryString(file);
+    };
+
+    // Excel upload submit
+    const handleExcelSubmit = async () => {
+        if (excelData.length === 0) { setMessage(' No data to upload'); return; }
+        setUploading(true); setMessage('');
+        try {
+            const formData = new FormData();
+            formData.append('file', excelFile);
+            formData.append('records', JSON.stringify(excelData));
+            await api.post('/admin/attendance/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            setMessage(` Uploaded ${excelData.length} attendance records!`);
+            setExcelData([]); setExcelFile(null);
+            fetchHistory();
+        } catch (err) { setMessage(' Upload failed'); }
+        setUploading(false);
+    };
+
+    // Download Excel template
+    const downloadTemplate = () => {
+        const template = [
+            { StudentID: 'STU2024001', Name: 'John Doe', Subject: 'Mathematics', Date: new Date().toISOString().split('T')[0], Period: 1, Status: 'Present' },
+            { StudentID: 'STU2024002', Name: 'Jane Smith', Subject: 'Mathematics', Date: new Date().toISOString().split('T')[0], Period: 1, Status: 'Absent' },
+        ];
+        const ws = XLSX.utils.json_to_sheet(template);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
+        XLSX.writeFile(wb, 'attendance_template.xlsx');
+    };
+
+    const presentCount = Object.values(attendance).filter(v => v === 'present').length;
+    const absentCount = Object.values(attendance).filter(v => v === 'absent').length;
+
+    const tabStyle = (tab) => ({
+        padding: '0.65rem 1.25rem', border: 'none', cursor: 'pointer', fontWeight: 600,
+        fontSize: '0.9rem', borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
+        background: 'transparent', color: activeTab === tab ? '#667eea' : 'inherit', opacity: activeTab === tab ? 1 : 0.6
+    });
+
+    return (
+        <div className="dashboard" style={{ padding: '1.5rem' }}>
+            <div className="dashboard-header" style={{ marginBottom: '1rem' }}>
+                <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    Attendance Manager
+                </h1>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '1.5rem', gap: '0.25rem' }}>
+                <button style={tabStyle('period')} onClick={() => setActiveTab('period')}> Period-wise</button>
+                <button style={tabStyle('upload')} onClick={() => setActiveTab('upload')}> Excel Upload</button>
+                <button style={tabStyle('history')} onClick={() => setActiveTab('history')}> History</button>
+            </div>
+
+            {message && (
+                <div className="card" style={{
+                    padding: '0.75rem 1rem', marginBottom: '1rem',
+                    background: message.includes('') ? 'rgba(34,197,94,0.15)' : message.includes('') ? 'rgba(239,68,68,0.15)' : 'rgba(251,191,36,0.15)',
+                    borderLeft: `4px solid ${message.includes('') ? '#22c55e' : message.includes('') ? '#ef4444' : '#fbbf24'}`
+                }}>
+                    {message}
+                </div>
+            )}
+
+            {/* TAB C: Period-wise Attendance */}
+            {activeTab === 'period' && (
+                <>
+                    <div className="card" style={{ padding: '1.25rem', marginBottom: '1.25rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', alignItems: 'end' }}>
+                            <div>
+                                <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem' }}> Date</label>
+                                <input type="date" className="form-control" value={date} onChange={e => setDate(e.target.value)} />
+                            </div>
+                            <div>
+                                <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem' }}> Period</label>
+                                <select className="form-control" value={period} onChange={e => setPeriod(Number(e.target.value))}>
+                                    {PERIODS.map(p => <option key={p.num} value={p.num}>Period {p.num} ({p.time})</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem' }}> Subject</label>
+                                <select className="form-control" value={subject} onChange={e => setSubject(e.target.value)}>
+                                    {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem' }}> Department</label>
+                                <select className="form-control" value={department} onChange={e => setDepartment(e.target.value)}>
+                                    {departments.map(d => <option key={d} value={d}>{d}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <button className="btn btn-primary btn-sm" onClick={() => markAll('present')} style={{ fontSize: '0.85rem' }}> Mark All Present</button>
+                        <button className="btn btn-danger btn-sm" onClick={() => markAll('absent')} style={{ fontSize: '0.85rem' }}> Mark All Absent</button>
+                        <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>
+                            {presentCount} P {absentCount} A Total: {students.length}
+                        </span>
+                    </div>
+
+                    {/* Students Table */}
+                    <div className="card" style={{ overflow: 'hidden' }}>
+                        <div className="table-container" style={{ maxHeight: '450px', overflowY: 'auto' }}>
+                            {loading ? (
+                                <div style={{ padding: '2rem', textAlign: 'center', opacity: 0.6 }}>Loading students...</div>
+                            ) : students.length === 0 ? (
+                                <div style={{ padding: '2rem', textAlign: 'center', opacity: 0.6 }}>No students found. Register students first.</div>
+                            ) : (
+                                <table className="table" style={{ width: '100%' }}>
+                                    <thead><tr><th style={{ width: '40px' }}>#</th><th>Student ID</th><th>Name</th><th>Dept</th><th style={{ textAlign: 'center' }}>Status</th></tr></thead>
+                                    <tbody>
+                                        {students.map((s, idx) => (
+                                            <tr key={s.studentId} style={{ background: attendance[s.studentId] === 'absent' ? 'rgba(239,68,68,0.08)' : 'transparent' }}>
+                                                <td style={{ opacity: 0.5 }}>{idx + 1}</td>
+                                                <td style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>{s.studentId}</td>
+                                                <td style={{ fontWeight: 500 }}>{s.name}</td>
+                                                <td style={{ fontSize: '0.85rem', opacity: 0.7 }}>{s.department}</td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <button onClick={() => toggleAttendance(s.studentId)} style={{
+                                                        padding: '0.3rem 0.9rem', borderRadius: '20px', border: 'none', cursor: 'pointer',
+                                                        fontWeight: 600, fontSize: '0.8rem', minWidth: '85px', color: '#fff', transition: 'all 0.2s',
+                                                        background: attendance[s.studentId] === 'present' ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#ef4444,#dc2626)'
+                                                    }}>
+                                                        {attendance[s.studentId] === 'present' ? ' P' : ' A'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        {students.length > 0 && (
+                            <div style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end' }}>
+                                <button className="btn btn-primary" onClick={handlePeriodSubmit} disabled={submitting} style={{ minWidth: '160px', fontWeight: 600 }}>
+                                    {submitting ? ' Submitting...' : ` Submit Period ${period}`}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* TAB B: Excel Upload */}
+            {activeTab === 'upload' && (
+                <div className="card" style={{ padding: '1.5rem' }}>
+                    <h3 style={{ marginTop: 0, marginBottom: '1rem' }}> Upload Attendance from Excel</h3>
+                    <p style={{ fontSize: '0.9rem', opacity: 0.7, marginBottom: '1rem' }}>
+                        Upload an Excel (.xlsx) file with columns: <b>StudentID, Name, Subject, Date, Period, Status</b> (Present/Absent or P/A)
+                    </p>
+
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                        <button className="btn btn-secondary btn-sm" onClick={downloadTemplate}> Download Template</button>
+                    </div>
+
+                    {/* File Input */}
+                    <div style={{
+                        border: '2px dashed var(--border-color)', borderRadius: '12px', padding: '2rem',
+                        textAlign: 'center', marginBottom: '1.5rem', cursor: 'pointer',
+                        background: 'var(--card-bg)', transition: 'border-color 0.3s'
+                    }}
+                        onClick={() => document.getElementById('attendance-excel-input')?.click()}
+                    >
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}></div>
+                        <p style={{ fontWeight: 500, marginBottom: '0.3rem' }}>Click to browse or drag & drop Excel file</p>
+                        <p style={{ fontSize: '0.8rem', opacity: 0.5 }}>Supports .xlsx, .xls, .csv</p>
+                        <input id="attendance-excel-input" type="file" accept=".xlsx,.xls,.csv" onChange={handleExcelFile} style={{ display: 'none' }} />
+                    </div>
+
+                    {excelFile && <p style={{ fontSize: '0.85rem', marginBottom: '1rem' }}> Selected: <b>{excelFile.name}</b></p>}
+
+                    {/* Preview Table */}
+                    {excelData.length > 0 && (
+                        <>
+                            <h4 style={{ marginBottom: '0.5rem' }}>Preview ({excelData.length} records)</h4>
+                            <div className="table-container" style={{ maxHeight: '350px', overflowY: 'auto', marginBottom: '1rem' }}>
+                                <table className="table" style={{ width: '100%' }}>
+                                    <thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Subject</th><th>Date</th><th>Period</th><th>Status</th></tr></thead>
+                                    <tbody>
+                                        {excelData.slice(0, 50).map((r, i) => (
+                                            <tr key={i}>
+                                                <td style={{ opacity: 0.5 }}>{i + 1}</td>
+                                                <td style={{ fontFamily: 'monospace' }}>{r.studentId}</td>
+                                                <td>{r.studentName}</td>
+                                                <td>{r.subject}</td>
+                                                <td>{r.date}</td>
+                                                <td>{r.period}</td>
+                                                <td><span style={{
+                                                    padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600,
+                                                    background: r.status?.toLowerCase?.()?.startsWith?.('p') ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)',
+                                                    color: r.status?.toLowerCase?.()?.startsWith?.('p') ? '#22c55e' : '#ef4444'
+                                                }}>{r.status}</span></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button className="btn btn-primary" onClick={handleExcelSubmit} disabled={uploading} style={{ fontWeight: 600 }}>
+                                {uploading ? ' Uploading...' : ` Upload ${excelData.length} Records`}
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {/* History Tab */}
+            {activeTab === 'history' && (
+                <div className="card" style={{ overflow: 'hidden' }}>
+                    <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)' }}>
+                        <h3 style={{ margin: 0 }}> Attendance History</h3>
+                    </div>
+                    <div className="table-container">
+                        {history.length === 0 ? (
+                            <div style={{ padding: '2rem', textAlign: 'center', opacity: 0.6 }}>No attendance records yet. Mark attendance or upload Excel first.</div>
+                        ) : (
+                            <table className="table" style={{ width: '100%' }}>
+                                <thead><tr><th>Date</th><th>Subject</th><th>Dept</th><th style={{ textAlign: 'center' }}>Present</th><th style={{ textAlign: 'center' }}>Absent</th><th style={{ textAlign: 'center' }}>Total</th><th style={{ textAlign: 'center' }}>%</th></tr></thead>
+                                <tbody>
+                                    {history.map((h, i) => (
+                                        <tr key={i}>
+                                            <td style={{ fontWeight: 500 }}>{new Date(h.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                            <td>{h.subject}</td>
+                                            <td style={{ fontSize: '0.85rem', opacity: 0.7 }}>{h.department}</td>
+                                            <td style={{ textAlign: 'center', color: '#22c55e', fontWeight: 600 }}>{h.present}</td>
+                                            <td style={{ textAlign: 'center', color: '#ef4444', fontWeight: 600 }}>{h.absent}</td>
+                                            <td style={{ textAlign: 'center' }}>{h.total}</td>
+                                            <td style={{ textAlign: 'center', fontWeight: 600 }}>{h.total > 0 ? ((h.present / h.total) * 100).toFixed(0) + '%' : '-'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+
+
+
+
 function WorkflowManagerPage() {
     const [tasks, setTasks] = useState([]);
     const [workflows, setWorkflows] = useState([]);
@@ -5141,10 +5516,10 @@ function WorkflowManagerPage() {
         <div className="page-container">
             <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    📋 Workflow & Task Manager
+                    Workflow & Task Manager
                 </h1>
                 <button className="btn btn-primary" onClick={() => setShowAddTask(true)}>
-                    ➕ Add Task
+                    Add Task
                 </button>
             </div>
 
@@ -5195,7 +5570,7 @@ function WorkflowManagerPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
                 {/* To Do Column */}
                 <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', padding: '1rem' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#667eea' }}>📝 To Do ({getColumn('todo').length})</h4>
+                    <h4 style={{ marginBottom: '1rem', color: '#667eea' }}> To Do ({getColumn('todo').length})</h4>
                     {getColumn('todo').map(task => (
                         <div key={task.id} className="card" style={{ marginBottom: '0.75rem', padding: '1rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -5204,8 +5579,8 @@ function WorkflowManagerPage() {
                             </div>
                             <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '0.5rem 0' }}>{task.description}</p>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button className="btn btn-secondary btn-sm" onClick={() => updateTaskStatus(task.id, 'in-progress')}>▶️ Start</button>
-                                <button className="btn btn-danger btn-sm" onClick={() => deleteTask(task.id)}>🗑️</button>
+                                <button className="btn btn-secondary btn-sm" onClick={() => updateTaskStatus(task.id, 'in-progress')}> Start</button>
+                                <button className="btn btn-danger btn-sm" onClick={() => deleteTask(task.id)}></button>
                             </div>
                         </div>
                     ))}
@@ -5213,7 +5588,7 @@ function WorkflowManagerPage() {
 
                 {/* In Progress Column */}
                 <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', padding: '1rem' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#ffd200' }}>⏳ In Progress ({getColumn('in-progress').length})</h4>
+                    <h4 style={{ marginBottom: '1rem', color: '#ffd200' }}> In Progress ({getColumn('in-progress').length})</h4>
                     {getColumn('in-progress').map(task => (
                         <div key={task.id} className="card" style={{ marginBottom: '0.75rem', padding: '1rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -5222,7 +5597,7 @@ function WorkflowManagerPage() {
                             </div>
                             <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '0.5rem 0' }}>{task.description}</p>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button className="btn btn-secondary btn-sm" onClick={() => updateTaskStatus(task.id, 'review')}>👁️ Review</button>
+                                <button className="btn btn-secondary btn-sm" onClick={() => updateTaskStatus(task.id, 'review')}> Review</button>
                             </div>
                         </div>
                     ))}
@@ -5230,7 +5605,7 @@ function WorkflowManagerPage() {
 
                 {/* Review Column */}
                 <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', padding: '1rem' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#f093fb' }}>👁️ Review ({getColumn('review').length})</h4>
+                    <h4 style={{ marginBottom: '1rem', color: '#f093fb' }}> Review ({getColumn('review').length})</h4>
                     {getColumn('review').map(task => (
                         <div key={task.id} className="card" style={{ marginBottom: '0.75rem', padding: '1rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -5239,7 +5614,7 @@ function WorkflowManagerPage() {
                             </div>
                             <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '0.5rem 0' }}>{task.description}</p>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button className="btn btn-primary btn-sm" onClick={() => updateTaskStatus(task.id, 'done')}>✅ Done</button>
+                                <button className="btn btn-primary btn-sm" onClick={() => updateTaskStatus(task.id, 'done')}> Done</button>
                             </div>
                         </div>
                     ))}
@@ -5247,14 +5622,14 @@ function WorkflowManagerPage() {
 
                 {/* Done Column */}
                 <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', padding: '1rem' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#38ef7d' }}>✅ Done ({getColumn('done').length})</h4>
+                    <h4 style={{ marginBottom: '1rem', color: '#38ef7d' }}> Done ({getColumn('done').length})</h4>
                     {getColumn('done').map(task => (
                         <div key={task.id} className="card" style={{ marginBottom: '0.75rem', padding: '1rem', opacity: 0.7 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <div style={{ fontWeight: 'bold', textDecoration: 'line-through' }}>{task.title}</div>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#38ef7d' }}></span>
                             </div>
-                            <button className="btn btn-danger btn-sm" style={{ marginTop: '0.5rem' }} onClick={() => deleteTask(task.id)}>🗑️ Remove</button>
+                            <button className="btn btn-danger btn-sm" style={{ marginTop: '0.5rem' }} onClick={() => deleteTask(task.id)}> Remove</button>
                         </div>
                     ))}
                 </div>
@@ -5262,7 +5637,7 @@ function WorkflowManagerPage() {
 
             {/* Workflow Templates */}
             <div className="card">
-                <h3>🔄 Automation Workflows</h3>
+                <h3> Automation Workflows</h3>
                 <div className="grid grid-3" style={{ gap: '1rem', marginTop: '1rem' }}>
                     {workflows.map(workflow => (
                         <div key={workflow.id} style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '10px' }}>
@@ -5272,7 +5647,7 @@ function WorkflowManagerPage() {
                                 {workflow.steps.slice(0, 3).map((step, i) => (
                                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
                                         <span style={{ color: step.status === 'completed' ? '#38ef7d' : '#ffd200' }}>
-                                            {step.status === 'completed' ? '✅' : '⏳'}
+                                            {step.status === 'completed' ? '' : ''}
                                         </span>
                                         {step.action}
                                     </div>
@@ -5335,7 +5710,7 @@ function ChatbotPage() {
                 alignItems: 'center'
             }}>
                 <div>
-                    <h2 style={{ margin: 0 }}>🤖 AI Study Buddy</h2>
+                    <h2 style={{ margin: 0 }}> AI Study Buddy</h2>
                     <small style={{ opacity: 0.9 }}>Ask me anything about your studies!</small>
                 </div>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -5352,7 +5727,7 @@ function ChatbotPage() {
                         <option style={{ color: '#333' }}>Physics</option>
                         <option style={{ color: '#333' }}>Digital Electronics</option>
                     </select>
-                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat">✕</Link>
+                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat"></Link>
                 </div>
             </div>
 
@@ -5371,7 +5746,7 @@ function ChatbotPage() {
             }}>
                 {messages.length === 0 && (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '3rem' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👋</div>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}></div>
                         <h3>Hi! I'm your AI Study Buddy</h3>
                         <p>Ask me about subjects, grades, attendance, study tips, or career advice!</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
@@ -5442,7 +5817,7 @@ function ChatbotPage() {
                         disabled={loading || !input.trim()}
                         style={{ minWidth: '60px', fontSize: '1.2rem' }}
                     >
-                        {loading ? '...' : '📤'}
+                        {loading ? '...' : ''}
                     </button>
                 </div>
             </div>
@@ -5579,6 +5954,7 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/dashboard" element={<ProtectedRoute><PageWrapper><DashboardPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute roles={['student']}><PageWrapper><AnalyticsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/settings" element={<ProtectedRoute><PageWrapper><SettingsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/attendance" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminAttendancePage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminAnalyticsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/certificates" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><CertificateGeneratorPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/workflows" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><WorkflowManagerPage /></PageWrapper></ProtectedRoute>} />

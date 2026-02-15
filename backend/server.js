@@ -1043,6 +1043,235 @@ app.get('/api/student/attendance', authenticateToken, (req, res) => {
   });
 });
 
+// Subjects list
+const SUBJECTS = [
+  'Mathematics', 'Physics', 'Chemistry', 'Computer Science',
+  'English', 'Electronics', 'Data Structures', 'Database Systems'
+];
+
+// Departments list
+const DEPARTMENTS = [
+  'Computer Science', 'Electronics', 'Mechanical', 'Civil', 'Electrical', 'Information Technology'
+];
+
+// Initialize daily attendance store
+if (!db.dailyAttendance) db.dailyAttendance = [];
+
+// Get subjects list
+app.get('/api/admin/subjects', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  res.json({ subjects: SUBJECTS, departments: DEPARTMENTS });
+});
+
+// Get students for attendance (filterable by department)
+app.get('/api/admin/attendance/students', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const { department } = req.query;
+  let students = db.students;
+  if (department && department !== 'All') {
+    students = students.filter(s => s.department === department);
+  }
+  res.json({
+    students: students.map(s => ({
+      studentId: s.studentId,
+      name: s.name,
+      department: s.department || 'Computer Science',
+      course: s.course || 'B.Tech'
+    }))
+  });
+});
+
+// Mark attendance for a class
+app.post('/api/admin/attendance/mark', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { date, subject, department, records } = req.body;
+
+    if (!date || !subject || !records || !Array.isArray(records) || records.length === 0) {
+      return res.status(400).json({ error: 'Date, subject, and attendance records are required' });
+    }
+
+    // Remove existing records for this date + subject + department combo
+    db.dailyAttendance = db.dailyAttendance.filter(r =>
+      !(r.date === date && r.subject === subject && r.department === department)
+    );
+
+    // Add new records
+    const newRecords = records.map(r => ({
+      id: uuidv4(),
+      date,
+      subject,
+      department: department || 'All',
+      studentId: r.studentId,
+      studentName: r.studentName || '',
+      status: r.status || 'absent', // 'present' or 'absent'
+      markedBy: req.user.id,
+      markedAt: new Date().toISOString()
+    }));
+
+    db.dailyAttendance.push(...newRecords);
+
+    // Also update the monthly summary in db.attendance
+    const dateObj = new Date(date);
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+    const month = months[dateObj.getMonth()];
+    const year = dateObj.getFullYear();
+
+    // Update monthly attendance for each student
+    records.forEach(r => {
+      let monthRecord = db.attendance.find(a =>
+        a.studentId === r.studentId && a.month === month && a.year === year
+      );
+      if (!monthRecord) {
+        monthRecord = {
+          id: uuidv4(),
+          studentId: r.studentId,
+          month,
+          year,
+          totalDays: 0,
+          presentDays: 0,
+          absentDays: 0,
+          percentage: 0
+        };
+        db.attendance.push(monthRecord);
+      }
+      // Recalculate from daily records for this student + month
+      const studentDailyRecords = db.dailyAttendance.filter(d => {
+        const dDate = new Date(d.date);
+        return d.studentId === r.studentId &&
+          months[dDate.getMonth()] === month &&
+          dDate.getFullYear() === year;
+      });
+      // Count unique dates
+      const uniqueDates = [...new Set(studentDailyRecords.map(d => d.date))];
+      const presentDates = [...new Set(studentDailyRecords.filter(d => d.status === 'present').map(d => d.date))];
+      monthRecord.totalDays = uniqueDates.length;
+      monthRecord.presentDays = presentDates.length;
+      monthRecord.absentDays = monthRecord.totalDays - monthRecord.presentDays;
+      monthRecord.percentage = monthRecord.totalDays > 0
+        ? parseFloat(((monthRecord.presentDays / monthRecord.totalDays) * 100).toFixed(1))
+        : 0;
+    });
+
+    const presentCount = records.filter(r => r.status === 'present').length;
+    const absentCount = records.filter(r => r.status === 'absent').length;
+
+    res.json({
+      message: `Attendance marked: ${presentCount} present, ${absentCount} absent`,
+      presentCount,
+      absentCount,
+      total: records.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get attendance records (with filters)
+app.get('/api/admin/attendance/records', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const { date, subject, department } = req.query;
+  let records = db.dailyAttendance;
+
+  if (date) records = records.filter(r => r.date === date);
+  if (subject) records = records.filter(r => r.subject === subject);
+  if (department && department !== 'All') records = records.filter(r => r.department === department);
+
+  // Sort by date descending
+  records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Group by date + subject for summary
+  const summaryMap = {};
+  records.forEach(r => {
+    const key = `${r.date}_${r.subject}`;
+    if (!summaryMap[key]) {
+      summaryMap[key] = { date: r.date, subject: r.subject, department: r.department, present: 0, absent: 0, total: 0 };
+    }
+    summaryMap[key].total++;
+    if (r.status === 'present') summaryMap[key].present++;
+    else summaryMap[key].absent++;
+  });
+
+  res.json({
+    records: records.slice(0, 200),
+    summary: Object.values(summaryMap).sort((a, b) => new Date(b.date) - new Date(a.date))
+  });
+});
+
+// Upload attendance from Excel
+app.post('/api/admin/attendance/upload', authenticateToken, requireRole('admin', 'institution'), upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Parse the file as text/CSV or let frontend send JSON
+    const { records } = req.body;
+    if (!records) {
+      return res.status(400).json({ error: 'No attendance records provided' });
+    }
+
+    const parsed = JSON.parse(records);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return res.status(400).json({ error: 'Empty or invalid records' });
+    }
+
+    let successCount = 0;
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+
+    parsed.forEach(row => {
+      const { studentId, subject, date, period, status } = row;
+      if (!studentId || !date || !status) return;
+
+      const record = {
+        id: uuidv4(),
+        date,
+        subject: subject || 'General',
+        department: 'All',
+        period: period || 1,
+        studentId,
+        studentName: row.studentName || '',
+        status: (status || '').toLowerCase() === 'present' || (status || '').toLowerCase() === 'p' ? 'present' : 'absent',
+        markedBy: req.user.id,
+        markedAt: new Date().toISOString()
+      };
+
+      // Remove duplicates
+      db.dailyAttendance = db.dailyAttendance.filter(r =>
+        !(r.date === date && r.subject === record.subject && r.studentId === studentId && r.period === record.period)
+      );
+      db.dailyAttendance.push(record);
+
+      // Update monthly summary
+      const dateObj = new Date(date);
+      const month = months[dateObj.getMonth()];
+      const year = dateObj.getFullYear();
+      let monthRecord = db.attendance.find(a =>
+        a.studentId === studentId && a.month === month && a.year === year
+      );
+      if (!monthRecord) {
+        monthRecord = { id: uuidv4(), studentId, month, year, totalDays: 0, presentDays: 0, absentDays: 0, percentage: 0 };
+        db.attendance.push(monthRecord);
+      }
+      const studentDailyRecords = db.dailyAttendance.filter(d => {
+        const dDate = new Date(d.date);
+        return d.studentId === studentId && months[dDate.getMonth()] === month && dDate.getFullYear() === year;
+      });
+      const uniqueDates = [...new Set(studentDailyRecords.map(d => d.date))];
+      const presentDates = [...new Set(studentDailyRecords.filter(d => d.status === 'present').map(d => d.date))];
+      monthRecord.totalDays = uniqueDates.length;
+      monthRecord.presentDays = presentDates.length;
+      monthRecord.absentDays = monthRecord.totalDays - monthRecord.presentDays;
+      monthRecord.percentage = monthRecord.totalDays > 0
+        ? parseFloat(((monthRecord.presentDays / monthRecord.totalDays) * 100).toFixed(1)) : 0;
+
+      successCount++;
+    });
+
+    res.json({ message: `Uploaded ${successCount} attendance records`, count: successCount });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ==================== PROFILE ROUTES ====================
 
 // Get student profile
