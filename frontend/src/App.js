@@ -2661,7 +2661,7 @@ function PapersPage() {
             const res = await api.post(`/papers/${paper.id}/download`);
             setPapers(prev => prev.map(p => p.id === paper.id ? { ...p, downloads: res.data.downloads } : p));
         } catch (err) { /* ignore */ }
-        window.open(`http://localhost:5000${paper.fileUrl}`, '_blank');
+        window.open(`${API_URL.replace('/api', '')}${paper.fileUrl}`, '_blank');
     };
 
     const handleBookmark = async (paper) => {
