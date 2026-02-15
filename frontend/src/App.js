@@ -563,7 +563,7 @@ function PageWrapper({ children }) {
 }
 
 // Sidebar Component
-function Sidebar({ isOpen, onToggle }) {
+function Sidebar({ isOpen, onToggle, onNavClick }) {
     const { user, logout } = useAuth();
     const location = window.location.pathname;
 
@@ -663,7 +663,7 @@ function Sidebar({ isOpen, onToggle }) {
                                 </div>
                             )}
                             {group.links.map((link) => (
-                                <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} style={{ padding: '0.45rem 0.75rem', fontSize: '0.88rem', position: 'relative' }}>
+                                <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} style={{ padding: '0.45rem 0.75rem', fontSize: '0.88rem', position: 'relative' }} onClick={onNavClick}>
                                     <span className="nav-icon" style={{ fontSize: '1.05rem' }}>{link.icon}</span>
                                     <span className="nav-text">{link.label}</span>
                                     {link.path === '/notifications' && <span className="notification-dot"></span>}
@@ -674,7 +674,7 @@ function Sidebar({ isOpen, onToggle }) {
                 ) : (
                     /* Admin/Institution: flat list */
                     links.map((link) => (
-                        <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}>
+                        <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} onClick={onNavClick}>
                             <span className="nav-icon">{link.icon}</span>
                             <span className="nav-text">{link.label}</span>
                         </Link>
@@ -5462,7 +5462,16 @@ function ChatbotPage() {
 
 // Main App Component with Sidebar Layout
 function App() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+
+    // Auto-close sidebar on mobile when window resizes
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= 768) setSidebarOpen(false);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Global ripple effect on all .btn clicks
     useEffect(() => {
@@ -5551,9 +5560,20 @@ function App() {
 }
 
 function AppInner({ sidebarOpen, setSidebarOpen }) {
+    const isMobile = window.innerWidth <= 768;
+
+    // Close sidebar on link click (mobile only)
+    const handleNavClick = () => {
+        if (window.innerWidth <= 768) setSidebarOpen(false);
+    };
+
     return (
         <div className="app-layout">
-            <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+            {/* Dark overlay to close sidebar on mobile */}
+            {sidebarOpen && window.innerWidth <= 768 && (
+                <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+            )}
+            <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} onNavClick={handleNavClick} />
             <div className={`main-content ${!sidebarOpen ? 'expanded' : ''}`}>
                 <TopBar
                     onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
