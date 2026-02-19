@@ -204,6 +204,12 @@ const uploadPaper = multer({
   }
 });
 
+// Generic multer for attendance Excel uploads (memory storage)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+});
+
 // In-memory database (simulating PostgreSQL/MongoDB)
 const db = {
   users: [],
