@@ -294,7 +294,6 @@ a:hover {
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-glow);
 }
 
@@ -360,7 +359,6 @@ a:hover {
 
 .card:hover {
   border-color: var(--border-focus);
-  transform: translateY(-6px);
   box-shadow: var(--shadow-lg), 0 0 20px rgba(102, 126, 234, 0.15);
 }
 
@@ -1005,7 +1003,7 @@ select.form-control {
 
 .payment-option:hover {
   border-color: var(--primary-color);
-  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .payment-icon {
@@ -1163,8 +1161,8 @@ select.form-control {
 }
 
 .fee-card:hover {
-  transform: translateY(-4px);
   border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
 }
 
 .fee-card.selected {
@@ -1691,7 +1689,6 @@ select.form-control {
 }
 
 .role-card:hover {
-  transform: translateY(-8px);
   border-color: var(--accent, var(--primary-color));
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }

@@ -36,13 +36,34 @@ async function initEmailTransporter() {
     return;
   }
 
-  // Provider 2: Brevo HTTP API (needs BREVO_SMTP_KEY — works as API key too)
-  if (process.env.BREVO_SMTP_KEY || process.env.BREVO_API_KEY) {
-    brevoApiKey = process.env.BREVO_API_KEY || process.env.BREVO_SMTP_KEY;
+  // Provider 2a: Brevo HTTP API (needs BREVO_API_KEY — separate from SMTP key)
+  if (process.env.BREVO_API_KEY) {
+    brevoApiKey = process.env.BREVO_API_KEY;
     senderEmail = process.env.SENDER_EMAIL || process.env.BREVO_LOGIN || 'noreply@blockedu.com';
     emailProvider = 'Brevo';
     emailReady = true;
     console.log(`\n📧 Email configured with Brevo HTTP API`);
+    console.log(`   Sender: ${senderEmail}\n`);
+    return;
+  }
+
+  // Provider 2b: Brevo SMTP (needs BREVO_SMTP_KEY + BREVO_LOGIN)
+  if (process.env.BREVO_SMTP_KEY) {
+    const smtpLogin = process.env.BREVO_LOGIN || process.env.SENDER_EMAIL;
+    senderEmail = process.env.SENDER_EMAIL || process.env.BREVO_LOGIN || 'noreply@blockedu.com';
+    emailTransporter = nodemailer.createTransport({
+      host: 'smtp-relay.brevo.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: smtpLogin,
+        pass: process.env.BREVO_SMTP_KEY
+      }
+    });
+    emailProvider = 'Brevo-SMTP';
+    emailReady = true;
+    console.log(`\n📧 Email configured with Brevo SMTP`);
+    console.log(`   Login: ${smtpLogin}`);
     console.log(`   Sender: ${senderEmail}\n`);
     return;
   }
@@ -155,7 +176,7 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 // Health / email diagnostic endpoint — check email config on deployed server
 app.get('/api/health', (req, res) => {
@@ -219,6 +240,8 @@ const db = {
   blockchainTransactions: [],
   notifications: [],
   results: [],
+  autonomousResults: [],
+  regulationResults: [],
   attendance: [],
   papers: [],
   assignments: [],
@@ -995,6 +1018,33 @@ app.put('/api/notifications/:id/read', authenticateToken, (req, res) => {
   res.json({ message: 'Notification marked as read', notification });
 });
 
+// Admin: Create a notification
+app.post('/api/admin/notifications', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { title, message, type, description, attachment } = req.body;
+    if (!title || !message) {
+      return res.status(400).json({ error: 'Title and message are required' });
+    }
+
+    const newNotification = {
+      id: uuidv4(),
+      title,
+      message,
+      type: type || 'notice',
+      description: description || '',
+      attachment: attachment || null,
+      date: new Date().toISOString(),
+      read: false,
+      createdBy: req.user.email
+    };
+
+    db.notifications.push(newNotification);
+    res.status(201).json({ message: 'Notification published successfully', notification: newNotification });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ==================== RESULTS ROUTES ====================
 
 // Get student results
@@ -1017,6 +1067,182 @@ app.get('/api/student/results', authenticateToken, (req, res) => {
     cgpa: parseFloat(cgpa),
     totalSemesters: results.length
   });
+});
+
+// Admin: Get all results (across all students)
+app.get('/api/admin/results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const resultsWithStudents = db.results.map(r => {
+    const student = db.students.find(s => s.studentId === r.studentId);
+    return {
+      ...r,
+      studentName: student ? student.name : 'Unknown',
+      studentEmail: student ? student.email : ''
+    };
+  });
+  res.json({ results: resultsWithStudents.sort((a, b) => (b.semester || 0) - (a.semester || 0)) });
+});
+
+// Admin: Publish results for a student
+app.post('/api/admin/results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { studentId, semester, year, branch, subjects } = req.body;
+
+    if (!studentId || !semester || !subjects || !Array.isArray(subjects) || subjects.length === 0) {
+      return res.status(400).json({ error: 'Student ID, semester, and subjects array are required' });
+    }
+
+    // Check student exists
+    const student = db.students.find(s => s.studentId === studentId);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Check for duplicate semester
+    const existing = db.results.find(r => r.studentId === studentId && r.semester === parseInt(semester));
+    if (existing) {
+      return res.status(400).json({ error: `Results for semester ${semester} already exist for this student. Delete existing first.` });
+    }
+
+    // Calculate SGPA
+    const totalCredits = subjects.reduce((sum, s) => sum + (parseInt(s.credits) || 0), 0);
+    const weightedSum = subjects.reduce((sum, s) => sum + ((parseInt(s.gradePoints) || 0) * (parseInt(s.credits) || 0)), 0);
+    const sgpa = totalCredits > 0 ? parseFloat((weightedSum / totalCredits).toFixed(2)) : 0;
+
+    const newResult = {
+      id: uuidv4(),
+      studentId,
+      semester: parseInt(semester),
+      year: parseInt(year) || new Date().getFullYear(),
+      branch: branch || '',
+      subjects: subjects.map(s => ({
+        code: s.code || '',
+        name: s.name || '',
+        credits: parseInt(s.credits) || 0,
+        grade: s.grade || '',
+        gradePoints: parseInt(s.gradePoints) || 0
+      })),
+      sgpa,
+      totalCredits,
+      publishedAt: new Date().toISOString(),
+      publishedBy: req.user.email
+    };
+
+    db.results.push(newResult);
+
+    // Auto-create notification for the student
+    db.notifications.push({
+      id: uuidv4(),
+      title: `📊 Semester ${semester} Results Published`,
+      message: `Your results for Semester ${semester} (${newResult.year}) have been published. SGPA: ${sgpa}. Check the Results section for details.`,
+      type: 'important',
+      date: new Date().toISOString(),
+      read: false,
+      targetStudentId: studentId
+    });
+
+    res.status(201).json({
+      message: 'Results published successfully',
+      result: newResult
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: Delete a result
+app.delete('/api/admin/results/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const idx = db.results.findIndex(r => r.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Result not found' });
+  }
+  db.results.splice(idx, 1);
+  res.json({ message: 'Result deleted successfully' });
+});
+
+// ==================== AUTONOMOUS RESULTS ROUTES ====================
+
+// Admin: Upload autonomous results file
+app.post('/api/admin/autonomous-results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { fileName, fileData, uploadedAt } = req.body;
+    if (!fileName || !fileData) {
+      return res.status(400).json({ error: 'File name and file data are required' });
+    }
+    const newResult = {
+      id: uuidv4(),
+      fileName,
+      fileData,
+      uploadedAt: uploadedAt || new Date().toISOString(),
+      uploadedBy: req.user.email
+    };
+    db.autonomousResults.push(newResult);
+    res.status(201).json({ message: 'Autonomous results uploaded successfully', result: newResult });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: Get all autonomous results
+app.get('/api/admin/autonomous-results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  res.json({ results: db.autonomousResults.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)) });
+});
+
+// Admin: Delete autonomous result
+app.delete('/api/admin/autonomous-results/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const idx = db.autonomousResults.findIndex(r => r.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Autonomous result not found' });
+  }
+  db.autonomousResults.splice(idx, 1);
+  res.json({ message: 'Autonomous result deleted successfully' });
+});
+
+// Student: Get all autonomous results (read-only)
+app.get('/api/student/autonomous-results', authenticateToken, (req, res) => {
+  res.json({ results: db.autonomousResults.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)) });
+});
+
+// ==================== REGULATION RESULTS ROUTES ====================
+
+// Admin: Upload regulation results file
+app.post('/api/admin/regulation-results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { fileName, fileData, uploadedAt } = req.body;
+    if (!fileName || !fileData) {
+      return res.status(400).json({ error: 'File name and file data are required' });
+    }
+    const newResult = {
+      id: uuidv4(),
+      fileName,
+      fileData,
+      uploadedAt: uploadedAt || new Date().toISOString(),
+      uploadedBy: req.user.email
+    };
+    db.regulationResults.push(newResult);
+    res.status(201).json({ message: 'Regulation results uploaded successfully', result: newResult });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: Get all regulation results
+app.get('/api/admin/regulation-results', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  res.json({ results: db.regulationResults.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)) });
+});
+
+// Admin: Delete regulation result
+app.delete('/api/admin/regulation-results/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const idx = db.regulationResults.findIndex(r => r.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Regulation result not found' });
+  }
+  db.regulationResults.splice(idx, 1);
+  res.json({ message: 'Regulation result deleted successfully' });
+});
+
+// Student: Get regulation results (read-only)
+app.get('/api/student/regulation-results', authenticateToken, (req, res) => {
+  res.json({ results: db.regulationResults.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)) });
 });
 
 // ==================== ATTENDANCE ROUTES ====================
@@ -1582,6 +1808,50 @@ app.post('/api/grievances', authenticateToken, (req, res) => {
 
   db.grievances.push(newGrievance);
   res.json({ message: 'Grievance submitted successfully', grievance: newGrievance });
+});
+
+// Admin: Get all grievances (across all students)
+app.get('/api/admin/grievances', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  const grievancesWithStudents = db.grievances.map(g => {
+    const student = db.students.find(s => s.studentId === g.studentId);
+    return {
+      ...g,
+      studentName: student ? student.name : 'Unknown',
+      studentEmail: student ? student.email : ''
+    };
+  });
+  res.json({ grievances: grievancesWithStudents.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) });
+});
+
+// Admin: Respond to a grievance
+app.put('/api/admin/grievances/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
+  try {
+    const { status, response } = req.body;
+    const grievance = db.grievances.find(g => g.id === req.params.id);
+    if (!grievance) {
+      return res.status(404).json({ error: 'Grievance not found' });
+    }
+
+    if (status) grievance.status = status;
+    if (response) grievance.response = response;
+    if (status === 'resolved') grievance.resolvedAt = new Date().toISOString().split('T')[0];
+    grievance.respondedBy = req.user.email;
+
+    // Auto-create notification for the student
+    db.notifications.push({
+      id: uuidv4(),
+      title: `📨 Grievance Update: ${grievance.subject}`,
+      message: `Your grievance "${grievance.subject}" has been updated to: ${grievance.status.toUpperCase()}. ${response ? 'Response: ' + response : ''}`,
+      type: 'important',
+      date: new Date().toISOString(),
+      read: false,
+      targetStudentId: grievance.studentId
+    });
+
+    res.json({ message: 'Grievance updated successfully', grievance });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // ==================== EVENTS ====================
@@ -2172,9 +2442,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
     res.json({
       message: emailSent
         ? `OTP sent successfully to ${email}! Check your inbox.`
-        : `OTP generated! Your code is: ${otp}`,
-      // Only include OTP if email was NOT sent (fallback)
-      ...(emailSent ? {} : { otp_code: otp }),
+        : `OTP sent to ${email}. Please check your inbox (including spam folder).`,
       ...(previewUrl ? { email_preview: previewUrl } : {})
     });
   } catch (error) {

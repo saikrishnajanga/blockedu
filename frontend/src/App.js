@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+﻿import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
@@ -21,6 +21,22 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Handle expired/invalid token responses
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            const msg = error.response.data?.error || '';
+            if (msg.includes('token') || msg.includes('Token') || msg.includes('expired')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
 // Auth Context
 const AuthContext = createContext(null);
 
@@ -33,7 +49,7 @@ const translations = {
         schedule: 'Schedule', assignments: 'Assignments', results: 'Results',
         attendance: 'Attendance', papers: 'Papers', events: 'Events',
         grievances: 'Grievances', certificates: 'Certificates', idCard: 'ID Card',
-        payFees: 'Pay Fees', settings: 'Settings', aiChatbot: 'AI Chatbot',
+        payFees: 'Pay Fees', settings: 'Settings', helpDesk: 'Help Desk',
         studentsRecords: 'Students & Records', workflows: 'Workflows',
         login: 'Login', register: 'Register', logout: 'Logout',
         welcome: 'Welcome to Portal', welcomeBack: 'Welcome Back',
@@ -523,18 +539,18 @@ function MobileBottomNav({ role }) {
     const navigate = useNavigate();
 
     const studentItems = [
-        { path: '/dashboard', icon: '\u{1F3E0}', label: 'Home' },
-        { path: '/papers', icon: '\u{1F3E0}', label: 'Papers' },
-        { path: '/attendance', icon: '\u{1F4CC}', label: 'Attend.' },
-        { path: '/notifications', icon: '\u{2699}', label: 'Alerts' },
-        { path: '/settings', icon: '\u{1F3E0}', label: 'Settings' },
+        { path: '/dashboard', icon: '🏠', label: 'Home' },
+        { path: '/papers', icon: '🏠', label: 'Papers' },
+        { path: '/attendance', icon: '📌', label: 'Attend.' },
+        { path: '/notifications', icon: '⚙', label: 'Alerts' },
+        { path: '/settings', icon: '🏠', label: 'Settings' },
     ];
 
     const adminItems = [
-        { path: '/dashboard', icon: '\u{1F3E0}', label: 'Home' },
-        { path: '/admin', icon: '\u{1F3E0}', label: 'Admin' },
-        { path: '/notifications', icon: '\u{1F464}', label: 'Alerts' },
-        { path: '/settings', icon: '\u{1F393}', label: 'Profile' },
+        { path: '/dashboard', icon: '🏠', label: 'Home' },
+        { path: '/admin', icon: '🏠', label: 'Admin' },
+        { path: '/notifications', icon: '👤', label: 'Alerts' },
+        { path: '/settings', icon: '🎓', label: 'Profile' },
     ];
 
     const items = role === 'admin' ? adminItems : studentItems;
@@ -579,56 +595,56 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
         {
             title: null,
             links: [
-                { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
+                { path: '/dashboard', icon: '🏠', label: t('dashboard') },
             ]
         },
         {
             title: 'Academics',
             links: [
-                { path: '/results', icon: '\u{1F4C8}', label: t('results') },
-                { path: '/attendance', icon: '\u{1F4CB}', label: t('attendance') },
-                { path: '/schedule', icon: '\u{1F4C5}', label: t('schedule') },
-                { path: '/assignments', icon: '\u{1F4DD}', label: t('assignments') },
-                { path: '/papers', icon: '\u{1F4C4}', label: t('papers') },
-                { path: '/certificates', icon: '\u{1F393}', label: t('certificates') },
+                { path: '/results', icon: '📈', label: t('results') },
+                { path: '/attendance', icon: '📋', label: t('attendance') },
+                { path: '/schedule', icon: '📅', label: t('schedule') },
+                { path: '/assignments', icon: '📝', label: t('assignments') },
+                { path: '/papers', icon: '📄', label: t('papers') },
+                { path: '/certificates', icon: '🎓', label: t('certificates') },
             ]
         },
         {
             title: 'Services',
             links: [
-                { path: '/notifications', icon: '\u{1F514}', label: t('notifications') },
-                { path: '/events', icon: '\u{1F389}', label: t('events') },
-                { path: '/grievances', icon: '\u{1F4E9}', label: t('grievances') },
-                { path: '/payments', icon: '\u{1F4B0}', label: t('payFees') },
-                { path: '/chatbot', icon: '\u{1F916}', label: t('aiChatbot') },
+                { path: '/grievances', icon: '📩', label: t('grievances') },
+                { path: '/payments', icon: '💰', label: t('payFees') },
+                { path: '/chatbot', icon: '💬', label: t('helpDesk') },
             ]
         },
         {
             title: 'Account',
             links: [
-                { path: '/analytics', icon: '\u{1F4CA}', label: t('analytics') },
-                { path: '/idcard', icon: '\u{1F4B3}', label: t('idCard') },
-                { path: '/settings', icon: '\u{2699}', label: t('settings') },
+                { path: '/analytics', icon: '📊', label: t('analytics') },
+                { path: '/idcard', icon: '💳', label: t('idCard') },
+                { path: '/settings', icon: '⚙', label: t('settings') },
             ]
         },
     ];
 
     // Admin links - includes student management, NO system admin
     const adminLinks = [
-        { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
-        { path: '/admin', icon: '\u{1F465}', label: t('studentsRecords') },
-        { path: '/admin/attendance', icon: '\u{1F4C5}', label: 'Attendance' },
-        { path: '/admin/analytics', icon: '\u{1F4CA}', label: t('analytics') },
-        { path: '/admin/certificates', icon: '\u{1F393}', label: t('certificates') },
-        { path: '/admin/workflows', icon: '\u{1F4CB}', label: t('workflows') },
-        { path: '/settings', icon: '\u{2699}', label: t('settings') },
+        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+        { path: '/admin', icon: '👥', label: t('studentsRecords') },
+        { path: '/admin/results', icon: '📊', label: 'Publish Results' },
+        { path: '/admin/grievances', icon: '📨', label: 'Grievances' },
+        { path: '/admin/attendance', icon: '📅', label: 'Attendance' },
+        { path: '/admin/analytics', icon: '📊', label: t('analytics') },
+        { path: '/admin/certificates', icon: '🎓', label: t('certificates') },
+        { path: '/admin/workflows', icon: '📋', label: t('workflows') },
+        { path: '/settings', icon: '⚙', label: t('settings') },
     ];
 
     // Institution links
     const institutionLinks = [
-        { path: '/dashboard', icon: '\u{1F3E0}', label: t('dashboard') },
-        { path: '/admin', icon: '\u{1F3E0}', label: t('studentsRecords') },
-        { path: '/settings', icon: '\u{2699}', label: t('settings') },
+        { path: '/dashboard', icon: '🏠', label: t('dashboard') },
+        { path: '/admin', icon: '🏠', label: t('studentsRecords') },
+        { path: '/settings', icon: '⚙', label: t('settings') },
     ];
 
     const isStudent = user && user.role === 'student';
@@ -651,7 +667,6 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
             <div className="sidebar-header">
                 <span className="logo-icon">🎓</span>
                 <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
-                <button className="sidebar-close-btn" onClick={onToggle} title="Close sidebar">✖</button>
             </div>
 
             <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
@@ -676,27 +691,36 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
                 ) : (
                     /* Admin/Institution: flat list */
                     links.map((link) => (
-                        <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} onClick={onNavClick}>
-                            <span className="nav-icon">{link.icon}</span>
-                            <span className="nav-text">{link.label}</span>
-                        </Link>
+                        link.external ? (
+                            <a key={link.label} href={link.external} target="_blank" rel="noopener noreferrer" className="sidebar-link" onClick={onNavClick}>
+                                <span className="nav-icon">{link.icon}</span>
+                                <span className="nav-text">{link.label} ↗</span>
+                            </a>
+                        ) : (
+                            <Link key={link.path} to={link.path} className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`} onClick={onNavClick}>
+                                <span className="nav-icon">{link.icon}</span>
+                                <span className="nav-text">{link.label}</span>
+                            </Link>
+                        )
                     ))
                 )}
             </nav>
 
-            {user && (
-                <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
-                    <div className="sidebar-link" style={{ cursor: 'default', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon">👤</span>
-                        <span className="nav-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</span>
+            {
+                user && (
+                    <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+                        <div className="sidebar-link" style={{ cursor: 'default', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
+                            <span className="nav-icon">👤</span>
+                            <span className="nav-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</span>
+                        </div>
+                        <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
+                            <span className="nav-icon">🚪</span>
+                            <span className="nav-text">{t('logout')}</span>
+                        </button>
                     </div>
-                    <button onClick={logout} className="sidebar-link" style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}>
-                        <span className="nav-icon">🚪</span>
-                        <span className="nav-text">{t('logout')}</span>
-                    </button>
-                </div>
-            )}
-        </aside>
+                )
+            }
+        </aside >
     );
 }
 
@@ -704,6 +728,23 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
 function TopBar({ onToggleSidebar, sidebarOpen }) {
     const { user, logout } = useAuth();
     const [walletAddress, setWalletAddress] = useState(null);
+    const [unreadCount, setUnreadCount] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.role === 'student') {
+            const fetchUnread = async () => {
+                try {
+                    const res = await api.get('/notifications');
+                    const count = (res.data.notifications || []).filter(n => !n.read).length;
+                    setUnreadCount(count);
+                } catch (err) { /* ignore */ }
+            };
+            fetchUnread();
+            const interval = setInterval(fetchUnread, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [user]);
 
     const connectWallet = async () => {
         if (window.ethereum) {
@@ -721,10 +762,12 @@ function TopBar({ onToggleSidebar, sidebarOpen }) {
     return (
         <div className="top-bar">
             <button className="toggle-btn" onClick={onToggleSidebar}>
-                {sidebarOpen ? '' : ''}
+                {sidebarOpen ? '✕' : '☰'}
             </button>
 
-            <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>                {/* Dark Mode Toggle */}
+            <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+
+                {/* Dark Mode Toggle */}
                 <ThemeToggle />
 
                 {walletAddress ? (
@@ -756,8 +799,8 @@ function HomePage() {
     const t = useLanguage();
 
     const roles = [
-        { id: 'student', icon: '\u{1F393}', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
-        { id: 'admin', icon: '\u{1F393}', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
+        { id: 'student', icon: '🎓', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
+        { id: 'admin', icon: '🎓', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
     ];
 
     if (user) {
@@ -862,7 +905,7 @@ function StudentLoginForm() {
         try {
             const res = await api.post('/auth/send-otp', { email: otpData.email });
             setOtpSent(true);
-            setOtpMessage(`${res.data.message}${res.data.otp_code ? ` (OTP: ${res.data.otp_code})` : ''}`);
+            setOtpMessage(res.data.message);
             setCountdown(60);
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to send OTP');
@@ -1007,6 +1050,29 @@ function StudentRegisterForm() {
         e.preventDefault();
         setLoading(true);
         setMessage({ type: '', text: '' });
+
+        // Password validation rules
+        if (formData.password.length < 8) {
+            setMessage({ type: 'error', text: 'Password must be at least 8 characters long.' });
+            setLoading(false);
+            return;
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password)) {
+            setMessage({ type: 'error', text: 'Password must include at least one special character (!@#$%^&*...).' });
+            setLoading(false);
+            return;
+        }
+        if (!/[A-Z]/.test(formData.password)) {
+            setMessage({ type: 'error', text: 'Password must include at least one uppercase letter.' });
+            setLoading(false);
+            return;
+        }
+        if (!/[0-9]/.test(formData.password)) {
+            setMessage({ type: 'error', text: 'Password must include at least one number.' });
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await api.post('/student/self-register', formData);
             localStorage.setItem('token', response.data.token);
@@ -1149,12 +1215,30 @@ function LoginPage() {
 // Dashboard Page Component
 function DashboardPage() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         fetchStats();
     }, []);
+
+    // Fetch unread notification count for students
+    useEffect(() => {
+        if (user?.role === 'student') {
+            const fetchUnread = async () => {
+                try {
+                    const res = await api.get('/notifications');
+                    const count = (res.data.notifications || []).filter(n => !n.read).length;
+                    setUnreadCount(count);
+                } catch (err) { /* ignore */ }
+            };
+            fetchUnread();
+            const interval = setInterval(fetchUnread, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [user]);
 
     const fetchStats = async () => {
         try {
@@ -1172,9 +1256,36 @@ function DashboardPage() {
     return (
         <div className="dashboard">
             <ScrollReveal className="scroll-reveal">
-                <div className="dashboard-header">
-                    <h1>Welcome, {user?.name}!</h1>
-                    <p className="text-muted">Role: {user?.role?.toUpperCase()}</p>
+                <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h1>Welcome, {user?.name}!</h1>
+                        <p className="text-muted">Role: {user?.role?.toUpperCase()}</p>
+                    </div>
+                    {user?.role === 'student' && (
+                        <button
+                            onClick={() => navigate('/notifications')}
+                            style={{
+                                position: 'relative', fontSize: '1.5rem', background: 'transparent',
+                                border: 'none', cursor: 'pointer', padding: '0.5rem'
+                            }}
+                            title="Notifications"
+                        >
+                            🔔
+                            {unreadCount > 0 && (
+                                <span style={{
+                                    position: 'absolute', top: '-2px', right: '-2px',
+                                    background: '#8b5cf6', color: 'white', borderRadius: '50%',
+                                    minWidth: '20px', height: '20px', fontSize: '0.7rem',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontWeight: 700, padding: '0 4px',
+                                    boxShadow: '0 0 8px rgba(139, 92, 246, 0.5)',
+                                    animation: 'pulse 2s infinite'
+                                }}>
+                                    {unreadCount > 99 ? '99+' : unreadCount}
+                                </span>
+                            )}
+                        </button>
+                    )}
                 </div>
             </ScrollReveal>
 
@@ -2305,10 +2416,52 @@ function NotificationsPage() {
 
     if (loading) return <SkeletonLoader rows={4} />;
 
+    const handleDownloadNotification = (notification) => {
+        const printWindow = window.open('', '_blank');
+        const html = `
+            <html><head><title>Notification - ${notification.title}</title>
+            <style>
+                body { font-family: 'Segoe UI', sans-serif; padding: 2rem; color: #333; max-width: 800px; margin: 0 auto; }
+                .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 2rem; }
+                .header h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
+                .header .meta { opacity: 0.9; font-size: 0.85rem; }
+                .content { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+                .content h2 { color: #667eea; margin: 0 0 1rem 0; font-size: 1.3rem; }
+                .content p { line-height: 1.8; font-size: 1rem; }
+                .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+                .badge-notice { background: #dbeafe; color: #3b82f6; }
+                .badge-important { background: #fef3c7; color: #f59e0b; }
+                .badge-urgent { background: #fee2e2; color: #ef4444; }
+                .badge-event { background: #d1fae5; color: #10b981; }
+                .footer { margin-top: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 1rem; text-align: center; }
+                @media print { body { padding: 0; } }
+            </style></head><body>
+            <div class="header">
+                <h1>${notification.title}</h1>
+                <div class="meta">
+                    <span class="badge badge-${notification.type || 'notice'}">${notification.type || 'notice'}</span>
+                    &nbsp;&bull;&nbsp;
+                    ${new Date(notification.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </div>
+            </div>
+            <div class="content">
+                <h2>Notification Details</h2>
+                <p>${(notification.message || '').replace(/\n/g, '<br/>')}</p>
+            </div>
+            ${notification.attachment ? '<div class="content"><h2>📎 Attachment</h2><p>' + notification.attachment + '</p></div>' : ''}
+            <div class="footer">Downloaded from BlockEdu Portal &bull; ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+            </body></html>
+        `;
+        printWindow.document.write(html);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => { printWindow.print(); }, 500);
+    };
+
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1> Notifications</h1>
+                <h1>🔔 Notifications</h1>
                 <p className="text-muted">Stay updated with college announcements</p>
             </div>
 
@@ -2346,7 +2499,7 @@ function NotificationsPage() {
                             }}
                         >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div>
+                                <div style={{ flex: 1 }}>
                                     <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>
                                         {notification.title}
                                         {!notification.read && <span className="badge badge-primary" style={{ marginLeft: '0.5rem' }}>New</span>}
@@ -2358,7 +2511,17 @@ function NotificationsPage() {
                                         })}
                                     </small>
                                 </div>
-                                <span className={`badge badge-${getTypeColor(notification.type)}`}>{notification.type}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end', flexShrink: 0 }}>
+                                    <span className={`badge badge-${getTypeColor(notification.type)}`}>{notification.type}</span>
+                                    <button
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={(e) => { e.stopPropagation(); handleDownloadNotification(notification); }}
+                                        title="Download as PDF"
+                                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem' }}
+                                    >
+                                        📥 Download
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))
@@ -2374,9 +2537,14 @@ function ResultsPage() {
     const [cgpa, setCgpa] = useState(0);
     const [loading, setLoading] = useState(true);
     const [selectedSemester, setSelectedSemester] = useState(null);
+    const [autonomousResults, setAutonomousResults] = useState([]);
+    const [regulationResults, setRegulationResults] = useState([]);
+    const [activeTab, setActiveTab] = useState('academic');
 
     useEffect(() => {
         fetchResults();
+        fetchAutonomousResults();
+        fetchRegulationResults();
     }, []);
 
     const fetchResults = async () => {
@@ -2391,6 +2559,20 @@ function ResultsPage() {
         }
     };
 
+    const fetchAutonomousResults = async () => {
+        try {
+            const res = await api.get('/student/autonomous-results');
+            setAutonomousResults(res.data.results || []);
+        } catch (e) { /* endpoint may not exist yet */ }
+    };
+
+    const fetchRegulationResults = async () => {
+        try {
+            const res = await api.get('/student/regulation-results');
+            setRegulationResults(res.data.results || []);
+        } catch (e) { /* endpoint may not exist yet */ }
+    };
+
     const getGradeColor = (grade) => {
         if (grade.startsWith('A')) return 'success';
         if (grade.startsWith('B')) return 'info';
@@ -2398,78 +2580,238 @@ function ResultsPage() {
         return 'error';
     };
 
+    const handleDownloadPDF = () => {
+        const printWindow = window.open('', '_blank');
+        const html = `
+            <html><head><title>Academic Results</title>
+            <style>
+                body { font-family: 'Segoe UI', sans-serif; padding: 2rem; color: #333; }
+                h1 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem; }
+                h2 { color: #444; margin-top: 1.5rem; }
+                .summary { display: flex; gap: 2rem; margin: 1rem 0; }
+                .summary-box { background: #f0f4ff; padding: 1rem 1.5rem; border-radius: 8px; text-align: center; }
+                .summary-box .value { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+                .summary-box .label { font-size: 0.85rem; color: #666; }
+                table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1.5rem; }
+                th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+                th { background: #667eea; color: white; }
+                tr:nth-child(even) { background: #f9f9f9; }
+                .sgpa { background: #e8f5e9; padding: 4px 12px; border-radius: 4px; font-weight: bold; color: #2e7d32; }
+                .footer { margin-top: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 1rem; }
+                @media print { body { padding: 0; } }
+            </style></head><body>
+            <h1>📊 Academic Results Report</h1>
+            <div class="summary">
+                <div class="summary-box"><div class="value">${cgpa}</div><div class="label">CGPA</div></div>
+                <div class="summary-box"><div class="value">${results.length}</div><div class="label">Semesters</div></div>
+            </div>
+            ${results.map(sem => `
+                <h2>Semester ${sem.semester} (${sem.year}) &mdash; <span class="sgpa">SGPA: ${sem.sgpa}</span></h2>
+                <table>
+                    <thead><tr><th>Code</th><th>Subject</th><th>Credits</th><th>Grade</th><th>Points</th></tr></thead>
+                    <tbody>${sem.subjects.map(s => `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.credits}</td><td>${s.grade}</td><td>${s.gradePoints}</td></tr>`).join('')}</tbody>
+                </table>
+            `).join('')}
+            <div class="footer">Generated on ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })} &bull; BlockEdu Portal</div>
+            </body></html>
+        `;
+        printWindow.document.write(html);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => { printWindow.print(); }, 500);
+    };
+
     if (loading) return <SkeletonLoader rows={3} />;
+
+    const tabStyle = (tab) => ({
+        padding: '0.7rem 1.5rem',
+        border: 'none',
+        borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
+        background: activeTab === tab ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
+        color: activeTab === tab ? '#667eea' : 'var(--text-secondary)',
+        fontWeight: activeTab === tab ? 700 : 500,
+        cursor: 'pointer',
+        fontSize: '0.95rem',
+        transition: 'all 0.3s ease',
+        borderRadius: '8px 8px 0 0'
+    });
 
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1> Academic Results</h1>
-                <p className="text-muted">View your semester-wise academic performance</p>
-            </div>
-
-            <div className="stats-grid" style={{ marginBottom: '2rem' }}>
-                <div className="stat-card success">
-                    <div className="stat-value">{cgpa}</div>
-                    <div className="stat-label">CGPA</div>
-                </div>
-                <div className="stat-card info">
-                    <div className="stat-value">{results.length}</div>
-                    <div className="stat-label">Semesters Completed</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                        <h1>📊 Academic Results</h1>
+                        <p className="text-muted">View your academic performance and results</p>
+                    </div>
+                    {activeTab === 'academic' && results.length > 0 && (
+                        <button className="btn btn-primary" onClick={handleDownloadPDF} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '1.2rem' }}>⬇</span> Download Results PDF
+                        </button>
+                    )}
                 </div>
             </div>
 
-            <div className="section">
-                <div className="section-header">
-                    <h2 className="section-title">Semester Results</h2>
-                </div>
+            {/* Tab Navigation */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '2px solid var(--border-color)', flexWrap: 'wrap' }}>
+                <button style={tabStyle('academic')} onClick={() => setActiveTab('academic')}>
+                    📝 Academic Results
+                </button>
+                <button style={tabStyle('autonomous')} onClick={() => setActiveTab('autonomous')}>
+                    📄 Autonomous Results
+                </button>
+                <button style={tabStyle('jntuh')} onClick={() => setActiveTab('jntuh')}>
+                    📋 JNTUH Regulation
+                </button>
+            </div>
 
-                {results.map(sem => (
-                    <div key={sem.semester} className="card" style={{ marginBottom: '1rem' }}>
-                        <div
-                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                            onClick={() => setSelectedSemester(selectedSemester === sem.semester ? null : sem.semester)}
-                        >
-                            <h3 style={{ margin: 0 }}> Semester {sem.semester} ({sem.year})</h3>
-                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                <span className="badge badge-success">SGPA: {sem.sgpa}</span>
-                                <span>{selectedSemester === sem.semester ? '' : ''}</span>
-                            </div>
+            {/* ===== TAB 1: ACADEMIC RESULTS ===== */}
+            {activeTab === 'academic' && (
+                <>
+                    <div className="stats-grid" style={{ marginBottom: '2rem' }}>
+                        <div className="stat-card success">
+                            <div className="stat-value">{cgpa}</div>
+                            <div className="stat-label">CGPA</div>
+                        </div>
+                        <div className="stat-card info">
+                            <div className="stat-value">{results.length}</div>
+                            <div className="stat-label">Semesters Completed</div>
+                        </div>
+                    </div>
+
+                    <div className="section">
+                        <div className="section-header">
+                            <h2 className="section-title">Semester Results</h2>
                         </div>
 
-                        {selectedSemester === sem.semester && (
-                            <div style={{ marginTop: '1rem' }}>
-                                <div className="table-container">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Code</th>
-                                                <th>Subject</th>
-                                                <th>Credits</th>
-                                                <th>Grade</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sem.subjects.map((sub, idx) => (
-                                                <tr key={idx}>
-                                                    <td><code>{sub.code}</code></td>
-                                                    <td>{sub.name}</td>
-                                                    <td>{sub.credits}</td>
-                                                    <td><span className={`badge badge-${getGradeColor(sub.grade)}`}>{sub.grade}</span></td>
-                                                    <td>{sub.gradePoints}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                        {results.length === 0 ? (
+                            <div className="card text-center"><p className="text-muted">No results available yet</p></div>
+                        ) : (
+                            results.map(sem => (
+                                <div key={sem.semester} className="card" style={{ marginBottom: '1rem' }}>
+                                    <div
+                                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                                        onClick={() => setSelectedSemester(selectedSemester === sem.semester ? null : sem.semester)}
+                                    >
+                                        <h3 style={{ margin: 0 }}> Semester {sem.semester} ({sem.year}){sem.branch ? ` — ${sem.branch}` : ''}</h3>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <span className="badge badge-success">SGPA: {sem.sgpa}</span>
+                                            <span>{selectedSemester === sem.semester ? '▲' : '▼'}</span>
+                                        </div>
+                                    </div>
+
+                                    {selectedSemester === sem.semester && (
+                                        <div style={{ marginTop: '1rem' }}>
+                                            <div className="table-container">
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Code</th>
+                                                            <th>Subject</th>
+                                                            <th>Credits</th>
+                                                            <th>Grade</th>
+                                                            <th>Points</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {sem.subjects.map((sub, idx) => (
+                                                            <tr key={idx}>
+                                                                <td><code>{sub.code}</code></td>
+                                                                <td>{sub.name}</td>
+                                                                <td>{sub.credits}</td>
+                                                                <td><span className={`badge badge-${getGradeColor(sub.grade)}`}>{sub.grade}</span></td>
+                                                                <td>{sub.gradePoints}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
+                            ))
                         )}
                     </div>
-                ))}
-            </div>
+                </>
+            )}
+
+            {/* ===== TAB 2: AUTONOMOUS RESULTS ===== */}
+            {activeTab === 'autonomous' && (
+                <div className="section">
+                    <div className="section-header">
+                        <h2 className="section-title">📄 Autonomous Results Files</h2>
+                    </div>
+                    <p className="text-muted" style={{ marginBottom: '1rem' }}>Download result files uploaded by the administration</p>
+                    {autonomousResults.length === 0 ? (
+                        <div className="card text-center"><p className="text-muted">No autonomous results uploaded yet</p></div>
+                    ) : (
+                        <div style={{ display: 'grid', gap: '1rem' }}>
+                            {autonomousResults.map(r => (
+                                <div key={r.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <span style={{ fontSize: '2rem' }}>📄</span>
+                                        <div>
+                                            <h4 style={{ margin: 0 }}>{r.fileName}</h4>
+                                            <small className="text-muted">
+                                                Uploaded: {new Date(r.uploadedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <a href={r.fileData} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            👁 View
+                                        </a>
+                                        <a href={r.fileData} download={r.fileName} className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            ⬇ Download
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* ===== TAB 3: JNTUH REGULATION RESULTS ===== */}
+            {activeTab === 'jntuh' && (
+                <div className="section">
+                    <div className="section-header">
+                        <h2 className="section-title">📋 JNTUH Regulation Results</h2>
+                    </div>
+                    <p className="text-muted" style={{ marginBottom: '1rem' }}>View and download regulation results uploaded by the administration</p>
+                    {regulationResults.length === 0 ? (
+                        <div className="card text-center"><p className="text-muted">No regulation results uploaded yet</p></div>
+                    ) : (
+                        <div style={{ display: 'grid', gap: '1rem' }}>
+                            {regulationResults.map(r => (
+                                <div key={r.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <span style={{ fontSize: '2rem' }}>📋</span>
+                                        <div>
+                                            <h4 style={{ margin: 0 }}>{r.fileName}</h4>
+                                            <small className="text-muted">
+                                                Uploaded: {new Date(r.uploadedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <a href={r.fileData} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            👁 View
+                                        </a>
+                                        <a href={r.fileData} download={r.fileName} className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            ⬇ Download
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
+
 
 // Attendance Page Component
 function AttendancePage() {
@@ -4060,11 +4402,11 @@ function PaymentPage() {
     const [showConfetti, setShowConfetti] = useState(false);
 
     const feeTypes = [
-        { id: 'tuition_fee', name: 'Tuition Fee', amount: 50000, icon: '\u{1F4DA}', description: 'Semester tuition charges' },
-        { id: 'crt_fee', name: 'CRT Fee', amount: 5000, icon: '\u{1F4B0}', description: 'Campus Recruitment Training' },
-        { id: 'bus_fee', name: 'Bus Fee', amount: 12000, icon: '\u{1F4B0}', description: 'Annual transportation charges' },
-        { id: 'hostel_fee', name: 'Hostel Fee', amount: 35000, icon: '\u{1F3E2}', description: 'Hostel accommodation per semester' },
-        { id: 'other_fee', name: 'Other Fees', amount: 2500, icon: '\u{1F4B0}', description: 'Lab, Library & Activities' }
+        { id: 'tuition_fee', name: 'Tuition Fee', amount: 50000, icon: '📚', description: 'Semester tuition charges' },
+        { id: 'crt_fee', name: 'CRT Fee', amount: 5000, icon: '💰', description: 'Campus Recruitment Training' },
+        { id: 'bus_fee', name: 'Bus Fee', amount: 12000, icon: '💰', description: 'Annual transportation charges' },
+        { id: 'hostel_fee', name: 'Hostel Fee', amount: 35000, icon: '🏢', description: 'Hostel accommodation per semester' },
+        { id: 'other_fee', name: 'Other Fees', amount: 2500, icon: '💰', description: 'Lab, Library & Activities' }
     ];
 
     const UPI_ID = 'college@upi';
@@ -4765,18 +5107,18 @@ function CertificateGeneratorPage() {
 
     // Pre-existing certificate templates
     const certTemplates = [
-        { id: 'bonafide', name: ' Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
-        { id: 'course_completion', name: ' Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
-        { id: 'transfer', name: ' Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
-        { id: 'migration', name: ' Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
-        { id: 'merit', name: ' Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
-        { id: 'participation', name: ' Participation Certificate', color: '#48bb78', border: '#2f9e5f', fields: ['studentName', 'eventName', 'eventDate', 'organizer', 'venue'] },
-        { id: 'internship', name: ' Internship Certificate', color: '#ed64a6', border: '#d53f8c', fields: ['studentName', 'company', 'role', 'duration', 'startDate', 'endDate', 'supervisor'] },
-        { id: 'character', name: ' Character Certificate', color: '#319795', border: '#2c7a7b', fields: ['studentName', 'fatherName', 'department', 'enrollmentYear', 'conduct', 'character'] },
-        { id: 'study', name: ' Study Certificate', color: '#d69e2e', border: '#b7791f', fields: ['studentName', 'fatherName', 'course', 'department', 'fromDate', 'toDate', 'enrollmentYear'] },
-        { id: 'medical_fitness', name: ' Medical Fitness Certificate', color: '#38a169', border: '#2f855a', fields: ['studentName', 'fatherName', 'age', 'bloodGroup', 'fitnessStatus', 'remarks'] },
-        { id: 'sports', name: ' Sports Certificate', color: '#dd6b20', border: '#c05621', fields: ['studentName', 'sportName', 'eventLevel', 'position', 'eventDate', 'venue', 'year'] },
-        { id: 'provisional', name: ' Provisional Degree Certificate', color: '#553c9a', border: '#44337a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'passingYear', 'grade', 'division'] },
+        { id: 'bonafide', name: '📄 Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
+        { id: 'course_completion', name: '🎓 Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
+        { id: 'transfer', name: '📋 Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
+        { id: 'migration', name: '✈️ Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
+        { id: 'merit', name: '🏆 Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
+        { id: 'participation', name: '🤝 Participation Certificate', color: '#48bb78', border: '#2f9e5f', fields: ['studentName', 'eventName', 'eventDate', 'organizer', 'venue'] },
+        { id: 'internship', name: '💼 Internship Certificate', color: '#ed64a6', border: '#d53f8c', fields: ['studentName', 'company', 'role', 'duration', 'startDate', 'endDate', 'supervisor'] },
+        { id: 'character', name: '⭐ Character Certificate', color: '#319795', border: '#2c7a7b', fields: ['studentName', 'fatherName', 'department', 'enrollmentYear', 'conduct', 'character'] },
+        { id: 'study', name: '📚 Study Certificate', color: '#d69e2e', border: '#b7791f', fields: ['studentName', 'fatherName', 'course', 'department', 'fromDate', 'toDate', 'enrollmentYear'] },
+        { id: 'medical_fitness', name: '🏥 Medical Fitness Certificate', color: '#38a169', border: '#2f855a', fields: ['studentName', 'fatherName', 'age', 'bloodGroup', 'fitnessStatus', 'remarks'] },
+        { id: 'sports', name: '🏅 Sports Certificate', color: '#dd6b20', border: '#c05621', fields: ['studentName', 'sportName', 'eventLevel', 'position', 'eventDate', 'venue', 'year'] },
+        { id: 'provisional', name: '🎖️ Provisional Degree Certificate', color: '#553c9a', border: '#44337a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'passingYear', 'grade', 'division'] },
     ];
 
     const fieldLabels = {
@@ -5646,6 +5988,768 @@ function WorkflowManagerPage() {
     );
 }
 
+// ==================== ADMIN RESULTS PAGE ====================
+function AdminResultsPage() {
+    const [results, setResults] = useState([]);
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+    const [activeTab, setActiveTab] = useState('publish');
+    const [form, setForm] = useState({ studentId: '', semester: '', year: new Date().getFullYear(), branch: '', subjects: [{ code: '', name: '', credits: 3, grade: 'A', gradePoints: 9 }] });
+    const [submitting, setSubmitting] = useState(false);
+    const [message, setMessage] = useState({ type: '', text: '' });
+    const [autonomousFile, setAutonomousFile] = useState(null);
+    const [autonomousResults, setAutonomousResults] = useState([]);
+    const [showJntuhSub, setShowJntuhSub] = useState(false);
+
+    useEffect(() => { fetchData(); }, []);
+
+    const fetchData = async () => {
+        try {
+            const [resResults, resStudents] = await Promise.all([
+                api.get('/admin/results'),
+                api.get('/students')
+            ]);
+            setResults(resResults.data.results || []);
+            setStudents(resStudents.data.students || []);
+            // Fetch autonomous results
+            try {
+                const autoRes = await api.get('/admin/autonomous-results');
+                setAutonomousResults(autoRes.data.results || []);
+            } catch (e) { /* endpoint may not exist yet */ }
+        } catch (err) {
+            console.error('Error:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const addSubject = () => {
+        setForm({ ...form, subjects: [...form.subjects, { code: '', name: '', credits: 3, grade: 'A', gradePoints: 9 }] });
+    };
+
+    const removeSubject = (idx) => {
+        if (form.subjects.length <= 1) return;
+        setForm({ ...form, subjects: form.subjects.filter((_, i) => i !== idx) });
+    };
+
+    const updateSubject = (idx, field, value) => {
+        const updated = [...form.subjects];
+        updated[idx][field] = value;
+        if (field === 'grade') {
+            const gpMap = { 'A+': 10, 'A': 9, 'B+': 8, 'B': 7, 'C+': 6, 'C': 5, 'D': 4, 'F': 0 };
+            updated[idx].gradePoints = gpMap[value] || 0;
+        }
+        setForm({ ...form, subjects: updated });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setMessage({ type: '', text: '' });
+        try {
+            await api.post('/admin/results', form);
+            setMessage({ type: 'success', text: 'Results published successfully! Student has been notified.' });
+            setShowForm(false);
+            setForm({ studentId: '', semester: '', year: new Date().getFullYear(), branch: '', subjects: [{ code: '', name: '', credits: 3, grade: 'A', gradePoints: 9 }] });
+            fetchData();
+        } catch (err) {
+            setMessage({ type: 'error', text: err.response?.data?.error || 'Failed to publish results' });
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Delete this result?')) return;
+        try {
+            await api.delete(`/admin/results/${id}`);
+            setResults(prev => prev.filter(r => r.id !== id));
+        } catch (err) {
+            alert('Failed to delete');
+        }
+    };
+
+    const handleAutonomousUpload = async (e) => {
+        e.preventDefault();
+        if (!autonomousFile) {
+            setMessage({ type: 'error', text: 'Please select a PDF file to upload' });
+            return;
+        }
+        setSubmitting(true);
+        setMessage({ type: '', text: '' });
+        try {
+            const reader = new FileReader();
+            reader.onload = async (evt) => {
+                try {
+                    await api.post('/admin/autonomous-results', {
+                        fileName: autonomousFile.name,
+                        fileData: evt.target.result,
+                        uploadedAt: new Date().toISOString()
+                    });
+                    setMessage({ type: 'success', text: 'Autonomous results uploaded successfully! Students can now view and download.' });
+                    setAutonomousFile(null);
+                    e.target.reset?.();
+                    fetchData();
+                } catch (err) {
+                    setMessage({ type: 'error', text: err.response?.data?.error || 'Failed to upload results' });
+                }
+                setSubmitting(false);
+            };
+            reader.readAsDataURL(autonomousFile);
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Error reading file' });
+            setSubmitting(false);
+        }
+    };
+
+    const handleDeleteAutonomous = async (id) => {
+        if (!window.confirm('Delete this autonomous result file?')) return;
+        try {
+            await api.delete(`/admin/autonomous-results/${id}`);
+            setAutonomousResults(prev => prev.filter(r => r.id !== id));
+        } catch (err) {
+            alert('Failed to delete');
+        }
+    };
+
+    if (loading) return <SkeletonLoader rows={3} />;
+
+    const tabStyle = (tab) => ({
+        padding: '0.7rem 1.5rem',
+        border: 'none',
+        borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
+        background: activeTab === tab ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
+        color: activeTab === tab ? '#667eea' : 'var(--text-secondary)',
+        fontWeight: activeTab === tab ? 700 : 500,
+        cursor: 'pointer',
+        fontSize: '0.95rem',
+        transition: 'all 0.3s ease',
+        borderRadius: '8px 8px 0 0'
+    });
+
+    return (
+        <div className="dashboard">
+            <div className="dashboard-header">
+                <h1>📊 Results Management</h1>
+                <p className="text-muted">Publish and manage student academic results</p>
+            </div>
+
+            {/* Tab Navigation */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '2px solid var(--border-color)', flexWrap: 'wrap' }}>
+                <button style={tabStyle('publish')} onClick={() => setActiveTab('publish')}>
+                    📝 Publish Results
+                </button>
+                <button style={tabStyle('autonomous')} onClick={() => setActiveTab('autonomous')}>
+                    📄 Autonomous Results
+                </button>
+                <button style={tabStyle('jntuh')} onClick={() => setActiveTab('jntuh')}>
+                    🏫 JNTUH Results
+                </button>
+            </div>
+
+            {message.text && <div className={`alert alert-${message.type}`} style={{ marginBottom: '1rem' }}>{message.text}</div>}
+
+            {/* ===== TAB 1: PUBLISH RESULTS ===== */}
+            {activeTab === 'publish' && (
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+                            {showForm ? '✖ Cancel' : '➕ Publish New Results'}
+                        </button>
+                    </div>
+
+                    {showForm && (
+                        <div className="card" style={{ marginBottom: '1.5rem' }}>
+                            <h3>Publish Results</h3>
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem' }}>
+                                    <div className="form-group">
+                                        <label className="form-label">Student</label>
+                                        <select className="form-control" value={form.studentId} onChange={e => setForm({ ...form, studentId: e.target.value })} required>
+                                            <option value="">Select Student</option>
+                                            {students.map(s => <option key={s.studentId} value={s.studentId}>{s.name} ({s.studentId})</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Branch</label>
+                                        <select className="form-control" value={form.branch} onChange={e => setForm({ ...form, branch: e.target.value })} required>
+                                            <option value="">Select Branch</option>
+                                            <option value="CSE">CSE - Computer Science</option>
+                                            <option value="ECE">ECE - Electronics & Communication</option>
+                                            <option value="EEE">EEE - Electrical & Electronics</option>
+                                            <option value="MECH">MECH - Mechanical</option>
+                                            <option value="CIVIL">CIVIL - Civil Engineering</option>
+                                            <option value="IT">IT - Information Technology</option>
+                                            <option value="AIDS">AIDS - AI & Data Science</option>
+                                            <option value="AIML">AIML - AI & Machine Learning</option>
+                                            <option value="CSM">CSM - Computer Science (AI & ML)</option>
+                                            <option value="CSD">CSD - Computer Science (Data Science)</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Semester</label>
+                                        <input type="number" min="1" max="12" className="form-control" value={form.semester} onChange={e => setForm({ ...form, semester: e.target.value })} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Year</label>
+                                        <input type="number" className="form-control" value={form.year} onChange={e => setForm({ ...form, year: e.target.value })} required />
+                                    </div>
+                                </div>
+
+                                <h4 style={{ margin: '1rem 0 0.5rem' }}>Subjects</h4>
+                                {form.subjects.map((sub, idx) => (
+                                    <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 0.7fr 0.8fr 0.7fr auto', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'end' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label className="form-label" style={{ fontSize: '0.75rem' }}>Code</label>
+                                            <input className="form-control" placeholder="CS101" value={sub.code} onChange={e => updateSubject(idx, 'code', e.target.value)} required />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label className="form-label" style={{ fontSize: '0.75rem' }}>Subject Name</label>
+                                            <input className="form-control" placeholder="Data Structures" value={sub.name} onChange={e => updateSubject(idx, 'name', e.target.value)} required />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label className="form-label" style={{ fontSize: '0.75rem' }}>Credits</label>
+                                            <input type="number" min="1" max="6" className="form-control" value={sub.credits} onChange={e => updateSubject(idx, 'credits', parseInt(e.target.value) || 0)} required />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label className="form-label" style={{ fontSize: '0.75rem' }}>Grade</label>
+                                            <select className="form-control" value={sub.grade} onChange={e => updateSubject(idx, 'grade', e.target.value)}>
+                                                {['A+', 'A', 'B+', 'B', 'C+', 'C', 'D', 'F'].map(g => <option key={g}>{g}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label className="form-label" style={{ fontSize: '0.75rem' }}>Points</label>
+                                            <input type="number" min="0" max="10" className="form-control" value={sub.gradePoints} onChange={e => updateSubject(idx, 'gradePoints', parseInt(e.target.value) || 0)} required />
+                                        </div>
+                                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => removeSubject(idx)} style={{ height: '38px' }} title="Remove">🗑</button>
+                                    </div>
+                                ))}
+                                <button type="button" className="btn btn-secondary btn-sm" onClick={addSubject} style={{ marginBottom: '1rem' }}>➕ Add Subject</button>
+
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                        {submitting ? 'Publishing...' : '📤 Publish Results'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    <div className="section">
+                        <div className="section-header">
+                            <h2 className="section-title">Published Results ({results.length})</h2>
+                        </div>
+                        {results.length === 0 ? (
+                            <div className="card text-center"><p className="text-muted">No results published yet</p></div>
+                        ) : (
+                            <div className="table-container">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>Student ID</th>
+                                            <th>Branch</th>
+                                            <th>Semester</th>
+                                            <th>Year</th>
+                                            <th>SGPA</th>
+                                            <th>Subjects</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {results.map(r => (
+                                            <tr key={r.id}>
+                                                <td>{r.studentName}</td>
+                                                <td><code>{r.studentId}</code></td>
+                                                <td><span className="badge badge-info">{r.branch || 'N/A'}</span></td>
+                                                <td>Sem {r.semester}</td>
+                                                <td>{r.year}</td>
+                                                <td><span className="badge badge-success">{r.sgpa}</span></td>
+                                                <td>{r.subjects?.length || 0}</td>
+                                                <td>
+                                                    <button className="btn btn-secondary btn-sm" onClick={() => handleDelete(r.id)} title="Delete">🗑</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* ===== TAB 2: AUTONOMOUS RESULTS (PDF UPLOAD) ===== */}
+            {activeTab === 'autonomous' && (
+                <>
+                    <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05))' }}>
+                        <h3>📄 Upload Autonomous Results (PDF)</h3>
+                        <p className="text-muted" style={{ marginBottom: '1rem' }}>Upload student results as PDF files. Students will be able to view and download these files.</p>
+                        <form onSubmit={handleAutonomousUpload}>
+                            <div className="form-group">
+                                <label className="form-label">📎 Select Results PDF</label>
+                                <input
+                                    type="file"
+                                    accept=".pdf,.xlsx,.xls,.csv"
+                                    className="form-control"
+                                    onChange={e => {
+                                        const f = e.target.files[0];
+                                        setAutonomousFile(f || null);
+                                    }}
+                                    style={{ padding: '0.6rem' }}
+                                    required
+                                />
+                                {autonomousFile && (
+                                    <small style={{ color: 'var(--success-color)', marginTop: '0.25rem', display: 'block' }}>
+                                        ✅ File selected: {autonomousFile.name} ({(autonomousFile.size / 1024).toFixed(1)} KB)
+                                    </small>
+                                )}
+                            </div>
+                            <button type="submit" className="btn btn-primary" disabled={submitting} style={{ marginTop: '0.5rem' }}>
+                                {submitting ? 'Uploading...' : '📤 Upload Results'}
+                            </button>
+                        </form>
+                    </div>
+
+                    <div className="section">
+                        <div className="section-header">
+                            <h2 className="section-title">Uploaded Autonomous Results ({autonomousResults.length})</h2>
+                        </div>
+                        {autonomousResults.length === 0 ? (
+                            <div className="card text-center"><p className="text-muted">No autonomous results uploaded yet</p></div>
+                        ) : (
+                            <div className="table-container">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>File Name</th>
+                                            <th>Uploaded At</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {autonomousResults.map(r => (
+                                            <tr key={r.id}>
+                                                <td>📄 {r.fileName}</td>
+                                                <td>{new Date(r.uploadedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                                                <td style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    <a href={r.fileData} download={r.fileName} className="btn btn-primary btn-sm">⬇ Download</a>
+                                                    <button className="btn btn-secondary btn-sm" onClick={() => handleDeleteAutonomous(r.id)} title="Delete">🗑</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* ===== TAB 3: JNTUH RESULTS ===== */}
+            {activeTab === 'jntuh' && (
+                <div>
+                    <div className="card" style={{ marginBottom: '1.5rem', textAlign: 'center', padding: '2rem' }}>
+                        <h3 style={{ marginBottom: '0.5rem' }}>🏫 JNTUH Results Portal</h3>
+                        <p className="text-muted" style={{ marginBottom: '1.5rem' }}>Access JNTUH results and analysis tools</p>
+
+                        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            {/* Button 1: JNTUH Results By Marks/SGPA */}
+                            <a href="https://jntuh-results-analysis.onrender.com/" target="_blank" rel="noopener noreferrer"
+                                style={{
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem',
+                                    padding: '1.5rem 2rem', background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                    color: 'white', borderRadius: '16px', textDecoration: 'none', border: 'none',
+                                    fontWeight: 600, fontSize: '1rem', minWidth: '200px',
+                                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.35)', transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 35px rgba(102, 126, 234, 0.5)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.35)'; }}
+                            >
+                                <span style={{ fontSize: '2rem' }}>📊</span>
+                                <span>JNTUH Results ↗</span>
+                                <small style={{ opacity: 0.8, fontSize: '0.75rem' }}>By Marks / SGPA</small>
+                            </a>
+
+                            {/* Button 2: JNTUH Overall Results */}
+                            <a href="https://jntuh-markslist-v2-0.onrender.com/" target="_blank" rel="noopener noreferrer"
+                                style={{
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem',
+                                    padding: '1.5rem 2rem', background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+                                    color: 'white', borderRadius: '16px', textDecoration: 'none', border: 'none',
+                                    fontWeight: 600, fontSize: '1rem', minWidth: '200px',
+                                    boxShadow: '0 8px 25px rgba(245, 158, 11, 0.35)', transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 35px rgba(245, 158, 11, 0.5)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(245, 158, 11, 0.35)'; }}
+                            >
+                                <span style={{ fontSize: '2rem' }}>📝</span>
+                                <span>JNTUH Overall Results ↗</span>
+                                <small style={{ opacity: 0.8, fontSize: '0.75rem' }}>Full Marks List</small>
+                            </a>
+
+                            {/* Button 3: JNTUH Regulation Results (Upload) */}
+                            <button
+                                onClick={() => setShowJntuhSub(!showJntuhSub)}
+                                style={{
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem',
+                                    padding: '1.5rem 2rem', background: showJntuhSub ? 'linear-gradient(135deg, #059669, #047857)' : 'linear-gradient(135deg, #10b981, #059669)',
+                                    color: 'white', borderRadius: '16px', border: 'none', cursor: 'pointer',
+                                    fontWeight: 600, fontSize: '1rem', minWidth: '200px',
+                                    boxShadow: '0 8px 25px rgba(16, 185, 129, 0.35)', transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 35px rgba(16, 185, 129, 0.5)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.35)'; }}
+                            >
+                                <span style={{ fontSize: '2rem' }}>📋</span>
+                                <span>JNTUH Regulation Results</span>
+                                <small style={{ opacity: 0.8, fontSize: '0.75rem' }}>{showJntuhSub ? '▲ Close' : '▼ Upload & Manage'}</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* JNTUH Regulation Results Upload Section */}
+                    {showJntuhSub && (
+                        <div className="card" style={{ animation: 'fadeInUp 0.3s ease' }}>
+                            <h3 style={{ marginBottom: '0.5rem' }}>📋 JNTUH Regulation Results</h3>
+                            <p className="text-muted" style={{ marginBottom: '1rem' }}>Upload regulation result files (PDF/Excel). Students can view & download from their Results page.</p>
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                const fileInput = e.target.querySelector('input[type="file"]');
+                                const file = fileInput?.files[0];
+                                if (!file) { setMessage({ type: 'error', text: 'Please select a file' }); return; }
+                                setSubmitting(true);
+                                setMessage({ type: '', text: '' });
+                                const reader = new FileReader();
+                                reader.onload = async (evt) => {
+                                    try {
+                                        await api.post('/admin/regulation-results', {
+                                            fileName: file.name,
+                                            fileData: evt.target.result,
+                                            uploadedAt: new Date().toISOString()
+                                        });
+                                        setMessage({ type: 'success', text: 'Regulation results uploaded! Students can now view & download.' });
+                                        fileInput.value = '';
+                                        fetchData();
+                                    } catch (err) {
+                                        setMessage({ type: 'error', text: err.response?.data?.error || 'Upload failed' });
+                                    }
+                                    setSubmitting(false);
+                                };
+                                reader.readAsDataURL(file);
+                            }}>
+                                <div className="form-group">
+                                    <label className="form-label">📎 Select Regulation Results File</label>
+                                    <input type="file" accept=".pdf,.xlsx,.xls,.csv" className="form-control" style={{ padding: '0.6rem' }} required />
+                                </div>
+                                <button type="submit" className="btn btn-primary" disabled={submitting} style={{ marginTop: '0.5rem' }}>
+                                    {submitting ? 'Uploading...' : '📤 Upload Regulation Results'}
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+
+// ==================== ADMIN NOTIFICATIONS PAGE ====================
+function AdminNotificationsPage() {
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+    const [form, setForm] = useState({ title: '', message: '', type: 'notice', description: '', attachment: '' });
+    const [submitting, setSubmitting] = useState(false);
+    const [msg, setMsg] = useState({ type: '', text: '' });
+
+    useEffect(() => { fetchNotifications(); }, []);
+
+    const fetchNotifications = async () => {
+        try {
+            const res = await api.get('/notifications');
+            setNotifications(res.data.notifications || []);
+        } catch (err) {
+            console.error('Error:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type === 'application/pdf') {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                setForm(prev => ({ ...prev, attachment: evt.target.result }));
+            };
+            reader.readAsDataURL(file);
+        } else if (file) {
+            alert('Please upload a PDF file only.');
+            e.target.value = '';
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setMsg({ type: '', text: '' });
+        try {
+            await api.post('/admin/notifications', {
+                title: form.title,
+                message: form.message,
+                type: form.type,
+                description: form.description,
+                attachment: form.attachment || null
+            });
+            setMsg({ type: 'success', text: 'Notification published to all students!' });
+            setShowForm(false);
+            setForm({ title: '', message: '', type: 'notice', description: '', attachment: '' });
+            fetchNotifications();
+        } catch (err) {
+            setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to publish notification' });
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const getTypeColor = (type) => {
+        switch (type) {
+            case 'urgent': return 'error';
+            case 'important': return 'warning';
+            case 'event': return 'success';
+            default: return 'info';
+        }
+    };
+
+    if (loading) return <SkeletonLoader rows={3} />;
+
+    return (
+        <div className="dashboard">
+            <div className="dashboard-header">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                        <h1>🔔 Manage Notifications</h1>
+                        <p className="text-muted">Send announcements and alerts to students</p>
+                    </div>
+                    <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+                        {showForm ? '✖ Cancel' : '➕ New Notification'}
+                    </button>
+                </div>
+            </div>
+
+            {msg.text && <div className={`alert alert-${msg.type}`} style={{ marginBottom: '1rem' }}>{msg.text}</div>}
+
+            {showForm && (
+                <div className="card" style={{ marginBottom: '1.5rem' }}>
+                    <h3>Create Notification</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">Title</label>
+                            <input type="text" className="form-control" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="e.g. Exam Schedule Released" required />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Message</label>
+                            <textarea className="form-control" rows="3" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Detailed notification message..." required />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Description / Additional Details</label>
+                            <textarea className="form-control" rows="2" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Optional detailed description of the notification data..." />
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div className="form-group">
+                                <label className="form-label">Type</label>
+                                <select className="form-control" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
+                                    <option value="notice">📋 Notice</option>
+                                    <option value="important">⚠ Important</option>
+                                    <option value="urgent">🚨 Urgent</option>
+                                    <option value="event">🎉 Event</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">📎 Attach PDF (optional)</label>
+                                <input type="file" accept=".pdf" className="form-control" onChange={handleFileChange} style={{ padding: '0.6rem' }} />
+                                {form.attachment && <small style={{ color: 'var(--success-color)', marginTop: '0.25rem', display: 'block' }}>✅ PDF attached</small>}
+                            </div>
+                        </div>
+                        <button type="submit" className="btn btn-primary" disabled={submitting}>
+                            {submitting ? 'Sending...' : '📤 Publish Notification'}
+                        </button>
+                    </form>
+                </div>
+            )}
+
+            <div className="section">
+                <div className="section-header">
+                    <h2 className="section-title">All Notifications ({notifications.length})</h2>
+                </div>
+                {notifications.length === 0 ? (
+                    <div className="card text-center"><p className="text-muted">No notifications yet</p></div>
+                ) : (
+                    notifications.map(n => (
+                        <div key={n.id} className="card" style={{ marginBottom: '0.75rem', borderLeft: `4px solid var(--${getTypeColor(n.type)})` }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div>
+                                    <h4 style={{ margin: '0 0 0.25rem 0' }}>{n.title}</h4>
+                                    <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>{n.message}</p>
+                                    <small className="text-muted">
+                                        {new Date(n.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                        {n.createdBy && ` • by ${n.createdBy}`}
+                                    </small>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <span className={`badge badge-${getTypeColor(n.type)}`}>{n.type}</span>
+                                    {n.read && <span className="badge badge-secondary">Read</span>}
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
+// ==================== ADMIN GRIEVANCES PAGE ====================
+function AdminGrievancesPage() {
+    const [grievances, setGrievances] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState('all');
+    const [respondingTo, setRespondingTo] = useState(null);
+    const [responseForm, setResponseForm] = useState({ status: '', response: '' });
+    const [msg, setMsg] = useState({ type: '', text: '' });
+
+    useEffect(() => { fetchGrievances(); }, []);
+
+    const fetchGrievances = async () => {
+        try {
+            const res = await api.get('/admin/grievances');
+            setGrievances(res.data.grievances || []);
+        } catch (err) {
+            console.error('Error:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRespond = async (id) => {
+        if (!responseForm.status && !responseForm.response) {
+            setMsg({ type: 'error', text: 'Please provide a status or response' });
+            return;
+        }
+        try {
+            const res = await api.put(`/admin/grievances/${id}`, responseForm);
+            setGrievances(prev => prev.map(g => g.id === id ? res.data.grievance : g));
+            setRespondingTo(null);
+            setResponseForm({ status: '', response: '' });
+            setMsg({ type: 'success', text: 'Grievance updated! Student has been notified.' });
+        } catch (err) {
+            setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to update' });
+        }
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'resolved': return 'success';
+            case 'in-progress': return 'warning';
+            default: return 'error';
+        }
+    };
+
+    const filtered = filter === 'all' ? grievances : grievances.filter(g => g.status === filter);
+    const counts = { all: grievances.length, pending: grievances.filter(g => g.status === 'pending').length, 'in-progress': grievances.filter(g => g.status === 'in-progress').length, resolved: grievances.filter(g => g.status === 'resolved').length };
+
+    if (loading) return <SkeletonLoader rows={3} />;
+
+    return (
+        <div className="dashboard">
+            <div className="dashboard-header">
+                <h1>📨 Student Grievances</h1>
+                <p className="text-muted">View and respond to student complaints</p>
+            </div>
+
+            {msg.text && <div className={`alert alert-${msg.type}`} style={{ marginBottom: '1rem' }}>{msg.text}</div>}
+
+            <div className="stats-grid" style={{ marginBottom: '1.5rem' }}>
+                <div className="stat-card" onClick={() => setFilter('all')} style={{ cursor: 'pointer', border: filter === 'all' ? '2px solid var(--primary)' : 'none' }}>
+                    <div className="stat-value">{counts.all}</div>
+                    <div className="stat-label">Total</div>
+                </div>
+                <div className="stat-card error" onClick={() => setFilter('pending')} style={{ cursor: 'pointer', border: filter === 'pending' ? '2px solid var(--error)' : 'none' }}>
+                    <div className="stat-value">{counts.pending}</div>
+                    <div className="stat-label">Pending</div>
+                </div>
+                <div className="stat-card warning" onClick={() => setFilter('in-progress')} style={{ cursor: 'pointer', border: filter === 'in-progress' ? '2px solid var(--warning)' : 'none' }}>
+                    <div className="stat-value">{counts['in-progress']}</div>
+                    <div className="stat-label">In Progress</div>
+                </div>
+                <div className="stat-card success" onClick={() => setFilter('resolved')} style={{ cursor: 'pointer', border: filter === 'resolved' ? '2px solid var(--success)' : 'none' }}>
+                    <div className="stat-value">{counts.resolved}</div>
+                    <div className="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <div className="section">
+                {filtered.length === 0 ? (
+                    <div className="card text-center"><p className="text-muted">No grievances found</p></div>
+                ) : (
+                    filtered.map(g => (
+                        <div key={g.id} className="card" style={{ marginBottom: '1rem', borderLeft: `4px solid var(--${getStatusColor(g.status)})` }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                                        <span className="badge badge-secondary">{g.category}</span>
+                                        <span className={`badge badge-${getStatusColor(g.status)}`}>{g.status.toUpperCase()}</span>
+                                    </div>
+                                    <h4 style={{ margin: '0 0 0.25rem 0' }}>{g.subject}</h4>
+                                    <p className="text-muted" style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem' }}>{g.description}</p>
+                                    <small className="text-muted">
+                                        👤 {g.studentName} ({g.studentId}) &bull; Filed: {g.createdAt}
+                                    </small>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {g.status !== 'resolved' && (
+                                        <button className="btn btn-primary btn-sm" onClick={() => { setRespondingTo(respondingTo === g.id ? null : g.id); setResponseForm({ status: g.status === 'pending' ? 'in-progress' : 'resolved', response: '' }); }}>
+                                            {respondingTo === g.id ? 'Cancel' : '✏ Respond'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {g.response && (
+                                <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
+                                    <strong>✅ Admin Response:</strong> {g.response}
+                                    {g.resolvedAt && <small className="text-muted"> (Resolved: {g.resolvedAt})</small>}
+                                </div>
+                            )}
+
+                            {respondingTo === g.id && (
+                                <div style={{ marginTop: '1rem', padding: '1rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
+                                    <div className="form-group">
+                                        <label className="form-label">Update Status</label>
+                                        <select className="form-control" value={responseForm.status} onChange={e => setResponseForm({ ...responseForm, status: e.target.value })}>
+                                            <option value="pending">Pending</option>
+                                            <option value="in-progress">In Progress</option>
+                                            <option value="resolved">Resolved</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Response Message</label>
+                                        <textarea className="form-control" rows="2" value={responseForm.response} onChange={e => setResponseForm({ ...responseForm, response: e.target.value })} placeholder="Your response to the student..." />
+                                    </div>
+                                    <button className="btn btn-primary btn-sm" onClick={() => handleRespond(g.id)}>📤 Send Response</button>
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
 // Full-page AI Chatbot Component
 function ChatbotPage() {
     const [messages, setMessages] = useState([]);
@@ -5691,8 +6795,8 @@ function ChatbotPage() {
                 alignItems: 'center'
             }}>
                 <div>
-                    <h2 style={{ margin: 0 }}>🤖 AI Study Buddy</h2>
-                    <small style={{ opacity: 0.9 }}>Ask me anything about your studies!</small>
+                    <h2 style={{ margin: 0 }}>💬 Help Desk</h2>
+                    <small style={{ opacity: 0.9 }}>Ask your queries & doubts about app features!</small>
                 </div>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                     <select
@@ -5727,11 +6831,11 @@ function ChatbotPage() {
             }}>
                 {messages.length === 0 && (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '3rem' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤖</div>
-                        <h3>Hi! I'm your AI Study Buddy</h3>
-                        <p>Ask me about subjects, grades, attendance, study tips, or career advice!</p>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💬</div>
+                        <h3>Welcome to Help Desk!</h3>
+                        <p>Ask about app features, results, attendance, settings, or anything else</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
-                            {['What is my CGPA?', 'Explain binary search', 'Study tips for exams', 'Career advice'].map(q => (
+                            {['How to check results?', 'How to view attendance?', 'How to download certificate?', 'How to pay fees?', 'How to change password?', 'How to file grievance?'].map(q => (
                                 <button
                                     key={q}
                                     className="btn btn-secondary btn-sm"
@@ -5785,10 +6889,10 @@ function ChatbotPage() {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Ask a question..."
+                        placeholder="Type your question here..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                         disabled={loading}
                         style={{ fontSize: '1rem' }}
                     />
@@ -5796,9 +6900,10 @@ function ChatbotPage() {
                         className="btn btn-primary"
                         onClick={sendMessage}
                         disabled={loading || !input.trim()}
-                        style={{ minWidth: '60px', fontSize: '1.2rem' }}
+                        style={{ minWidth: '52px', fontSize: '1.3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', width: '52px', height: '52px', padding: 0 }}
+                        title="Send message (Enter)"
                     >
-                        {loading ? '...' : ''}
+                        {loading ? '⏳' : '➤'}
                     </button>
                 </div>
             </div>
@@ -5939,6 +7044,9 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminAnalyticsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/certificates" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><CertificateGeneratorPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/workflows" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><WorkflowManagerPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/results" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminResultsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/notifications-manage" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminNotificationsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/grievances" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminGrievancesPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/notifications" element={<ProtectedRoute roles={['student']}><PageWrapper><NotificationsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/results" element={<ProtectedRoute roles={['student']}><PageWrapper><ResultsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/attendance" element={<ProtectedRoute roles={['student']}><PageWrapper><AttendancePage /></PageWrapper></ProtectedRoute>} />
