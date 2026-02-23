@@ -98,6 +98,41 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.3s ease;
+}
+
+/* Smooth page transition */
+.page-transition {
+  animation: pageSlideIn 0.35s ease-out;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card entrance animation */
+.card {
+  animation: cardFadeIn 0.3s ease-out;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ==================== Animated Background ==================== */
@@ -295,6 +330,7 @@ a:hover {
 
 .btn-primary:hover:not(:disabled) {
   box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -833,7 +869,8 @@ select.form-control {
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .tab:hover {

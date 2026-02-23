@@ -257,7 +257,13 @@ const db = {
   activityLog: [],
   // Paper engagement tracking
   paperBookmarks: [],
-  paperRatings: []
+  paperRatings: [],
+  // Feedback system
+  feedback: [],
+  // Department management
+  branches: [],
+  subjects: [],
+  facultyMembers: []
 };
 
 // Initialize demo data
@@ -3084,8 +3090,256 @@ app.get('/api/admin/tasks/stats', authenticateToken, (req, res) => {
   res.json({ stats });
 });
 
+// ==================== LEADERBOARD ====================
+app.get('/api/leaderboard', authenticateToken, (req, res) => {
+  try {
+    const { department } = req.query;
+    let students = db.students.map(s => {
+      const user = db.users.find(u => u.id === s.userId);
+      const results = db.results.filter(r => r.studentId === s.studentId);
+      const attendanceRecords = db.attendance.filter(a => a.studentId === s.studentId);
+      const totalClasses = attendanceRecords.reduce((sum, a) => sum + (a.totalClasses || 0), 0);
+      const attendedClasses = attendanceRecords.reduce((sum, a) => sum + (a.present || 0), 0);
+      const attendancePercent = totalClasses > 0 ? Math.round((attendedClasses / totalClasses) * 100) : 0;
+      const grades = results.map(r => {
+        const gradeMap = { 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'D': 4, 'F': 0 };
+        return gradeMap[r.grade] || 0;
+      });
+      const cgpa = grades.length > 0 ? (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2) : (7 + Math.random() * 3).toFixed(2);
+      return {
+        name: s.name || user?.name || 'Student',
+        studentId: s.studentId,
+        department: s.department,
+        course: s.course || 'B.Tech',
+        cgpa: parseFloat(cgpa),
+        attendance: attendancePercent || Math.floor(70 + Math.random() * 30),
+        profilePicture: s.profilePicture || null
+      };
+    });
+    if (department && department !== 'All') {
+      students = students.filter(s => s.department === department);
+    }
+    const byCgpa = [...students].sort((a, b) => b.cgpa - a.cgpa).slice(0, 20);
+    const byAttendance = [...students].sort((a, b) => b.attendance - a.attendance).slice(0, 20);
+    const departments = [...new Set(db.students.map(s => s.department))];
+    res.json({ byCgpa, byAttendance, departments });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==================== FEEDBACK SYSTEM ====================
+// Submit anonymous feedback
+app.post('/api/student/feedback', authenticateToken, (req, res) => {
+  try {
+    const { category, target, rating, comment, semester } = req.body;
+    if (!category || !target || !rating) {
+      return res.status(400).json({ error: 'Category, target, and rating are required' });
+    }
+    const student = db.students.find(s => s.userId === req.user.id);
+    const entry = {
+      id: uuidv4(),
+      category, // 'course' or 'faculty'
+      target,   // course name or faculty name
+      rating: Math.min(5, Math.max(1, parseInt(rating))),
+      comment: comment || '',
+      semester: semester || 'Current',
+      department: student?.department || 'General',
+      createdAt: new Date().toISOString()
+      // No userId stored — fully anonymous
+    };
+    db.feedback.push(entry);
+    res.json({ message: 'Feedback submitted anonymously. Thank you!', feedback: entry });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get aggregated feedback (admin)
+app.get('/api/admin/feedback', authenticateToken, (req, res) => {
+  try {
+    if (!['admin', 'institution'].includes(req.user.role)) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    const grouped = {};
+    db.feedback.forEach(f => {
+      const key = `${f.category}:${f.target}`;
+      if (!grouped[key]) {
+        grouped[key] = { category: f.category, target: f.target, ratings: [], comments: [], department: f.department };
+      }
+      grouped[key].ratings.push(f.rating);
+      if (f.comment) grouped[key].comments.push({ comment: f.comment, rating: f.rating, date: f.createdAt });
+    });
+    const summary = Object.values(grouped).map(g => ({
+      ...g,
+      avgRating: (g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length).toFixed(1),
+      totalResponses: g.ratings.length,
+      ratings: undefined
+    }));
+    res.json({ feedback: summary, total: db.feedback.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==================== OFFLINE DATA BUNDLE ====================
+app.get('/api/student/offline-bundle', authenticateToken, (req, res) => {
+  try {
+    const student = db.students.find(s => s.userId === req.user.id);
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+    const results = db.results.filter(r => r.studentId === student.studentId);
+    const attendance = db.attendance.filter(a => a.studentId === student.studentId);
+    const timetable = db.timetable.filter(t => t.department === student.department);
+    const notifications = db.notifications.filter(n => !n.department || n.department === student.department).slice(-20);
+    res.json({
+      timestamp: new Date().toISOString(),
+      profile: { name: student.name, studentId: student.studentId, department: student.department, course: student.course, email: student.email, profilePicture: student.profilePicture },
+      results,
+      attendance,
+      timetable,
+      notifications
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==================== BRANCHES / SUBJECTS / FACULTY MANAGEMENT ====================
+// Get all branches
+app.get('/api/admin/branches', authenticateToken, (req, res) => {
+  res.json({ branches: db.branches });
+});
+
+// Add branch
+app.post('/api/admin/branches', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  const { name, code } = req.body;
+  if (!name) return res.status(400).json({ error: 'Branch name required' });
+  const branch = { id: uuidv4(), name, code: code || name.substring(0, 3).toUpperCase(), createdAt: new Date().toISOString() };
+  db.branches.push(branch);
+  res.json({ message: 'Branch added', branch });
+});
+
+// Delete branch
+app.delete('/api/admin/branches/:id', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  db.branches = db.branches.filter(b => b.id !== req.params.id);
+  db.subjects = db.subjects.filter(s => s.branchId !== req.params.id);
+  res.json({ message: 'Branch deleted' });
+});
+
+// Get subjects (optionally by branchId)
+app.get('/api/admin/subjects', authenticateToken, (req, res) => {
+  const { branchId } = req.query;
+  let subjects = db.subjects;
+  if (branchId) subjects = subjects.filter(s => s.branchId === branchId);
+  res.json({ subjects });
+});
+
+// Add subject
+app.post('/api/admin/subjects', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  const { name, branchId, semester } = req.body;
+  if (!name || !branchId) return res.status(400).json({ error: 'Name and branchId required' });
+  const subject = { id: uuidv4(), name, branchId, semester: semester || 'All', createdAt: new Date().toISOString() };
+  db.subjects.push(subject);
+  res.json({ message: 'Subject added', subject });
+});
+
+// Delete subject
+app.delete('/api/admin/subjects/:id', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  db.subjects = db.subjects.filter(s => s.id !== req.params.id);
+  db.facultyMembers = db.facultyMembers.filter(f => f.subjectId !== req.params.id);
+  res.json({ message: 'Subject deleted' });
+});
+
+// Get faculty (optionally by subjectId or branchId)
+app.get('/api/admin/faculty', authenticateToken, (req, res) => {
+  const { subjectId, branchId } = req.query;
+  let faculty = db.facultyMembers;
+  if (subjectId) faculty = faculty.filter(f => f.subjectId === subjectId);
+  if (branchId) faculty = faculty.filter(f => f.branchId === branchId);
+  res.json({ faculty });
+});
+
+// Add faculty
+app.post('/api/admin/faculty', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  const { name, subjectId, branchId, designation } = req.body;
+  if (!name) return res.status(400).json({ error: 'Faculty name required' });
+  const member = { id: uuidv4(), name, subjectId: subjectId || null, branchId: branchId || null, designation: designation || 'Professor', createdAt: new Date().toISOString() };
+  db.facultyMembers.push(member);
+  res.json({ message: 'Faculty added', faculty: member });
+});
+
+// Delete faculty
+app.delete('/api/admin/faculty/:id', authenticateToken, (req, res) => {
+  if (!['admin', 'institution'].includes(req.user.role)) return res.status(403).json({ error: 'Admin only' });
+  db.facultyMembers = db.facultyMembers.filter(f => f.id !== req.params.id);
+  res.json({ message: 'Faculty deleted' });
+});
+
+// Public endpoint: get all departments data (for student feedback forms)
+app.get('/api/departments-data', authenticateToken, (req, res) => {
+  res.json({
+    branches: db.branches,
+    subjects: db.subjects,
+    faculty: db.facultyMembers
+  });
+});
+
 // Initialize demo data and start server
+function seedDepartments() {
+  const depts = [
+    { name: 'Computer Science & Engineering', code: 'CSE' },
+    { name: 'Electronics & Communication', code: 'ECE' },
+    { name: 'Mechanical Engineering', code: 'MECH' },
+    { name: 'Civil Engineering', code: 'CIVIL' }
+  ];
+  depts.forEach(d => {
+    const branch = { id: uuidv4(), name: d.name, code: d.code, createdAt: new Date().toISOString() };
+    db.branches.push(branch);
+  });
+
+  const subjectsData = {
+    'CSE': ['Data Structures', 'OOP', 'Database Systems', 'Computer Networks', 'Operating Systems', 'Web Technologies', 'Software Engineering', 'Machine Learning'],
+    'ECE': ['Digital Electronics', 'Signal Processing', 'VLSI Design', 'Electromagnetic Theory', 'Communication Systems', 'Control Systems'],
+    'MECH': ['Thermodynamics', 'Fluid Mechanics', 'Strength of Materials', 'Manufacturing Technology', 'CAD/CAM', 'Heat Transfer'],
+    'CIVIL': ['Structural Analysis', 'Surveying', 'Concrete Technology', 'Soil Mechanics', 'Transportation Engineering', 'Environmental Engineering']
+  };
+
+  Object.entries(subjectsData).forEach(([code, subs]) => {
+    const branch = db.branches.find(b => b.code === code);
+    if (branch) {
+      subs.forEach(name => {
+        db.subjects.push({ id: uuidv4(), name, branchId: branch.id, semester: 'All', createdAt: new Date().toISOString() });
+      });
+    }
+  });
+
+  const facultyData = [
+    { name: 'Dr. Rajesh Sharma', dept: 'CSE', designation: 'HOD' },
+    { name: 'Prof. Anita Patel', dept: 'CSE', designation: 'Associate Professor' },
+    { name: 'Dr. Suresh Kumar', dept: 'CSE', designation: 'Assistant Professor' },
+    { name: 'Prof. Meena Reddy', dept: 'ECE', designation: 'HOD' },
+    { name: 'Dr. Ravi Singh', dept: 'ECE', designation: 'Associate Professor' },
+    { name: 'Prof. Lakshmi Rao', dept: 'MECH', designation: 'HOD' },
+    { name: 'Dr. Anil Gupta', dept: 'MECH', designation: 'Associate Professor' },
+    { name: 'Prof. Sita Iyer', dept: 'CIVIL', designation: 'HOD' },
+    { name: 'Dr. Prakash Joshi', dept: 'CIVIL', designation: 'Associate Professor' }
+  ];
+  facultyData.forEach(f => {
+    const branch = db.branches.find(b => b.code === f.dept);
+    db.facultyMembers.push({
+      id: uuidv4(), name: f.name, branchId: branch?.id || null, subjectId: null,
+      designation: f.designation, createdAt: new Date().toISOString()
+    });
+  });
+}
+
 initDemoData();
+seedDepartments();
 
 app.listen(PORT, () => {
   console.log(`

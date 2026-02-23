@@ -343,23 +343,73 @@ function SkeletonLoader({ rows = 3, type = 'card' }) {
 
 // Theme Toggle Component
 function ThemeToggle() {
-    const [isDark, setIsDark] = useState(() => {
-        const saved = localStorage.getItem('theme');
-        return saved ? saved === 'dark' : true; // default dark
+    const getAutoTheme = () => {
+        const hour = new Date().getHours();
+        return (hour >= 19 || hour < 6) ? 'dark' : 'light';
+    };
+
+    const [themeMode, setThemeMode] = useState(() => {
+        return localStorage.getItem('themeMode') || 'auto';
     });
 
+    const getEffectiveTheme = (mode) => {
+        if (mode === 'auto') return getAutoTheme();
+        return mode; // 'light' or 'dark'
+    };
+
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    }, [isDark]);
+        const theme = getEffectiveTheme(themeMode);
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [themeMode]);
+
+    // Auto-schedule: recheck every minute
+    useEffect(() => {
+        if (themeMode !== 'auto') return;
+        const interval = setInterval(() => {
+            const theme = getAutoTheme();
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [themeMode]);
+
+    const setMode = (mode) => {
+        setThemeMode(mode);
+        localStorage.setItem('themeMode', mode);
+    };
+
+    const btnBase = {
+        border: 'none', cursor: 'pointer', padding: '5px 10px',
+        borderRadius: '20px', fontSize: '0.75rem', fontWeight: 600,
+        transition: 'all 0.25s ease', display: 'flex', alignItems: 'center', gap: '3px'
+    };
+    const activeStyle = {
+        background: 'var(--primary-gradient)', color: 'white',
+        boxShadow: '0 2px 10px rgba(102, 126, 234, 0.4)'
+    };
+    const inactiveStyle = {
+        background: 'transparent', color: 'var(--text-secondary)'
+    };
 
     return (
-        <button className="theme-toggle" onClick={() => setIsDark(!isDark)} title={isDark ? 'Switch to Light' : 'Switch to Dark'}>
-            <span>{isDark ? '' : ''}</span>
-            <div className={`theme-toggle-track ${!isDark ? 'active' : ''}`}>
-                <div className="theme-toggle-thumb"></div>
-            </div>
-        </button>
+        <div style={{
+            display: 'flex', gap: '2px', background: 'var(--bg-secondary)',
+            borderRadius: '24px', padding: '3px', border: '1px solid var(--border-color)'
+        }}>
+            <button
+                style={{ ...btnBase, ...(themeMode === 'light' ? activeStyle : inactiveStyle) }}
+                onClick={() => setMode('light')} title="Light theme"
+            >☀️</button>
+            <button
+                style={{ ...btnBase, ...(themeMode === 'auto' ? activeStyle : inactiveStyle) }}
+                onClick={() => setMode('auto')} title="Auto (Light 6AM–7PM, Dark 7PM–6AM)"
+            >⏰</button>
+            <button
+                style={{ ...btnBase, ...(themeMode === 'dark' ? activeStyle : inactiveStyle) }}
+                onClick={() => setMode('dark')} title="Dark theme"
+            >🌙</button>
+        </div>
     );
 }
 
@@ -575,7 +625,8 @@ function MobileBottomNav({ role }) {
 
 // Page Wrapper with fade animation
 function PageWrapper({ children }) {
-    return <div className="page-fade">{children}</div>;
+    const key = window.location.pathname;
+    return <div className="page-transition" key={key}>{children}</div>;
 }
 
 // Sidebar Component
@@ -618,6 +669,13 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
             ]
         },
         {
+            title: 'Community',
+            links: [
+                { path: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
+                { path: '/feedback', icon: '📝', label: 'Feedback' },
+            ]
+        },
+        {
             title: 'Account',
             links: [
                 { path: '/analytics', icon: '📊', label: t('analytics') },
@@ -631,9 +689,12 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
     const adminLinks = [
         { path: '/dashboard', icon: '🏠', label: t('dashboard') },
         { path: '/admin', icon: '👥', label: t('studentsRecords') },
+        { path: '/admin/departments', icon: '🏛️', label: 'Departments' },
         { path: '/admin/results', icon: '📊', label: 'Publish Results' },
         { path: '/admin/grievances', icon: '📨', label: 'Grievances' },
         { path: '/admin/attendance', icon: '📅', label: 'Attendance' },
+        { path: '/admin/feedback', icon: '📝', label: 'Feedback Review' },
+        { path: '/admin/leaderboard', icon: '🏆', label: 'Leaderboard' },
         { path: '/admin/analytics', icon: '📊', label: t('analytics') },
         { path: '/admin/certificates', icon: '🎓', label: t('certificates') },
         { path: '/admin/workflows', icon: '📋', label: t('workflows') },
@@ -1240,6 +1301,27 @@ function DashboardPage() {
         }
     }, [user]);
 
+    // Offline caching: download and cache key data for offline use
+    const [offlineSynced, setOfflineSynced] = useState(false);
+    useEffect(() => {
+        if (user?.role !== 'student') return;
+        const cacheOfflineData = async () => {
+            try {
+                const res = await api.get('/student/offline-bundle');
+                localStorage.setItem('offlineBundle', JSON.stringify(res.data));
+                localStorage.setItem('offlineBundleTime', new Date().toISOString());
+                setOfflineSynced(true);
+            } catch (err) {
+                // If API fails, check if we have cached data
+                const cached = localStorage.getItem('offlineBundle');
+                if (cached) setOfflineSynced(true);
+            }
+        };
+        cacheOfflineData();
+        const syncInterval = setInterval(cacheOfflineData, 300000); // re-sync every 5 min
+        return () => clearInterval(syncInterval);
+    }, [user]);
+
     const fetchStats = async () => {
         try {
             const response = await api.get('/dashboard/stats');
@@ -1259,7 +1341,16 @@ function DashboardPage() {
                 <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <h1>Welcome, {user?.name}!</h1>
-                        <p className="text-muted">Role: {user?.role?.toUpperCase()}</p>
+                        <p className="text-muted" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            Role: {user?.role?.toUpperCase()}
+                            {offlineSynced && user?.role === 'student' && (
+                                <span style={{
+                                    fontSize: '0.7rem', background: 'rgba(16, 185, 129, 0.15)',
+                                    color: 'var(--success-color)', padding: '2px 8px', borderRadius: '12px',
+                                    border: '1px solid rgba(16, 185, 129, 0.3)', fontWeight: 600
+                                }}>📥 Offline ready</span>
+                            )}
+                        </p>
                     </div>
                     {user?.role === 'student' && (
                         <button
@@ -4204,37 +4295,53 @@ function SettingsPage() {
             {activeTab === 'picture' && isStudent && (
                 <div className="card" style={{ maxWidth: '500px' }}>
                     <div className="card-header">
-                        <h3 className="card-title">Profile Picture</h3>
+                        <h3 className="card-title">📸 Profile Picture</h3>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{
-                            width: '150px',
-                            height: '150px',
-                            borderRadius: '50%',
-                            background: 'var(--bg-secondary)',
-                            margin: '0 auto 1.5rem',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            border: '3px solid var(--primary)'
-                        }}>
-                            {picturePreview ? (
-                                <img src={picturePreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            ) : (
-                                <span style={{ fontSize: '4rem' }}></span>
-                            )}
-                        </div>
-                        <div className="form-group">
-                            <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
-                                Choose Photo
-                                <input type="file" accept="image/*" onChange={handlePictureChange} style={{ display: 'none' }} />
-                            </label>
-                            <p className="text-muted" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Max size: 2MB. Formats: JPG, PNG</p>
-                        </div>
+                        <label style={{ cursor: 'pointer', display: 'inline-block', position: 'relative' }}>
+                            <div style={{
+                                width: '160px',
+                                height: '160px',
+                                borderRadius: '50%',
+                                background: picturePreview ? 'none' : 'linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))',
+                                margin: '0 auto 1.5rem',
+                                overflow: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: '4px solid transparent',
+                                backgroundClip: 'padding-box',
+                                boxShadow: '0 0 0 4px var(--primary-color), 0 8px 30px rgba(102, 126, 234, 0.25)',
+                                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                                position: 'relative'
+                            }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 12px 40px rgba(102, 126, 234, 0.4)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 8px 30px rgba(102, 126, 234, 0.25)'; }}
+                            >
+                                {picturePreview ? (
+                                    <img src={picturePreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    <span style={{ fontSize: '4rem', opacity: 0.5 }}>📷</span>
+                                )}
+                                {/* Hover overlay */}
+                                <div style={{
+                                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                    background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center',
+                                    justifyContent: 'center', borderRadius: '50%', opacity: 0,
+                                    transition: 'opacity 0.3s ease', fontSize: '1.5rem', color: 'white'
+                                }}
+                                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                                    onMouseLeave={e => e.currentTarget.style.opacity = '0'}
+                                >
+                                    📸 Change
+                                </div>
+                            </div>
+                            <input type="file" accept="image/*" onChange={handlePictureChange} style={{ display: 'none' }} />
+                        </label>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>Click the photo to choose an image · Max 2MB · JPG, PNG</p>
                         {picturePreview && (
-                            <button className="btn btn-primary" onClick={handlePictureUpload} disabled={loading}>
-                                {loading ? 'Uploading...' : ' Save Picture'}
+                            <button className="btn btn-primary" onClick={handlePictureUpload} disabled={loading} style={{ minWidth: '160px' }}>
+                                {loading ? '⏳ Uploading...' : '✅ Save Picture'}
                             </button>
                         )}
                     </div>
@@ -6783,64 +6890,84 @@ function ChatbotPage() {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)', maxWidth: '900px', margin: '0 auto' }}>
-            {/* Header */}
+        <div style={{
+            display: 'flex', flexDirection: 'column',
+            height: 'calc(100dvh - 70px)',
+            maxWidth: '900px', margin: '0 auto',
+            position: 'relative'
+        }}>
+            {/* Header - mobile responsive */}
             <div style={{
-                padding: '1.5rem',
+                padding: window.innerWidth <= 768 ? '0.75rem 1rem' : '1.5rem',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
-                borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
+                borderRadius: window.innerWidth <= 768 ? '0' : 'var(--radius-lg) var(--radius-lg) 0 0',
                 display: 'flex',
+                flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: window.innerWidth <= 768 ? 'stretch' : 'center',
+                gap: window.innerWidth <= 768 ? '0.5rem' : '0',
+                flexShrink: 0
             }}>
-                <div>
-                    <h2 style={{ margin: 0 }}>💬 Help Desk</h2>
-                    <small style={{ opacity: 0.9 }}>Ask your queries & doubts about app features!</small>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h2 style={{ margin: 0, fontSize: window.innerWidth <= 768 ? '1.1rem' : '1.3rem' }}>💬 Help Desk</h2>
+                        <small style={{ opacity: 0.9, fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.85rem' }}>Ask your queries & doubts about app features!</small>
+                    </div>
+                    <Link to="/dashboard" style={{
+                        background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)',
+                        color: 'white', width: '32px', height: '32px', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'none', flexShrink: 0
+                    }} title="Close chat">✖</Link>
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <select
-                        className="form-control"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        style={{ width: 'auto', fontSize: '0.9rem', background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px' }}
-                    >
-                        <option style={{ color: '#333' }}>General</option>
-                        <option style={{ color: '#333' }}>Data Structures</option>
-                        <option style={{ color: '#333' }}>OOP</option>
-                        <option style={{ color: '#333' }}>Mathematics</option>
-                        <option style={{ color: '#333' }}>Physics</option>
-                        <option style={{ color: '#333' }}>Digital Electronics</option>
-                    </select>
-                    <Link to="/dashboard" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem', textDecoration: 'none' }} title="Close chat">✖</Link>
-                </div>
+                <select
+                    className="form-control"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    style={{
+                        width: window.innerWidth <= 768 ? '100%' : 'auto',
+                        fontSize: '0.85rem', background: 'rgba(255,255,255,0.2)',
+                        color: 'white', border: '1px solid rgba(255,255,255,0.3)',
+                        borderRadius: '8px', padding: '6px 10px'
+                    }}
+                >
+                    <option style={{ color: '#333' }}>General</option>
+                    <option style={{ color: '#333' }}>Data Structures</option>
+                    <option style={{ color: '#333' }}>OOP</option>
+                    <option style={{ color: '#333' }}>Mathematics</option>
+                    <option style={{ color: '#333' }}>Physics</option>
+                    <option style={{ color: '#333' }}>Digital Electronics</option>
+                </select>
             </div>
 
-            {/* Messages */}
+            {/* Messages - mobile responsive */}
             <div style={{
                 flex: 1,
                 overflowY: 'auto',
-                padding: '1.5rem',
+                padding: window.innerWidth <= 768 ? '0.75rem' : '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.75rem',
                 background: 'var(--bg-primary)',
                 border: '1px solid var(--border-color)',
                 borderTop: 'none',
-                borderBottom: 'none'
+                borderBottom: 'none',
+                WebkitOverflowScrolling: 'touch',
+                minHeight: 0
             }}>
                 {messages.length === 0 && (
-                    <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '3rem' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💬</div>
-                        <h3>Welcome to Help Desk!</h3>
-                        <p>Ask about app features, results, attendance, settings, or anything else</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+                    <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: window.innerWidth <= 768 ? '1.5rem' : '3rem' }}>
+                        <div style={{ fontSize: window.innerWidth <= 768 ? '2.5rem' : '4rem', marginBottom: '0.75rem' }}>💬</div>
+                        <h3 style={{ fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem' }}>Welcome to Help Desk!</h3>
+                        <p style={{ fontSize: window.innerWidth <= 768 ? '0.8rem' : '0.95rem' }}>Ask about app features, results, attendance, settings, or anything else</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center', marginTop: '1rem' }}>
                             {['How to check results?', 'How to view attendance?', 'How to download certificate?', 'How to pay fees?', 'How to change password?', 'How to file grievance?'].map(q => (
                                 <button
                                     key={q}
                                     className="btn btn-secondary btn-sm"
                                     onClick={() => { setInput(q); }}
-                                    style={{ borderRadius: '20px' }}
+                                    style={{ borderRadius: '20px', fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.85rem', padding: window.innerWidth <= 768 ? '4px 10px' : '6px 14px' }}
                                 >
                                     {q}
                                 </button>
@@ -6849,27 +6976,32 @@ function ChatbotPage() {
                     </div>
                 )}
                 {messages.map((msg, idx) => (
-                    <div key={idx} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '75%' }}>
+                    <div key={idx} style={{
+                        alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                        maxWidth: window.innerWidth <= 768 ? '85%' : '75%'
+                    }}>
                         <div style={{
-                            padding: '0.75rem 1rem',
+                            padding: window.innerWidth <= 768 ? '0.6rem 0.85rem' : '0.75rem 1rem',
                             borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                             background: msg.sender === 'user'
                                 ? 'linear-gradient(135deg, #667eea, #764ba2)'
                                 : 'var(--bg-tertiary)',
                             color: msg.sender === 'user' ? 'white' : 'var(--text-primary)',
                             whiteSpace: 'pre-wrap',
-                            lineHeight: '1.5'
+                            lineHeight: '1.5',
+                            fontSize: window.innerWidth <= 768 ? '0.9rem' : '1rem',
+                            wordBreak: 'break-word'
                         }}>
                             {msg.message}
                         </div>
-                        <small className="text-muted" style={{ fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
+                        <small className="text-muted" style={{ fontSize: '0.7rem', marginTop: '0.2rem', display: 'block' }}>
                             {new Date(msg.timestamp).toLocaleTimeString()}
                         </small>
                     </div>
                 ))}
                 {loading && (
                     <div style={{ alignSelf: 'flex-start' }}>
-                        <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-tertiary)', borderRadius: '18px 18px 18px 4px' }}>
+                        <div style={{ padding: '0.6rem 0.85rem', background: 'var(--bg-tertiary)', borderRadius: '18px 18px 18px 4px' }}>
                             <span className="typing-dots">Thinking...</span>
                         </div>
                     </div>
@@ -6877,15 +7009,17 @@ function ChatbotPage() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
+            {/* Input - mobile responsive with safe area */}
             <div style={{
-                padding: '1rem 1.5rem',
-                borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
+                padding: window.innerWidth <= 768 ? '0.6rem 0.75rem' : '1rem 1.5rem',
+                paddingBottom: window.innerWidth <= 768 ? 'calc(0.6rem + env(safe-area-inset-bottom, 0px))' : '1rem',
+                borderRadius: window.innerWidth <= 768 ? '0' : '0 0 var(--radius-lg) var(--radius-lg)',
                 background: 'var(--bg-secondary)',
                 border: '1px solid var(--border-color)',
-                borderTop: 'none'
+                borderTop: 'none',
+                flexShrink: 0
             }}>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <input
                         type="text"
                         className="form-control"
@@ -6894,18 +7028,709 @@ function ChatbotPage() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                         disabled={loading}
-                        style={{ fontSize: '1rem' }}
+                        style={{ fontSize: window.innerWidth <= 768 ? '0.9rem' : '1rem', flex: 1 }}
                     />
                     <button
                         className="btn btn-primary"
                         onClick={sendMessage}
                         disabled={loading || !input.trim()}
-                        style={{ minWidth: '52px', fontSize: '1.3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', width: '52px', height: '52px', padding: 0 }}
+                        style={{
+                            minWidth: window.innerWidth <= 768 ? '42px' : '52px',
+                            fontSize: window.innerWidth <= 768 ? '1.1rem' : '1.3rem',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            borderRadius: '50%',
+                            width: window.innerWidth <= 768 ? '42px' : '52px',
+                            height: window.innerWidth <= 768 ? '42px' : '52px',
+                            padding: 0, flexShrink: 0
+                        }}
                         title="Send message (Enter)"
                     >
                         {loading ? '⏳' : '➤'}
                     </button>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+// ==================== ADMIN DEPARTMENTS PAGE ====================
+function AdminDepartmentsPage() {
+    const [branches, setBranches] = useState([]);
+    const [subjects, setSubjects] = useState([]);
+    const [faculty, setFaculty] = useState([]);
+    const [activeTab, setActiveTab] = useState('branches');
+    const [selectedBranch, setSelectedBranch] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [message, setMessage] = useState({ type: '', text: '' });
+    const [newBranch, setNewBranch] = useState({ name: '', code: '' });
+    const [newSubject, setNewSubject] = useState({ name: '', branchId: '', semester: '' });
+    const [newFaculty, setNewFaculty] = useState({ name: '', branchId: '', designation: '' });
+
+    useEffect(() => { fetchAll(); }, []);
+
+    const fetchAll = async () => {
+        setLoading(true);
+        try {
+            const [bRes, sRes, fRes] = await Promise.all([
+                api.get('/admin/branches'),
+                api.get('/admin/subjects'),
+                api.get('/admin/faculty')
+            ]);
+            setBranches(bRes.data.branches);
+            setSubjects(sRes.data.subjects);
+            setFaculty(fRes.data.faculty);
+        } catch (err) { console.error(err); }
+        finally { setLoading(false); }
+    };
+
+    const addBranch = async (e) => {
+        e.preventDefault();
+        try {
+            await api.post('/admin/branches', newBranch);
+            setNewBranch({ name: '', code: '' });
+            setMessage({ type: 'success', text: 'Branch added!' });
+            fetchAll();
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.error || 'Failed' }); }
+    };
+
+    const addSubject = async (e) => {
+        e.preventDefault();
+        try {
+            await api.post('/admin/subjects', newSubject);
+            setNewSubject({ name: '', branchId: newSubject.branchId, semester: '' });
+            setMessage({ type: 'success', text: 'Subject added!' });
+            fetchAll();
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.error || 'Failed' }); }
+    };
+
+    const addFacultyMember = async (e) => {
+        e.preventDefault();
+        try {
+            await api.post('/admin/faculty', newFaculty);
+            setNewFaculty({ name: '', branchId: newFaculty.branchId, designation: '' });
+            setMessage({ type: 'success', text: 'Faculty added!' });
+            fetchAll();
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.error || 'Failed' }); }
+    };
+
+    const deleteBranch = async (id) => { await api.delete(`/admin/branches/${id}`); fetchAll(); };
+    const deleteSubject = async (id) => { await api.delete(`/admin/subjects/${id}`); fetchAll(); };
+    const deleteFaculty = async (id) => { await api.delete(`/admin/faculty/${id}`); fetchAll(); };
+
+    const getBranchName = (id) => branches.find(b => b.id === id)?.name || 'Unknown';
+
+    if (loading) return <SkeletonLoader rows={4} />;
+
+    return (
+        <div className="dashboard page-transition">
+            <div className="dashboard-header">
+                <h1>🏛️ Department Management</h1>
+                <p className="text-muted">Manage branches, subjects, and faculty</p>
+            </div>
+
+            {message.text && <div className={`alert alert-${message.type}`} style={{ marginBottom: '1rem' }}>{message.text}</div>}
+
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>🏢</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{branches.length}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Branches</div>
+                </div>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>📚</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{subjects.length}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Subjects</div>
+                </div>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>👨‍🏫</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{faculty.length}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Faculty</div>
+                </div>
+            </div>
+
+            <div className="tabs" style={{ marginBottom: '1.5rem' }}>
+                <button className={`tab ${activeTab === 'branches' ? 'active' : ''}`} onClick={() => setActiveTab('branches')}>🏢 Branches</button>
+                <button className={`tab ${activeTab === 'subjects' ? 'active' : ''}`} onClick={() => setActiveTab('subjects')}>📚 Subjects</button>
+                <button className={`tab ${activeTab === 'faculty' ? 'active' : ''}`} onClick={() => setActiveTab('faculty')}>👨‍🏫 Faculty</button>
+            </div>
+
+            {activeTab === 'branches' && (
+                <div>
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ marginBottom: '1rem' }}>➕ Add New Branch</h3>
+                        <form onSubmit={addBranch} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                            <div className="form-group" style={{ flex: 2, marginBottom: 0, minWidth: '200px' }}>
+                                <label className="form-label">Branch Name</label>
+                                <input className="form-control" placeholder="e.g. Computer Science & Engineering" value={newBranch.name} onChange={e => setNewBranch({ ...newBranch, name: e.target.value })} required />
+                            </div>
+                            <div className="form-group" style={{ flex: 1, marginBottom: 0, minWidth: '100px' }}>
+                                <label className="form-label">Code</label>
+                                <input className="form-control" placeholder="e.g. CSE" value={newBranch.code} onChange={e => setNewBranch({ ...newBranch, code: e.target.value })} />
+                            </div>
+                            <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>➕ Add</button>
+                        </form>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {branches.map(b => (
+                            <div key={b.id} className="card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                    <strong>{b.name}</strong>
+                                    <span className="text-muted" style={{ marginLeft: '0.75rem' }}>({b.code})</span>
+                                    <span className="text-muted" style={{ marginLeft: '0.75rem', fontSize: '0.8rem' }}>{subjects.filter(s => s.branchId === b.id).length} subjects · {faculty.filter(f => f.branchId === b.id).length} faculty</span>
+                                </div>
+                                <button className="btn btn-secondary" onClick={() => deleteBranch(b.id)} style={{ fontSize: '0.8rem', padding: '4px 10px' }}>🗑️</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'subjects' && (
+                <div>
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ marginBottom: '1rem' }}>➕ Add New Subject</h3>
+                        <form onSubmit={addSubject} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                            <div className="form-group" style={{ flex: 2, marginBottom: 0, minWidth: '180px' }}>
+                                <label className="form-label">Subject Name</label>
+                                <input className="form-control" placeholder="e.g. Data Structures" value={newSubject.name} onChange={e => setNewSubject({ ...newSubject, name: e.target.value })} required />
+                            </div>
+                            <div className="form-group" style={{ flex: 1, marginBottom: 0, minWidth: '150px' }}>
+                                <label className="form-label">Branch</label>
+                                <select className="form-control" value={newSubject.branchId} onChange={e => setNewSubject({ ...newSubject, branchId: e.target.value })} required>
+                                    <option value="">Select Branch</option>
+                                    {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                                </select>
+                            </div>
+                            <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>➕ Add</button>
+                        </form>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: '1rem' }}>
+                        <select className="form-control" value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)} style={{ width: 'auto', minWidth: '200px' }}>
+                            <option value="">All Branches</option>
+                            {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                        </select>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {subjects.filter(s => !selectedBranch || s.branchId === selectedBranch).map(s => (
+                            <div key={s.id} className="card" style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                    <strong>{s.name}</strong>
+                                    <span className="text-muted" style={{ marginLeft: '0.75rem', fontSize: '0.85rem' }}>{getBranchName(s.branchId)}</span>
+                                </div>
+                                <button className="btn btn-secondary" onClick={() => deleteSubject(s.id)} style={{ fontSize: '0.8rem', padding: '4px 10px' }}>🗑️</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'faculty' && (
+                <div>
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ marginBottom: '1rem' }}>➕ Add New Faculty</h3>
+                        <form onSubmit={addFacultyMember} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                            <div className="form-group" style={{ flex: 2, marginBottom: 0, minWidth: '180px' }}>
+                                <label className="form-label">Faculty Name</label>
+                                <input className="form-control" placeholder="e.g. Dr. Rajesh Sharma" value={newFaculty.name} onChange={e => setNewFaculty({ ...newFaculty, name: e.target.value })} required />
+                            </div>
+                            <div className="form-group" style={{ flex: 1, marginBottom: 0, minWidth: '150px' }}>
+                                <label className="form-label">Branch</label>
+                                <select className="form-control" value={newFaculty.branchId} onChange={e => setNewFaculty({ ...newFaculty, branchId: e.target.value })}>
+                                    <option value="">Select Branch</option>
+                                    {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                                </select>
+                            </div>
+                            <div className="form-group" style={{ flex: 1, marginBottom: 0, minWidth: '140px' }}>
+                                <label className="form-label">Designation</label>
+                                <select className="form-control" value={newFaculty.designation} onChange={e => setNewFaculty({ ...newFaculty, designation: e.target.value })}>
+                                    <option value="">Select</option>
+                                    <option>HOD</option><option>Professor</option>
+                                    <option>Associate Professor</option><option>Assistant Professor</option>
+                                    <option>Lecturer</option>
+                                </select>
+                            </div>
+                            <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>➕ Add</button>
+                        </form>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: '1rem' }}>
+                        <select className="form-control" value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)} style={{ width: 'auto', minWidth: '200px' }}>
+                            <option value="">All Branches</option>
+                            {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                        </select>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {faculty.filter(f => !selectedBranch || f.branchId === selectedBranch).map(f => (
+                            <div key={f.id} className="card" style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                    <strong>{f.name}</strong>
+                                    <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: 'var(--primary-gradient)', color: 'white', padding: '2px 8px', borderRadius: '12px' }}>{f.designation}</span>
+                                    <span className="text-muted" style={{ marginLeft: '0.75rem', fontSize: '0.85rem' }}>{getBranchName(f.branchId)}</span>
+                                </div>
+                                <button className="btn btn-secondary" onClick={() => deleteFaculty(f.id)} style={{ fontSize: '0.8rem', padding: '4px 10px' }}>🗑️</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ==================== ADMIN FEEDBACK REVIEW PAGE ====================
+function AdminFeedbackPage() {
+    const [feedbackData, setFeedbackData] = useState({ feedback: [], total: 0 });
+    const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState('all');
+
+    useEffect(() => { fetchFeedback(); }, []);
+
+    const fetchFeedback = async () => {
+        try {
+            const res = await api.get('/admin/feedback');
+            setFeedbackData(res.data);
+        } catch (err) { console.error(err); }
+        finally { setLoading(false); }
+    };
+
+    const renderStars = (rating) => {
+        return '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    };
+
+    const filtered = feedbackData.feedback.filter(f => filter === 'all' || f.category === filter);
+
+    if (loading) return <SkeletonLoader rows={3} />;
+
+    return (
+        <div className="dashboard page-transition">
+            <div className="dashboard-header">
+                <h1>📊 Feedback Review</h1>
+                <p className="text-muted">{feedbackData.total} total anonymous responses</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <div className="tabs" style={{ flex: 1, marginBottom: 0 }}>
+                    <button className={`tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>📊 All</button>
+                    <button className={`tab ${filter === 'course' ? 'active' : ''}`} onClick={() => setFilter('course')}>📚 Courses</button>
+                    <button className={`tab ${filter === 'faculty' ? 'active' : ''}`} onClick={() => setFilter('faculty')}>👨‍🏫 Faculty</button>
+                </div>
+            </div>
+
+            {filtered.length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📭</div>
+                    <h3>No feedback yet</h3>
+                    <p className="text-muted">Students haven't submitted any feedback in this category</p>
+                </div>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {filtered.sort((a, b) => parseFloat(b.avgRating) - parseFloat(a.avgRating)).map((f, idx) => (
+                        <div key={idx} className="card" style={{ padding: '1.25rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                                <div>
+                                    <h3 style={{ fontSize: '1.1rem', margin: 0 }}>
+                                        {f.category === 'course' ? '📚' : '👨‍🏫'} {f.target}
+                                    </h3>
+                                    <span className="text-muted" style={{ fontSize: '0.8rem' }}>{f.category} · {f.department}</span>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{renderStars(parseFloat(f.avgRating))}</div>
+                                    <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{f.avgRating}/5.0</div>
+                                    <div className="text-muted" style={{ fontSize: '0.8rem' }}>{f.totalResponses} responses</div>
+                                </div>
+                            </div>
+                            {f.comments && f.comments.length > 0 && (
+                                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                                    <strong style={{ fontSize: '0.85rem' }}>💬 Recent Comments:</strong>
+                                    {f.comments.slice(0, 3).map((c, ci) => (
+                                        <div key={ci} style={{ padding: '0.5rem', marginTop: '0.5rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', fontSize: '0.9rem' }}>
+                                            <span style={{ color: '#f59e0b' }}>{'★'.repeat(c.rating)}</span> — "{c.comment}"
+                                            <div className="text-muted" style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>{new Date(c.date).toLocaleDateString()}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ==================== ADMIN LEADERBOARD PAGE ====================
+function AdminLeaderboardPage() {
+    const [data, setData] = useState({ byCgpa: [], byAttendance: [], departments: [] });
+    const [loading, setLoading] = useState(true);
+    const [tab, setTab] = useState('cgpa');
+    const [dept, setDept] = useState('');
+    const [publishedNames, setPublishedNames] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('publishedLeaderboard') || '[]'); } catch { return []; }
+    });
+    const [message, setMessage] = useState({ type: '', text: '' });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await api.get(`/leaderboard${dept ? `?department=${dept}` : ''}`);
+                setData(res.data);
+            } catch (err) { console.error(err); }
+            finally { setLoading(false); }
+        };
+        fetchData();
+    }, [dept]);
+
+    const togglePublish = (student) => {
+        let updated;
+        const exists = publishedNames.find(p => p.id === student.studentId);
+        if (exists) {
+            updated = publishedNames.filter(p => p.id !== student.studentId);
+            setMessage({ type: 'success', text: `Removed ${student.name} from published list` });
+        } else {
+            updated = [...publishedNames, {
+                id: student.studentId, name: student.name, department: student.department,
+                cgpa: student.cgpa, attendance: student.attendance,
+                publishedAt: new Date().toISOString()
+            }];
+            setMessage({ type: 'success', text: `Published ${student.name} to leaderboard!` });
+        }
+        setPublishedNames(updated);
+        localStorage.setItem('publishedLeaderboard', JSON.stringify(updated));
+        setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+    };
+
+    const removePublished = (id) => {
+        const updated = publishedNames.filter(p => p.id !== id);
+        setPublishedNames(updated);
+        localStorage.setItem('publishedLeaderboard', JSON.stringify(updated));
+    };
+
+    const isPublished = (studentId) => publishedNames.some(p => p.id === studentId);
+    const currentList = tab === 'cgpa' ? data.byCgpa : data.byAttendance;
+    const getMedal = (i) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+
+    if (loading) return <SkeletonLoader rows={4} />;
+
+    return (
+        <div className="dashboard page-transition">
+            <div className="dashboard-header">
+                <h1>🏆 Leaderboard Management</h1>
+                <p className="text-muted">Publish top student names to the student leaderboard</p>
+            </div>
+
+            {message.text && <div className={`alert alert-${message.type}`} style={{ marginBottom: '1rem' }}>{message.text}</div>}
+
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>🏆</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{publishedNames.length}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Published</div>
+                </div>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>📊</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.byCgpa.length}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Total Ranked</div>
+                </div>
+                <div className="card" style={{ padding: '1rem', textAlign: 'center', flex: 1, minWidth: '120px' }}>
+                    <div style={{ fontSize: '2rem' }}>🏢</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.departments?.length || 0}</div>
+                    <div className="text-muted" style={{ fontSize: '0.85rem' }}>Departments</div>
+                </div>
+            </div>
+
+            {/* Published Names */}
+            {publishedNames.length > 0 && (
+                <div className="card" style={{ marginBottom: '1.5rem', padding: '1.25rem' }}>
+                    <h3 style={{ marginBottom: '1rem' }}>✅ Published Students ({publishedNames.length})</h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {publishedNames.map(p => (
+                            <div key={p.id} style={{
+                                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                background: 'var(--bg-secondary)', padding: '6px 12px',
+                                borderRadius: '20px', border: '1px solid var(--border-color)', fontSize: '0.85rem'
+                            }}>
+                                <span>🏆 {p.name}</span>
+                                <span className="text-muted" style={{ fontSize: '0.75rem' }}>({p.department})</span>
+                                <button onClick={() => removePublished(p.id)} style={{
+                                    background: 'none', border: 'none', cursor: 'pointer',
+                                    fontSize: '0.8rem', color: 'var(--text-muted)', padding: '0 4px'
+                                }}>✖</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <div className="tabs" style={{ flex: 1, marginBottom: 0 }}>
+                    <button className={`tab ${tab === 'cgpa' ? 'active' : ''}`} onClick={() => setTab('cgpa')}>📊 By CGPA</button>
+                    <button className={`tab ${tab === 'attendance' ? 'active' : ''}`} onClick={() => setTab('attendance')}>📅 By Attendance</button>
+                </div>
+                <select className="form-control" value={dept} onChange={e => setDept(e.target.value)} style={{ width: 'auto', minWidth: '180px' }}>
+                    <option value="">All Departments</option>
+                    {(data.departments || []).map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {currentList.map((s, i) => (
+                    <div key={s.studentId} className="card" style={{
+                        padding: '1rem', display: 'flex', justifyContent: 'space-between',
+                        alignItems: 'center', borderLeft: isPublished(s.studentId) ? '4px solid var(--success-color)' : 'none'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <span style={{ fontSize: i < 3 ? '1.5rem' : '1rem', fontWeight: 700, minWidth: '40px', textAlign: 'center' }}>{getMedal(i)}</span>
+                            <div>
+                                <strong>{s.name}</strong>
+                                <div className="text-muted" style={{ fontSize: '0.8rem' }}>{s.department} · {s.studentId}</div>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                                    {tab === 'cgpa' ? `${s.cgpa} GPA` : `${s.attendance}%`}
+                                </div>
+                            </div>
+                            <button
+                                className={`btn ${isPublished(s.studentId) ? 'btn-secondary' : 'btn-primary'}`}
+                                onClick={() => togglePublish(s)}
+                                style={{ fontSize: '0.8rem', padding: '6px 14px', minWidth: '90px' }}
+                            >
+                                {isPublished(s.studentId) ? '✖ Remove' : '✅ Publish'}
+                            </button>
+                        </div>
+                    </div>
+                ))}
+                {currentList.length === 0 && (
+                    <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+                        <h3>No students found</h3>
+                        <p className="text-muted">No ranking data available yet</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// ==================== LEADERBOARD PAGE ====================
+function LeaderboardPage() {
+    const [data, setData] = useState({ byCgpa: [], byAttendance: [], departments: [] });
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('cgpa');
+    const [department, setDepartment] = useState('All');
+
+    useEffect(() => {
+        fetchLeaderboard();
+    }, [department]);
+
+    const fetchLeaderboard = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get(`/leaderboard?department=${department}`);
+            setData(res.data);
+        } catch (error) {
+            console.error('Leaderboard error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getMedal = (idx) => idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+
+    const renderList = (list, valueKey, suffix) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {list.map((s, idx) => (
+                <div key={s.studentId} className="card" style={{
+                    padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem',
+                    borderLeft: idx < 3 ? '4px solid' : 'none',
+                    borderLeftColor: idx === 0 ? '#f59e0b' : idx === 1 ? '#94a3b8' : idx === 2 ? '#cd7f32' : 'transparent',
+                    animation: `cardFadeIn 0.3s ease-out ${idx * 0.05}s both`
+                }}>
+                    <div style={{ fontSize: idx < 3 ? '1.8rem' : '1rem', minWidth: '40px', textAlign: 'center', fontWeight: 700, color: 'var(--text-muted)' }}>
+                        {getMedal(idx)}
+                    </div>
+                    <div style={{
+                        width: '44px', height: '44px', borderRadius: '50%',
+                        background: 'var(--primary-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: 'white', fontWeight: 700, fontSize: '1.1rem', overflow: 'hidden', flexShrink: 0
+                    }}>
+                        {s.profilePicture ? <img src={s.profilePicture} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : s.name?.charAt(0)}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{s.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{s.department} · {s.studentId}</div>
+                    </div>
+                    <div style={{
+                        fontWeight: 700, fontSize: '1.1rem',
+                        background: idx < 3 ? 'var(--primary-gradient)' : 'var(--bg-secondary)',
+                        color: idx < 3 ? 'white' : 'var(--text-primary)',
+                        padding: '0.35rem 0.75rem', borderRadius: '20px', minWidth: '70px', textAlign: 'center'
+                    }}>
+                        {s[valueKey]}{suffix}
+                    </div>
+                </div>
+            ))}
+            {list.length === 0 && <p className="text-muted" style={{ textAlign: 'center', padding: '2rem' }}>No students found</p>}
+        </div>
+    );
+
+    return (
+        <div className="dashboard page-transition">
+            <div className="dashboard-header">
+                <h1>🏆 Leaderboard</h1>
+                <p className="text-muted">Top performers by CGPA and attendance</p>
+            </div>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                <div className="tabs" style={{ flex: 1, marginBottom: 0 }}>
+                    <button className={`tab ${activeTab === 'cgpa' ? 'active' : ''}`} onClick={() => setActiveTab('cgpa')}>📊 By CGPA</button>
+                    <button className={`tab ${activeTab === 'attendance' ? 'active' : ''}`} onClick={() => setActiveTab('attendance')}>📋 By Attendance</button>
+                </div>
+                <select className="form-control" value={department} onChange={e => setDepartment(e.target.value)}
+                    style={{ width: 'auto', minWidth: '150px' }}>
+                    <option value="All">All Departments</option>
+                    {data.departments.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+            </div>
+            {loading ? <SkeletonLoader rows={5} /> :
+                activeTab === 'cgpa' ? renderList(data.byCgpa, 'cgpa', '') : renderList(data.byAttendance, 'attendance', '%')
+            }
+        </div>
+    );
+}
+
+// ==================== FEEDBACK PAGE ====================
+function FeedbackPage() {
+    const [category, setCategory] = useState('course');
+    const [form, setForm] = useState({ target: '', rating: 0, comment: '', semester: '' });
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ type: '', text: '' });
+    const [hoverRating, setHoverRating] = useState(0);
+    const [submitted, setSubmitted] = useState(false);
+    const [deptData, setDeptData] = useState({ branches: [], subjects: [], faculty: [] });
+
+    useEffect(() => {
+        const fetchDepts = async () => {
+            try {
+                const res = await api.get('/departments-data');
+                setDeptData(res.data);
+            } catch (err) { console.error(err); }
+        };
+        fetchDepts();
+    }, []);
+
+    const courses = deptData.subjects.map(s => s.name);
+    const faculty = deptData.faculty.map(f => f.name);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!form.target || !form.rating) {
+            setMessage({ type: 'error', text: 'Please select a target and provide a rating' });
+            return;
+        }
+        setLoading(true);
+        setMessage({ type: '', text: '' });
+        try {
+            const res = await api.post('/student/feedback', { ...form, category });
+            setMessage({ type: 'success', text: res.data.message });
+            setForm({ target: '', rating: 0, comment: '', semester: '' });
+            setSubmitted(true);
+            setTimeout(() => setSubmitted(false), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error.response?.data?.error || 'Failed to submit feedback' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const StarRating = ({ value, onChange }) => (
+        <div style={{ display: 'flex', gap: '0.5rem', fontSize: '2rem', cursor: 'pointer' }}>
+            {[1, 2, 3, 4, 5].map(star => (
+                <span key={star}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    onClick={() => onChange(star)}
+                    style={{
+                        color: star <= (hoverRating || value) ? '#f59e0b' : 'var(--text-muted)',
+                        transition: 'all 0.15s ease',
+                        transform: star <= (hoverRating || value) ? 'scale(1.2)' : 'scale(1)'
+                    }}
+                >★</span>
+            ))}
+            <span style={{ fontSize: '1rem', marginLeft: '0.5rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>
+                {value > 0 ? ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][value] : 'Rate'}
+            </span>
+        </div>
+    );
+
+    return (
+        <div className="dashboard page-transition">
+            <div className="dashboard-header">
+                <h1>📝 Feedback</h1>
+                <p className="text-muted">Rate courses and faculty anonymously — your identity is never recorded</p>
+            </div>
+
+            {submitted && (
+                <div style={{
+                    textAlign: 'center', padding: '2rem', marginBottom: '1.5rem',
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05))',
+                    borderRadius: 'var(--radius-xl)', border: '1px solid rgba(16, 185, 129, 0.3)',
+                    animation: 'cardFadeIn 0.3s ease-out'
+                }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>✅</div>
+                    <h3 style={{ color: 'var(--success-color)' }}>Thank you for your feedback!</h3>
+                    <p className="text-muted">Your response has been recorded anonymously</p>
+                </div>
+            )}
+
+            <div className="tabs" style={{ marginBottom: '1.5rem' }}>
+                <button className={`tab ${category === 'course' ? 'active' : ''}`} onClick={() => { setCategory('course'); setForm({ ...form, target: '' }); }}>📚 Rate Course</button>
+                <button className={`tab ${category === 'faculty' ? 'active' : ''}`} onClick={() => { setCategory('faculty'); setForm({ ...form, target: '' }); }}>👨‍🏫 Rate Faculty</button>
+            </div>
+
+            {message.text && <div className={`alert alert-${message.type}`}>{message.text}</div>}
+
+            <div className="card" style={{ maxWidth: '600px' }}>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">{category === 'course' ? '📚 Select Course' : '👨‍🏫 Select Faculty'}</label>
+                        <select className="form-control" value={form.target} onChange={e => setForm({ ...form, target: e.target.value })} required>
+                            <option value="">Choose...</option>
+                            {(category === 'course' ? courses : faculty).map(item => (
+                                <option key={item} value={item}>{item}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">⭐ Rating</label>
+                        <StarRating value={form.rating} onChange={r => setForm({ ...form, rating: r })} />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">📅 Semester (optional)</label>
+                        <select className="form-control" value={form.semester} onChange={e => setForm({ ...form, semester: e.target.value })}>
+                            <option value="">Current Semester</option>
+                            <option>1st Semester</option><option>2nd Semester</option>
+                            <option>3rd Semester</option><option>4th Semester</option>
+                            <option>5th Semester</option><option>6th Semester</option>
+                            <option>7th Semester</option><option>8th Semester</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">💬 Comments (optional)</label>
+                        <textarea className="form-control" rows="4" placeholder="Share your detailed thoughts... (completely anonymous)"
+                            value={form.comment} onChange={e => setForm({ ...form, comment: e.target.value })}
+                            style={{ resize: 'vertical' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <button type="submit" className="btn btn-primary" disabled={loading} style={{ minWidth: '160px' }}>
+                            {loading ? '⏳ Submitting...' : '📤 Submit Anonymously'}
+                        </button>
+                        <small className="text-muted">🔒 Your identity is never stored</small>
+                    </div>
+                </form>
             </div>
         </div>
     );
@@ -7047,6 +7872,9 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/admin/results" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminResultsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/notifications-manage" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminNotificationsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin/grievances" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminGrievancesPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/departments" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminDepartmentsPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/feedback" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminFeedbackPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/admin/leaderboard" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminLeaderboardPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/notifications" element={<ProtectedRoute roles={['student']}><PageWrapper><NotificationsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/results" element={<ProtectedRoute roles={['student']}><PageWrapper><ResultsPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/attendance" element={<ProtectedRoute roles={['student']}><PageWrapper><AttendancePage /></PageWrapper></ProtectedRoute>} />
@@ -7061,6 +7889,8 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/certificates" element={<ProtectedRoute roles={['student']}><PageWrapper><CertificatesPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/admin" element={<ProtectedRoute roles={['admin', 'institution']}><PageWrapper><AdminPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/chatbot" element={<ProtectedRoute roles={['student']}><PageWrapper><ChatbotPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/leaderboard" element={<ProtectedRoute roles={['student']}><PageWrapper><LeaderboardPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="/feedback" element={<ProtectedRoute roles={['student']}><PageWrapper><FeedbackPage /></PageWrapper></ProtectedRoute>} />
                     </Routes>
                 </div>
             </div>
