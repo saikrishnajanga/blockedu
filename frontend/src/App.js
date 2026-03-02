@@ -321,6 +321,34 @@ class ErrorBoundary extends React.Component {
     }
 }
 
+// Password Input with Eye Toggle
+function PasswordInput({ className = 'form-control', value, onChange, required, minLength, placeholder = '', ...rest }) {
+    const [show, setShow] = useState(false);
+    return (
+        <div className="password-input-wrapper">
+            <input
+                type={show ? 'text' : 'password'}
+                className={className}
+                value={value}
+                onChange={onChange}
+                required={required}
+                minLength={minLength}
+                placeholder={placeholder}
+                {...rest}
+            />
+            <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShow(!show)}
+                tabIndex={-1}
+                aria-label={show ? 'Hide password' : 'Show password'}
+            >
+                {show ? '🙈' : '👁️'}
+            </button>
+        </div>
+    );
+}
+
 // Loading Spinner Component
 function LoadingSpinner() {
     return (
@@ -1080,7 +1108,7 @@ function StudentLoginForm() {
                     </div>
                     <div className="form-group">
                         <label className="form-label">{t('password')}</label>
-                        <input type="password" className="form-control" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
+                        <PasswordInput value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
                     </div>
                     <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
                         {loading ? 'Logging in...' : t('login')}
@@ -1200,7 +1228,7 @@ function StudentRegisterForm() {
             </div>
             <div className="form-group">
                 <label className="form-label">Password</label>
-                <input type="password" className="form-control" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
+                <PasswordInput value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
             </div>
             <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
                 {loading ? 'Registering...' : 'Register'}
@@ -1273,12 +1301,9 @@ function LoginPage() {
                     </div>
                     <div className="form-group">
                         <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            className="form-control"
+                        <PasswordInput
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder=""
                             required
                         />
                     </div>
@@ -4387,15 +4412,15 @@ function SettingsPage() {
                     <form onSubmit={handlePasswordChange}>
                         <div className="form-group">
                             <label className="form-label">Current Password</label>
-                            <input type="password" className="form-control" value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })} required />
+                            <PasswordInput value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })} required />
                         </div>
                         <div className="form-group">
                             <label className="form-label">New Password</label>
-                            <input type="password" className="form-control" value={passwordForm.newPassword} onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })} required minLength={6} />
+                            <PasswordInput value={passwordForm.newPassword} onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })} required minLength={6} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Confirm New Password</label>
-                            <input type="password" className="form-control" value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })} required />
+                            <PasswordInput value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })} required />
                         </div>
                         <button type="submit" className="btn btn-primary" disabled={loading}>
                             {loading ? 'Changing...' : 'Change Password'}
@@ -4497,11 +4522,11 @@ function StudentRegisterPage() {
                     <div className="grid-2">
                         <div className="form-group">
                             <label className="form-label">Password *</label>
-                            <input type="password" className="form-control" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={6} />
+                            <PasswordInput value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={6} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Confirm Password *</label>
-                            <input type="password" className="form-control" value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} required />
+                            <PasswordInput value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} required />
                         </div>
                     </div>
                     <div className="grid-2">
