@@ -11,6 +11,9 @@ frontend/build/
 frontend/.env
 backend/.env
 
+# Database persistence
+backend/data/
+
 # Logs
 *.log
 npm-debug.log*

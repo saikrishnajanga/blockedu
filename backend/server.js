@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -11,8 +13,25 @@ const { v4: uuidv4 } = require('uuid');
 const { generateEnhancedAIResponse } = require('./aiChatbot');
 const nodemailer = require('nodemailer');
 
+// JWT secret — must be set in environment
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('\n⚠️  WARNING: JWT_SECRET is not set in .env! Using a random secret (tokens will invalidate on restart).\n');
+}
+const jwtSecret = JWT_SECRET || crypto.randomBytes(64).toString('hex');
+
 // In-memory OTP store: { email: { otp, expiresAt } }
 const otpStore = {};
+
+// Cleanup expired OTPs every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const email of Object.keys(otpStore)) {
+    if (otpStore[email].expiresAt < now) {
+      delete otpStore[email];
+    }
+  }
+}, 5 * 60 * 1000);
 
 // Email system - supports multiple providers
 let emailTransporter = null;
@@ -171,12 +190,41 @@ initEmailTransporter();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Security Middleware
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+// Rate limiting for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // max 20 attempts per window
+  message: { error: 'Too many attempts, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
+
+// CORS — restrict in production
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : ['http://localhost:3000', 'http://localhost:5000'];
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: process.env.NODE_ENV === 'production' ? allowedOrigins : '*',
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
+
+// Auto-save database after any mutation request (POST, PUT, PATCH, DELETE)
+app.use((req, res, next) => {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    const originalJson = res.json.bind(res);
+    res.json = (body) => {
+      saveDb();
+      return originalJson(body);
+    };
+  }
+  next();
+});
 
 // Health / email diagnostic endpoint — check email config on deployed server
 app.get('/api/health', (req, res) => {
@@ -205,8 +253,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded files with authentication
+app.use('/uploads', authenticateToken, express.static(path.join(__dirname, 'uploads')));
 
 // Multer config for PDF uploads
 const paperStorage = multer.diskStorage({
@@ -231,8 +279,18 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
 });
 
-// In-memory database (simulating PostgreSQL/MongoDB)
-const db = {
+// ==================== DATABASE PERSISTENCE ====================
+// JSON file-based persistence — data survives server restarts
+const DB_PATH = path.join(__dirname, 'data', 'db.json');
+
+// Ensure data directory exists
+const dataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+// Default empty database structure
+const defaultDb = {
   users: [],
   students: [],
   records: [],
@@ -250,21 +308,72 @@ const db = {
   events: [],
   certificates: [],
   chatHistory: [],
-  // New admin features
   tasks: [],
   workflows: [],
   certificateTemplates: [],
   activityLog: [],
-  // Paper engagement tracking
   paperBookmarks: [],
   paperRatings: [],
-  // Feedback system
   feedback: [],
-  // Department management
   branches: [],
   subjects: [],
   facultyMembers: []
 };
+
+// Load database from file or create fresh
+function loadDb() {
+  try {
+    if (fs.existsSync(DB_PATH)) {
+      const raw = fs.readFileSync(DB_PATH, 'utf-8');
+      const loaded = JSON.parse(raw);
+      // Merge with defaults to ensure new fields exist
+      const merged = { ...defaultDb };
+      for (const key of Object.keys(defaultDb)) {
+        if (Array.isArray(loaded[key])) {
+          merged[key] = loaded[key];
+        }
+      }
+      console.log(`\n💾 Database loaded from ${DB_PATH} (${merged.users.length} users, ${merged.students.length} students)\n`);
+      return merged;
+    }
+  } catch (err) {
+    console.error(`⚠️ Failed to load database: ${err.message}. Starting fresh.`);
+  }
+  return JSON.parse(JSON.stringify(defaultDb));
+}
+
+// Save database to file (debounced)
+let saveTimer = null;
+function saveDb() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf-8');
+    } catch (err) {
+      console.error(`⚠️ Failed to save database: ${err.message}`);
+    }
+  }, 2000); // Debounce: save 2s after last change
+}
+
+// Force-save (for shutdown)
+function saveDbSync() {
+  try {
+    if (saveTimer) clearTimeout(saveTimer);
+    fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf-8');
+    console.log('💾 Database saved.');
+  } catch (err) {
+    console.error(`⚠️ Failed to save database on shutdown: ${err.message}`);
+  }
+}
+
+// Graceful shutdown — save data before exit
+process.on('SIGINT', () => { saveDbSync(); process.exit(0); });
+process.on('SIGTERM', () => { saveDbSync(); process.exit(0); });
+
+// Initialize database
+const db = loadDb();
+const isFirstRun = !fs.existsSync(DB_PATH);
+
 
 // Initialize demo data
 function initDemoData() {
@@ -537,7 +646,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ error: 'Access token required' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, user) => {
+  jwt.verify(token, jwtSecret, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid or expired token' });
     }
@@ -573,13 +682,17 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
 
+    // Self-registration is always 'student' — admins are created via admin panel
+    const allowedSelfRoles = ['student'];
+    const safeRole = allowedSelfRoles.includes(role) ? role : 'student';
+
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser = {
       id: uuidv4(),
       email,
       password: hashedPassword,
       name,
-      role: role || 'student',
+      role: safeRole,
       walletAddress: walletAddress || null,
       createdAt: new Date().toISOString()
     };
@@ -588,7 +701,7 @@ app.post('/api/auth/register', async (req, res) => {
 
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email, role: newUser.role },
-      process.env.JWT_SECRET || 'secret',
+      jwtSecret,
       { expiresIn: '24h' }
     );
 
@@ -625,7 +738,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, walletAddress: user.walletAddress },
-      process.env.JWT_SECRET || 'secret',
+      jwtSecret,
       { expiresIn: '24h' }
     );
 
@@ -674,7 +787,7 @@ app.post('/api/auth/wallet-login', async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, walletAddress: user.walletAddress },
-      process.env.JWT_SECRET || 'secret',
+      jwtSecret,
       { expiresIn: '24h' }
     );
 
@@ -1660,7 +1773,7 @@ app.post('/api/admin/papers/upload', authenticateToken, uploadPaper.single('file
 });
 
 // Admin: Delete a paper
-app.delete('/api/admin/papers/:id', authenticateToken, (req, res) => {
+app.delete('/api/admin/papers/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
   const idx = db.papers.findIndex(p => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Paper not found' });
 
@@ -1677,7 +1790,7 @@ app.delete('/api/admin/papers/:id', authenticateToken, (req, res) => {
 });
 
 // Admin: Bulk delete papers
-app.post('/api/admin/papers/bulk-delete', authenticateToken, (req, res) => {
+app.post('/api/admin/papers/bulk-delete', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
   const { ids } = req.body;
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     return res.status(400).json({ error: 'No paper IDs provided' });
@@ -1699,7 +1812,7 @@ app.post('/api/admin/papers/bulk-delete', authenticateToken, (req, res) => {
 });
 
 // Admin: Edit paper metadata
-app.put('/api/admin/papers/:id', authenticateToken, (req, res) => {
+app.put('/api/admin/papers/:id', authenticateToken, requireRole('admin', 'institution'), (req, res) => {
   const paper = db.papers.find(p => p.id === req.params.id);
   if (!paper) return res.status(404).json({ error: 'Paper not found' });
 
@@ -3185,7 +3298,7 @@ app.get('/api/admin/feedback', authenticateToken, (req, res) => {
 // ==================== OFFLINE DATA BUNDLE ====================
 app.get('/api/student/offline-bundle', authenticateToken, (req, res) => {
   try {
-    const student = db.students.find(s => s.userId === req.user.id);
+    const student = db.students.find(s => s.userId === req.user.id || s.id === req.user.id);
     if (!student) return res.status(404).json({ error: 'Student not found' });
     const results = db.results.filter(r => r.studentId === student.studentId);
     const attendance = db.attendance.filter(a => a.studentId === student.studentId);
@@ -3338,8 +3451,15 @@ function seedDepartments() {
   });
 }
 
-initDemoData();
-seedDepartments();
+// Only seed demo data on first run (no existing db.json)
+if (isFirstRun || db.users.length === 0) {
+  initDemoData();
+  seedDepartments();
+  saveDbSync(); // Persist the initial seed data immediately
+  console.log('📦 Demo data seeded and saved.');
+} else {
+  console.log('📦 Existing data loaded, skipping demo seed.');
+}
 
 app.listen(PORT, () => {
   console.log(`

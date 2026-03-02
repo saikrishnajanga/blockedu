@@ -63,58 +63,58 @@ const translations = {
         registerDesc: 'Register, login and pay fees', adminDesc: 'Manage students and records'
     },
     hi: {
-        dashboard: '', analytics: '', notifications: '',
-        schedule: '', assignments: '', results: '',
-        attendance: '', papers: '', events: '',
-        grievances: '', certificates: '', idCard: ' ',
-        payFees: ' ', settings: '', aiChatbot: 'AI ',
-        studentsRecords: ' ', workflows: '',
-        login: '', register: '', logout: '',
-        welcome: 'Portal ', welcomeBack: ' ',
-        studentPortal: ' ', email: '', password: '',
-        fullName: ' ', studentId: ' ', department: '',
-        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
-        enterOtp: '6 OTP ', loginWithPassword: ' ',
-        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
-        securePlatform: ' ',
-        student: '', admin: '',
-        registerDesc: ', ', adminDesc: ' '
+        dashboard: 'डैशबोर्ड', analytics: 'विश्लेषण', notifications: 'सूचनाएँ',
+        schedule: 'समय सारणी', assignments: 'असाइनमेंट', results: 'परिणाम',
+        attendance: 'उपस्थिति', papers: 'प्रश्न पत्र', events: 'कार्यक्रम',
+        grievances: 'शिकायतें', certificates: 'प्रमाणपत्र', idCard: 'पहचान पत्र',
+        payFees: 'शुल्क भुगतान', settings: 'सेटिंग्स', aiChatbot: 'AI चैटबॉट', helpDesk: 'हेल्प डेस्क',
+        studentsRecords: 'छात्र एवं रिकॉर्ड', workflows: 'कार्यप्रवाह',
+        login: 'लॉगिन', register: 'पंजीकरण', logout: 'लॉगआउट',
+        welcome: 'पोर्टल में आपका स्वागत है', welcomeBack: 'वापसी पर स्वागत है',
+        studentPortal: 'छात्र पोर्टल', email: 'ईमेल', password: 'पासवर्ड',
+        fullName: 'पूरा नाम', studentId: 'छात्र आईडी', department: 'विभाग',
+        sendOtp: 'OTP भेजें', verifyLogin: 'सत्यापित करें और लॉगिन करें', otpSent: 'आपके ईमेल पर OTP भेजा गया!',
+        enterOtp: '6 अंकों का OTP दर्ज करें', loginWithPassword: 'पासवर्ड से लॉगिन करें',
+        loginWithOtp: 'OTP से लॉगिन करें', or: 'या', resendOtp: 'OTP पुनः भेजें',
+        securePlatform: 'सुरक्षित छात्र रिकॉर्ड प्रबंधन',
+        student: 'छात्र', admin: 'व्यवस्थापक',
+        registerDesc: 'पंजीकरण करें, लॉगिन करें और शुल्क भुगतान करें', adminDesc: 'छात्रों और रिकॉर्ड का प्रबंधन करें'
     },
     te: {
-        dashboard: '', analytics: '', notifications: '',
-        schedule: '', assignments: '', results: '',
-        attendance: '', papers: '', events: '',
-        grievances: '', certificates: '', idCard: ' ',
-        payFees: ' ', settings: '', aiChatbot: 'AI ',
-        studentsRecords: ' & ', workflows: '',
-        login: '', register: '', logout: '',
-        welcome: 'Portal ', welcomeBack: ' ',
-        studentPortal: ' ', email: '', password: '',
-        fullName: ' ', studentId: ' ', department: '',
-        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
-        enterOtp: '6 OTP ', loginWithPassword: ' ',
-        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
-        securePlatform: ' ',
-        student: '', admin: '',
-        registerDesc: ', ', adminDesc: ' '
+        dashboard: 'డాష్‌బోర్డ్', analytics: 'విశ్లేషణలు', notifications: 'నోటిఫికేషన్లు',
+        schedule: 'షెడ్యూల్', assignments: 'అసైన్‌మెంట్లు', results: 'ఫలితాలు',
+        attendance: 'హాజరు', papers: 'ప్రశ్న పత్రాలు', events: 'కార్యక్రమాలు',
+        grievances: 'ఫిర్యాదులు', certificates: 'ధృవీకరణ పత్రాలు', idCard: 'గుర్తింపు కార్డు',
+        payFees: 'ఫీజు చెల్లింపు', settings: 'సెట్టింగ్‌లు', aiChatbot: 'AI చాట్‌బాట్', helpDesk: 'హెల్ప్ డెస్క్',
+        studentsRecords: 'విద్యార్థులు & రికార్డులు', workflows: 'వర్క్‌ఫ్లోలు',
+        login: 'లాగిన్', register: 'నమోదు', logout: 'లాగౌట్',
+        welcome: 'పోర్టల్‌కు స్వాగతం', welcomeBack: 'తిరిగి స్వాగతం',
+        studentPortal: 'విద్యార్థి పోర్టల్', email: 'ఇమెయిల్', password: 'పాస్‌వర్డ్',
+        fullName: 'పూర్తి పేరు', studentId: 'విద్యార్థి ఐడి', department: 'విభాగం',
+        sendOtp: 'OTP పంపండి', verifyLogin: 'ధృవీకరించి లాగిన్ చేయండి', otpSent: 'మీ ఇమెయిల్‌కు OTP పంపబడింది!',
+        enterOtp: '6 అంకెల OTP నమోదు చేయండి', loginWithPassword: 'పాస్‌వర్డ్‌తో లాగిన్',
+        loginWithOtp: 'OTP తో లాగిన్', or: 'లేదా', resendOtp: 'OTP మళ్ళీ పంపండి',
+        securePlatform: 'సురక్షిత విద్యార్థి రికార్డుల నిర్వహణ',
+        student: 'విద్యార్థి', admin: 'అడ్మిన్',
+        registerDesc: 'నమోదు చేయండి, లాగిన్ చేయండి మరియు ఫీజు చెల్లించండి', adminDesc: 'విద్యార్థులు మరియు రికార్డులను నిర్వహించండి'
     },
     ta: {
-        dashboard: '', analytics: '', notifications: '',
-        schedule: '', assignments: '', results: '',
-        attendance: '', papers: '', events: '',
-        grievances: '', certificates: '', idCard: ' ',
-        payFees: ' ', settings: '', aiChatbot: 'AI ',
-        studentsRecords: ' & ', workflows: '',
-        login: '', register: '', logout: '',
-        welcome: 'Portal ', welcomeBack: ' ',
-        studentPortal: ' ', email: '', password: '',
-        fullName: ' ', studentId: ' ', department: '',
-        sendOtp: 'OTP ', verifyLogin: ' ', otpSent: 'OTP !',
-        enterOtp: '6 OTP ', loginWithPassword: ' ',
-        loginWithOtp: 'OTP ', or: '', resendOtp: 'OTP ',
-        securePlatform: ' ',
-        student: '', admin: '',
-        registerDesc: ', ', adminDesc: ' '
+        dashboard: 'டாஷ்போர்டு', analytics: 'பகுப்பாய்வுகள்', notifications: 'அறிவிப்புகள்',
+        schedule: 'அட்டவணை', assignments: 'பணிகள்', results: 'முடிவுகள்',
+        attendance: 'வருகை', papers: 'வினாத்தாள்கள்', events: 'நிகழ்வுகள்',
+        grievances: 'புகார்கள்', certificates: 'சான்றிதழ்கள்', idCard: 'அடையாள அட்டை',
+        payFees: 'கட்டணம் செலுத்து', settings: 'அமைப்புகள்', aiChatbot: 'AI சாட்பாட்', helpDesk: 'உதவி மையம்',
+        studentsRecords: 'மாணவர்கள் & பதிவுகள்', workflows: 'பணிப்பாய்வுகள்',
+        login: 'உள்நுழைவு', register: 'பதிவு', logout: 'வெளியேறு',
+        welcome: 'போர்டலுக்கு வரவேற்கிறோம்', welcomeBack: 'மீண்டும் வரவேற்கிறோம்',
+        studentPortal: 'மாணவர் போர்டல்', email: 'மின்னஞ்சல்', password: 'கடவுச்சொல்',
+        fullName: 'முழு பெயர்', studentId: 'மாணவர் எண்', department: 'துறை',
+        sendOtp: 'OTP அனுப்பு', verifyLogin: 'சரிபார்த்து உள்நுழை', otpSent: 'உங்கள் மின்னஞ்சலுக்கு OTP அனுப்பப்பட்டது!',
+        enterOtp: '6 இலக்க OTP உள்ளிடவும்', loginWithPassword: 'கடவுச்சொல்லுடன் உள்நுழை',
+        loginWithOtp: 'OTP மூலம் உள்நுழை', or: 'அல்லது', resendOtp: 'OTP மீண்டும் அனுப்பு',
+        securePlatform: 'பாதுகாப்பான மாணவர் பதிவு மேலாண்மை',
+        student: 'மாணவர்', admin: 'நிர்வாகி',
+        registerDesc: 'பதிவு செய்யுங்கள், உள்நுழையுங்கள் மற்றும் கட்டணம் செலுத்துங்கள்', adminDesc: 'மாணவர்கள் மற்றும் பதிவுகளை நிர்வகிக்கவும்'
     }
 };
 
@@ -290,6 +290,35 @@ function ProtectedRoute({ children, roles }) {
     if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" />;
 
     return children;
+}
+
+// Error Boundary — catches runtime errors and shows fallback UI instead of blank screen
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+    static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+    }
+    componentDidCatch(error, errorInfo) {
+        console.error('ErrorBoundary caught:', error, errorInfo);
+    }
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div style={{ padding: '3rem', textAlign: 'center', fontFamily: 'system-ui' }}>
+                    <h2 style={{ color: '#ef4444', marginBottom: '1rem' }}>⚠️ Something went wrong</h2>
+                    <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>{this.state.error?.message || 'An unexpected error occurred.'}</p>
+                    <button
+                        onClick={() => { this.setState({ hasError: false, error: null }); window.location.href = '/'; }}
+                        style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem' }}
+                    >Go to Home</button>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
 }
 
 // Loading Spinner Component
@@ -535,6 +564,8 @@ function AnimatedCounter({ value, duration = 1500, prefix = '', suffix = '', col
 // Scroll Reveal Hook triggers reveal animation when element enters viewport
 function useScrollReveal(options = {}) {
     const ref = useRef(null);
+    const threshold = options.threshold || 0.1;
+    const rootMargin = options.rootMargin || '0px';
     useEffect(() => {
         const el = ref.current;
         if (!el) return;
@@ -543,10 +574,10 @@ function useScrollReveal(options = {}) {
                 el.classList.add('revealed');
                 observer.unobserve(el);
             }
-        }, { threshold: options.threshold || 0.1, rootMargin: options.rootMargin || '0px' });
+        }, { threshold, rootMargin });
         observer.observe(el);
         return () => observer.disconnect();
-    }, []);
+    }, [threshold, rootMargin]);
     return ref;
 }
 
@@ -590,17 +621,17 @@ function MobileBottomNav({ role }) {
 
     const studentItems = [
         { path: '/dashboard', icon: '🏠', label: 'Home' },
-        { path: '/papers', icon: '🏠', label: 'Papers' },
-        { path: '/attendance', icon: '📌', label: 'Attend.' },
-        { path: '/notifications', icon: '⚙', label: 'Alerts' },
-        { path: '/settings', icon: '🏠', label: 'Settings' },
+        { path: '/papers', icon: '📄', label: 'Papers' },
+        { path: '/attendance', icon: '📋', label: 'Attend.' },
+        { path: '/notifications', icon: '🔔', label: 'Alerts' },
+        { path: '/settings', icon: '⚙️', label: 'Settings' },
     ];
 
     const adminItems = [
         { path: '/dashboard', icon: '🏠', label: 'Home' },
-        { path: '/admin', icon: '🏠', label: 'Admin' },
-        { path: '/notifications', icon: '👤', label: 'Alerts' },
-        { path: '/settings', icon: '🎓', label: 'Profile' },
+        { path: '/admin', icon: '👥', label: 'Admin' },
+        { path: '/notifications', icon: '🔔', label: 'Alerts' },
+        { path: '/settings', icon: '⚙️', label: 'Profile' },
     ];
 
     const items = role === 'admin' ? adminItems : studentItems;
@@ -7891,6 +7922,13 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/chatbot" element={<ProtectedRoute roles={['student']}><PageWrapper><ChatbotPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/leaderboard" element={<ProtectedRoute roles={['student']}><PageWrapper><LeaderboardPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="/feedback" element={<ProtectedRoute roles={['student']}><PageWrapper><FeedbackPage /></PageWrapper></ProtectedRoute>} />
+                        <Route path="*" element={
+                            <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                                <h1 style={{ fontSize: '4rem', marginBottom: '1rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>404</h1>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Page not found</p>
+                                <Link to="/" style={{ padding: '0.75rem 1.5rem', background: 'var(--primary-gradient)', color: 'white', borderRadius: '8px', textDecoration: 'none' }}>Go Home</Link>
+                            </div>
+                        } />
                     </Routes>
                 </div>
             </div>
