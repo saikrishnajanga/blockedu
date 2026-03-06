@@ -822,6 +822,99 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
   });
 });
 
+// ==================== STUDENT SELF-REGISTRATION ====================
+
+// Public endpoint for students to register themselves (no auth required)
+app.post('/api/student/self-register', async (req, res) => {
+  try {
+    const { name, email, password, studentId, department, course, enrollmentYear, aadhaarNumber, apaarId, dob, admissionType, confirmPassword } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required' });
+    }
+
+    if (!studentId) {
+      return res.status(400).json({ error: 'Student ID is required' });
+    }
+
+    // Check if email already exists in users
+    const existingUser = db.users.find(u => u.email === email);
+    if (existingUser) {
+      return res.status(400).json({ error: 'An account with this email already exists. Please login instead.' });
+    }
+
+    // Check if student ID already exists
+    const existingStudent = db.students.find(s => s.studentId === studentId);
+    if (existingStudent) {
+      return res.status(400).json({ error: 'This Student ID is already registered.' });
+    }
+
+    // Password strength validation
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
+    }
+
+    // Create user account
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const userId = uuidv4();
+    const newUser = {
+      id: userId,
+      email,
+      password: hashedPassword,
+      name,
+      role: 'student',
+      studentId,
+      walletAddress: null,
+      createdAt: new Date().toISOString()
+    };
+    db.users.push(newUser);
+
+    // Create student record
+    const newStudent = {
+      id: userId,
+      studentId,
+      name,
+      email,
+      course: course || '',
+      department: department || '',
+      enrollmentYear: enrollmentYear || new Date().getFullYear(),
+      walletAddress: null,
+      institutionId: db.institutions[0]?.id || null,
+      aadhaarNumber: aadhaarNumber || null,
+      apaarId: apaarId || null,
+      dob: dob || null,
+      admissionType: admissionType || null,
+      profilePicture: null,
+      createdAt: new Date().toISOString()
+    };
+    db.students.push(newStudent);
+
+    // Generate JWT token for auto-login
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      jwtSecret,
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      message: 'Student registered successfully',
+      token,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        role: newUser.role,
+        studentId: newUser.studentId,
+        walletAddress: newUser.walletAddress
+      }
+    });
+  } catch (error) {
+    console.error('Self-registration error:', error);
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
+  }
+});
+
 // ==================== STUDENT ROUTES ====================
 
 // Register student
