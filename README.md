@@ -10,7 +10,7 @@
 
 **A secure, decentralized, and feature-rich student records management system powered by blockchain technology. Available as a Web App, PWA, and Android APK.**
 
-[Features](#-features) · [Live Demo](#-live-demo) · [Quick Start](#-quick-start) · [Demo Credentials](#-demo-credentials) · [Mobile App](#-mobile-app) · [Tech Stack](#️-tech-stack) · [API Reference](#-api-reference)
+[Features](#-features) · [Architecture](#%EF%B8%8F-architecture) · [Tech Stack](#%EF%B8%8F-tech-stack) · [Quick Start](#-quick-start) · [Demo Credentials](#-demo-credentials) · [Mobile App](#-mobile-app) · [API Reference](#-api-reference) · [Security](#-security) · [Deployment](#-deployment)
 
 </div>
 
@@ -34,38 +34,57 @@
 | **Role-Based Access** | Separate portals for Students, Admins, and Institutions |
 | **Blockchain Verification** | Tamper-proof record storage with SHA-256 hashing |
 | **MetaMask Integration** | Web3 wallet-based authentication via Ethers.js |
-| **JWT Authentication** | Secure token-based session management |
-| **OTP Email Verification** | Multi-provider email support (Gmail, Outlook, Resend, Brevo) |
+| **JWT Authentication** | Secure token-based session management (24h expiry) |
+| **OTP Email Verification** | Multi-provider email support (Gmail, Outlook, Resend, Brevo, Ethereal) |
 | **Multilingual Support** | i18n with English, Hindi, and Telugu |
 | **Session Timeout** | Auto-logout after inactivity with countdown warning modal |
 | **PWA Support** | Installable as a Progressive Web App on any device |
+| **Offline Data Bundle** | Download profile, results, attendance, & timetable for offline access |
+| **JSON File Persistence** | Data survives server restarts via debounced file-based storage |
 
 ### 👨‍🎓 Student Portal
 | Feature | Description |
 |---------|-------------|
 | **Dashboard** | Personalized stats — GPA, attendance, upcoming events |
-| **Results** | Semester-wise grade view with blockchain verification |
+| **Results** | Semester-wise grade view with blockchain verification & CGPA calculation |
+| **Autonomous Results** | View uploaded autonomous exam result files |
+| **Regulation Results** | View uploaded regulation result files |
 | **Attendance** | Monthly tracker with circular **ProgressRing** visualizations |
 | **Schedule** | Weekly timetable with day-wise class breakdown |
-| **Assignments** | Track pending / submitted / graded assignments |
-| **Papers** | Academic paper library — browse, bookmark, rate, download PDFs |
+| **Assignments** | Track pending / submitted / graded assignments with submission |
+| **Papers** | Academic paper library — browse, bookmark, rate (1–5 ★), download PDFs |
 | **Certificates** | View earned certificates with blockchain hashes |
 | **Fee Payments** | UPI-based payment with multiple fee types, **confetti** on success |
 | **Notifications** | Real-time announcements with **swipe-to-dismiss** gestures |
 | **ID Card** | Digital student identity card with **3D flip animation** and QR code |
 | **Events** | Campus events calendar with registration |
-| **Grievances** | Submit and track grievance tickets |
-| **AI Chatbot** | Intelligent study buddy for academic queries |
-| **Analytics** | CGPA tracking, performance predictions, peer comparison |
-| **Settings** | Profile editing, password change, profile picture upload |
+| **Grievances** | Submit and track grievance tickets with admin responses |
+| **AI Chatbot** | Intelligent study buddy — personalized to your results & attendance |
+| **Analytics** | CGPA tracking, performance predictions, peer comparison, weak subject analysis |
+| **Leaderboard** | Student rankings by CGPA & attendance — filterable by department |
+| **Feedback** | Anonymous course & faculty feedback (1–5 ★ rating + comments) |
+| **Settings** | Profile editing, Aadhaar/APAAR ID, password change, profile picture upload |
 
 ### 🛡️ Admin Panel
 | Feature | Description |
 |---------|-------------|
 | **Student Records** | Full CRUD — register, edit, delete, bulk Excel upload |
-| **Analytics Dashboard** | Real-time stats, department comparison, fee revenue charts |
-| **Certificate Generator** | 12 template types — Bonafide, TC, Merit, Sports, etc. with PDF export |
-| **Workflow Manager** | Kanban-style task board with drag-and-drop and automation rules |
+| **Analytics Dashboard** | Real-time stats, department comparison, fee revenue, attendance distribution, performance tiers |
+| **Results Management** | Publish / delete semester results per student with auto-notification |
+| **Autonomous Results** | Upload & manage autonomous exam result files |
+| **Regulation Results** | Upload & manage regulation result files |
+| **Attendance System** | Mark daily attendance per subject/department, upload via Excel, view records with filters |
+| **Certificate Generator** | 6+ template types — Bonafide, Character, Course, Internship, Degree, Merit — with blockchain hash & QR |
+| **Workflow Manager** | Kanban-style task board with drag-and-drop, automation rules, predefined workflows (Admission, Fee Payment, Certificate Request) |
+| **Grievance Manager** | View, respond to, and resolve student grievances with auto-notification |
+| **Notification Publisher** | Create and broadcast announcements to all students |
+| **User Management** | View all users, update roles, reset passwords, delete accounts |
+| **System Logs** | Audit trail for password changes, user updates, account deletions |
+| **Feedback Analytics** | View aggregated anonymous feedback per course/faculty |
+| **Branch / Subject / Faculty** | CRUD management for branches (departments), subjects per branch, and faculty members |
+| **Paper Management** | Upload PDFs with dedup check, Edit metadata, Bulk delete |
+| **Institution Management** | Register, verify, update, and delete institutions |
+| **Admin Stats** | Comprehensive system statistics — users, students, payments, blockchain transactions |
 
 ### 🏛️ Institution Portal
 | Feature | Description |
@@ -103,6 +122,189 @@
 
 ---
 
+## 🏗️ Architecture
+
+### System Overview
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                         CLIENT LAYER                             │
+│  ┌──────────┐  ┌──────────────┐  ┌────────────┐  ┌───────────┐  │
+│  │ Web App  │  │  PWA (Offline │  │ Android APK│  │  MetaMask  │  │
+│  │ (React)  │  │   Bundle)    │  │ (Capacitor)│  │  (Ethers)  │  │
+│  └────┬─────┘  └──────┬───────┘  └─────┬──────┘  └─────┬─────┘  │
+└───────┼───────────────┼────────────────┼──────────────┼─────────┘
+        │               │                │              │
+        └───────────────┼────────────────┘              │
+                        ▼                               ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                         API LAYER                                │
+│                  Node.js + Express REST API                       │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌──────────────────┐   │
+│  │   Auth   │ │  Student │ │  Admin    │ │    Blockchain    │   │
+│  │  Module  │ │  Routes  │ │  Routes   │ │    Routes        │   │
+│  └──────────┘ └──────────┘ └───────────┘ └──────────────────┘   │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌──────────────────┐   │
+│  │  Email   │ │ AI Chat  │ │ Workflow  │ │ Rate Limiter +   │   │
+│  │ Service  │ │  Bot     │ │  Engine   │ │ Helmet Security  │   │
+│  └──────────┘ └──────────┘ └───────────┘ └──────────────────┘   │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                       DATA LAYER                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │   JSON File DB  │  │    File Uploads  │  │  Blockchain     │  │
+│  │  (data/db.json) │  │  (uploads/papers)│  │  (SHA-256 Hash) │  │
+│  │  • Debounced    │  │  • PDF papers    │  │  • Tx records   │  │
+│  │    auto-save    │  │  • Profile pics  │  │  • Verification │  │
+│  │  • Graceful     │  │  • 20MB limit    │  │  • Smart        │  │
+│  │    shutdown     │  │                  │  │    Contract     │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Data Flow
+
+```mermaid
+graph LR
+    A[Student / Admin / Institution] -->|HTTPS| B[React Frontend]
+    B -->|Axios / JWT| C[Express API]
+    C -->|Read/Write| D[JSON File DB]
+    C -->|SHA-256| E[Blockchain Layer]
+    C -->|Nodemailer / Resend / Brevo| F[Email Service]
+    C -->|AI Module| G[Chatbot Engine]
+    B -->|Ethers.js| H[MetaMask Wallet]
+    B -->|Capacitor| I[Android APK]
+    B -->|Service Worker| J[PWA / Offline]
+```
+
+### Authentication Flow
+
+```
+┌────────────┐     ┌────────────┐     ┌──────────────┐
+│   Login    │────▶│  JWT Token │────▶│  Protected   │
+│  Options   │     │  (24h TTL) │     │   Routes     │
+├────────────┤     └────────────┘     └──────────────┘
+│ Email+Pass │            │
+│ MetaMask   │            ▼
+│ OTP Email  │     ┌────────────┐
+│ Self-Reg   │     │ Role Guard │──▶ student | admin | institution
+└────────────┘     └────────────┘
+```
+
+---
+
+## ⚙️ Tech Stack
+
+### Frontend
+| Technology | Purpose |
+|-----------|---------|
+| React 18 | UI framework (single-file component architecture) |
+| React Router v6 | Client-side routing with protected routes |
+| Axios | HTTP client with JWT interceptor |
+| Ethers.js v5 | Web3 / MetaMask integration |
+| XLSX | Excel import/export for bulk operations |
+| CSS3 | Full design system — dark/light themes, glassmorphism, animations (3600+ lines) |
+
+### Backend
+| Technology | Purpose |
+|-----------|---------|
+| Node.js + Express | REST API server (60+ endpoints) |
+| JWT (jsonwebtoken) | Stateless authentication tokens (24h expiry) |
+| bcryptjs | Salted password hashing |
+| Multer | File uploads — PDFs (20MB), Excel (10MB) |
+| Nodemailer | SMTP email (Gmail, Brevo-SMTP, Ethereal) |
+| Resend SDK | HTTP API email delivery |
+| Brevo SDK | HTTP API email delivery |
+| Helmet | HTTP security headers |
+| express-rate-limit | Auth endpoint rate limiting (20 req / 15 min) |
+| uuid | Unique ID generation |
+| Ethers.js | Blockchain interaction |
+| crypto (Node.js) | SHA-256 hashing for record integrity |
+
+### Mobile
+| Technology | Purpose |
+|-----------|---------|
+| Capacitor 7 | Native Android wrapper |
+| @capacitor/status-bar | Status bar management |
+
+### Blockchain
+| Technology | Purpose |
+|-----------|---------|
+| Ethereum (Ethers.js) | Smart contract interaction |
+| Solidity ^0.8.19 | `StudentRecords.sol` smart contract |
+| MetaMask | Wallet authentication |
+| SHA-256 Hashing | Record integrity verification |
+
+### DevOps & Deployment
+| Technology | Purpose |
+|-----------|---------|
+| Vercel | Frontend hosting with SPA routing (`vercel.json`) |
+| Render | Backend API hosting |
+| PWA (Service Worker) | Offline support & installability |
+| JSON File DB | Persistent storage with debounced auto-save & graceful shutdown |
+
+---
+
+## 📁 Project Structure
+
+```
+project/
+├── README.md
+├── .gitignore
+│
+├── backend/
+│   ├── server.js              # Express server — 60+ routes & JSON file DB
+│   ├── aiChatbot.js           # AI Study Buddy module (enhanced responses)
+│   ├── package.json
+│   ├── .env / .env.example    # Environment configuration
+│   ├── data/
+│   │   └── db.json            # Persistent JSON database (auto-saved)
+│   └── uploads/
+│       └── papers/            # Uploaded academic paper PDFs
+│
+├── frontend/
+│   ├── public/
+│   │   ├── index.html         # HTML template (viewport-fit=cover)
+│   │   ├── manifest.json      # PWA manifest
+│   │   └── service-worker.js  # PWA service worker
+│   ├── src/
+│   │   ├── App.js             # All components (5600+ lines)
+│   │   │   ├── AuthContext     # Auth state + session timeout
+│   │   │   ├── ProtectedRoute  # Role-based route guard
+│   │   │   ├── Sidebar         # Slide-in navigation (mobile overlay)
+│   │   │   ├── TopBar          # Header + theme toggle
+│   │   │   ├── MobileBottomNav # Mobile tab bar
+│   │   │   ├── PageWrapper     # Transition animations
+│   │   │   ├── SkeletonLoader  # Loading placeholders
+│   │   │   ├── ProgressRing    # SVG circular progress
+│   │   │   ├── ConfettiEffect  # Celebration animation
+│   │   │   ├── ThemeToggle     # Dark/light switch
+│   │   │   └── 20+ Page components
+│   │   ├── index.css           # Full design system (3600+ lines)
+│   │   └── index.js            # React entry point
+│   ├── capacitor.config.json   # Capacitor mobile config
+│   ├── vercel.json             # Vercel deployment config
+│   └── package.json
+│
+├── frontend/android/           # Auto-generated Android project
+│   ├── app/src/main/
+│   │   ├── java/.../MainActivity.java
+│   │   └── res/values/styles.xml
+│   └── build/outputs/apk/     # Built APKs
+│
+└── contracts/
+    └── StudentRecords.sol      # Solidity smart contract (249 lines)
+        ├── registerStudent()   # Register student on-chain
+        ├── storeRecord()       # Store record hash + IPFS hash
+        ├── verifyRecord()      # Verify record integrity
+        ├── authorizeInstitution()  # Permission management
+        └── getStats()          # Contract-level statistics
+```
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -136,6 +338,7 @@ npm start               # Starts on http://localhost:3000
 |----------|-----|
 | Frontend | http://localhost:3000 |
 | Backend  | http://localhost:5000 |
+| Health Check | http://localhost:5000/api/health |
 
 ---
 
@@ -145,9 +348,9 @@ npm start               # Starts on http://localhost:3000
 |------|-------|----------|
 | **Admin** | `admin@university.edu` | `admin123` |
 | **Student** | `student@university.edu` | `student123` |
-| **Institution** | `admin@university.edu` | `admin123` |
+| **Institution** | `institution@university.edu` | `institution123` |
 
-> **Note:** Institution login uses the same credentials as Admin.
+> **Note:** The demo data is auto-seeded on first run and persisted in `backend/data/db.json`. Delete this file to reset to fresh demo data.
 
 ---
 
@@ -201,105 +404,19 @@ The APK loads the live Vercel deployment, so frontend updates don't require rebu
 
 ---
 
-## 🏗️ Tech Stack
-
-### Frontend
-| Technology | Purpose |
-|-----------|---------|
-| React 18 | UI framework |
-| React Router v6 | Client-side routing |
-| Axios | HTTP client |
-| Ethers.js v5 | Web3 / MetaMask integration |
-| XLSX | Excel import/export |
-
-### Backend
-| Technology | Purpose |
-|-----------|---------|
-| Node.js + Express | REST API server |
-| JWT (jsonwebtoken) | Authentication tokens |
-| bcryptjs | Password hashing |
-| Multer | File uploads (PDFs) |
-| Nodemailer / Resend / Brevo | Email delivery |
-| uuid | Unique ID generation |
-| Ethers.js | Blockchain interaction |
-
-### Mobile
-| Technology | Purpose |
-|-----------|---------|
-| Capacitor 7 | Native Android wrapper |
-| @capacitor/status-bar | Status bar management |
-
-### Blockchain
-| Technology | Purpose |
-|-----------|---------|
-| Ethereum (Ethers.js) | Smart contract interaction |
-| MetaMask | Wallet authentication |
-| SHA-256 Hashing | Record integrity verification |
-
----
-
-## 📁 Project Structure
-
-```
-project/
-├── README.md
-├── .gitignore
-│
-├── backend/
-│   ├── server.js              # Express server — all routes & in-memory DB
-│   ├── aiChatbot.js           # AI Study Buddy module
-│   ├── package.json
-│   └── uploads/               # Uploaded PDFs (papers)
-│       └── papers/
-│
-├── frontend/
-│   ├── public/
-│   │   ├── index.html         # HTML template (viewport-fit=cover)
-│   │   ├── manifest.json      # PWA manifest
-│   │   └── service-worker.js  # PWA service worker
-│   ├── src/
-│   │   ├── App.js             # All components (5600+ lines)
-│   │   │   ├── AuthContext     # Auth state + session timeout
-│   │   │   ├── ProtectedRoute  # Role-based route guard
-│   │   │   ├── Sidebar         # Slide-in navigation (mobile overlay)
-│   │   │   ├── TopBar          # Header + theme toggle
-│   │   │   ├── MobileBottomNav # Mobile tab bar
-│   │   │   ├── PageWrapper     # Transition animations
-│   │   │   ├── SkeletonLoader  # Loading placeholders
-│   │   │   ├── ProgressRing    # SVG circular progress
-│   │   │   ├── ConfettiEffect  # Celebration animation
-│   │   │   ├── ThemeToggle     # Dark/light switch
-│   │   │   └── 17+ Page components
-│   │   └── index.css          # 3600+ lines — full design system
-│   ├── capacitor.config.json  # Capacitor mobile config
-│   ├── vercel.json            # Vercel deployment config
-│   └── package.json
-│
-├── frontend/android/          # Auto-generated Android project
-│   ├── app/src/main/
-│   │   ├── java/.../MainActivity.java
-│   │   └── res/values/styles.xml
-│   └── build/outputs/apk/     # Built APKs
-│
-└── contracts/
-    └── StudentRecords.sol     # Solidity smart contract (reference)
-```
-
----
-
 ## 📡 API Reference
 
 ### 🔐 Authentication
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/auth/register` | Register new user |
+| `POST` | `/api/auth/register` | Register new user (student role only) |
 | `POST` | `/api/auth/login` | Email/password login |
 | `POST` | `/api/auth/wallet-login` | MetaMask wallet login |
 | `GET` | `/api/auth/me` | Get current user |
 | `POST` | `/api/auth/change-password` | Change password |
 | `PUT` | `/api/auth/update-profile` | Update user profile |
 | `POST` | `/api/auth/send-otp` | Send email OTP |
-| `POST` | `/api/auth/verify-otp` | Verify email OTP |
+| `POST` | `/api/auth/verify-otp` | Verify email OTP & login |
 
 ### 👨‍🎓 Student
 | Method | Endpoint | Description |
@@ -308,24 +425,36 @@ project/
 | `POST` | `/api/student/self-register` | Student self-registration |
 | `POST` | `/api/student/bulk-upload` | Bulk upload from Excel |
 | `POST` | `/api/student/uploadRecord` | Upload academic record |
-| `GET` | `/api/student/verify/:studentId` | Verify student records |
-| `GET` | `/api/students` | List all students |
+| `GET` | `/api/student/verify/:studentId` | Verify student records (public) |
+| `GET` | `/api/student/records/:walletAddress` | Get records by wallet address |
+| `GET` | `/api/students` | List all students (admin) |
+| `GET` | `/api/student/profile` | Get student profile |
 | `PUT` | `/api/student/profile` | Update student profile |
 | `GET` | `/api/student/attendance` | Get attendance data |
 | `GET` | `/api/student/results` | Get academic results |
+| `GET` | `/api/student/autonomous-results` | Get autonomous results |
+| `GET` | `/api/student/regulation-results` | Get regulation results |
 | `GET` | `/api/student/idcard` | Get digital ID card |
-| `GET` | `/api/student/analytics` | Get performance analytics |
+| `GET` | `/api/student/offline-bundle` | Download offline data bundle |
+| `POST` | `/api/student/feedback` | Submit anonymous feedback |
 
 ### 📚 Academic
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/schedule` | Get class timetable |
+| `GET` | `/api/timetable` | Get class timetable |
 | `GET` | `/api/assignments` | Get assignments list |
-| `GET` | `/api/papers` | Get academic papers |
-| `POST` | `/api/papers` | Upload new paper (PDF) |
-| `GET` | `/api/papers/:id/download` | Download paper PDF |
-| `PUT` | `/api/admin/papers/:id` | Edit paper metadata |
-| `DELETE` | `/api/admin/papers/:id` | Delete a paper |
+| `POST` | `/api/assignments/:id/submit` | Submit assignment |
+| `GET` | `/api/papers` | Get academic papers (with bookmarks & ratings) |
+| `POST` | `/api/papers/:id/download` | Track paper download |
+| `POST` | `/api/papers/:id/bookmark` | Toggle bookmark |
+| `POST` | `/api/papers/:id/rate` | Rate paper (1–5 ★) |
+
+### 📊 Analytics
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/analytics/performance` | Student performance analytics |
+| `GET` | `/api/leaderboard` | Student leaderboard (CGPA & attendance) |
+| `GET` | `/api/dashboard/stats` | Dashboard statistics |
 
 ### 💬 Communication
 | Method | Endpoint | Description |
@@ -333,33 +462,94 @@ project/
 | `GET` | `/api/notifications` | Get notifications |
 | `PUT` | `/api/notifications/:id/read` | Mark as read |
 | `GET` | `/api/events` | Get campus events |
+| `POST` | `/api/events/:id/register` | Register for event |
 | `GET` | `/api/grievances` | Get grievances |
 | `POST` | `/api/grievances` | Submit a grievance |
 
 ### 💳 Payments
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/payments` | Get payment history |
+| `GET` | `/api/payments` | Get user payment history |
+| `GET` | `/api/payments/all` | Get all payments (admin) |
+| `GET` | `/api/payments/pending` | Get pending fees |
 | `POST` | `/api/payments` | Record a payment |
 
 ### 🏆 Certificates
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/certificates` | Get student certificates |
+| `GET` | `/api/certificates/verify/:certId` | Verify certificate (public) |
 | `POST` | `/api/admin/certificates/generate` | Generate certificates |
+| `GET` | `/api/admin/certificates` | Get all certificates |
+| `GET` | `/api/admin/certificates/templates` | Get certificate templates |
 
 ### ⛓️ Blockchain
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/api/blockchain/storeHash` | Store hash on chain |
-| `GET` | `/api/blockchain/verifyHash` | Verify a hash |
+| `GET` | `/api/blockchain/verifyHash` | Verify a hash (public) |
 | `GET` | `/api/blockchain/transactions` | Get all transactions |
 
-### 📊 Dashboard & Analytics
+### 🛡️ Admin — Results
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/dashboard/stats` | Dashboard statistics |
-| `GET` | `/api/admin/analytics` | Admin analytics data |
+| `GET` | `/api/admin/results` | Get all results |
+| `POST` | `/api/admin/results` | Publish results |
+| `DELETE` | `/api/admin/results/:id` | Delete a result |
+| `POST` | `/api/admin/autonomous-results` | Upload autonomous results |
+| `GET` | `/api/admin/autonomous-results` | Get autonomous results |
+| `DELETE` | `/api/admin/autonomous-results/:id` | Delete autonomous result |
+| `POST` | `/api/admin/regulation-results` | Upload regulation results |
+| `GET` | `/api/admin/regulation-results` | Get regulation results |
+| `DELETE` | `/api/admin/regulation-results/:id` | Delete regulation result |
+
+### 🛡️ Admin — Attendance
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/attendance/students` | Get students (filterable by dept) |
+| `POST` | `/api/admin/attendance/mark` | Mark daily attendance |
+| `GET` | `/api/admin/attendance/records` | Get attendance records (with filters) |
+| `POST` | `/api/admin/attendance/upload` | Upload attendance from Excel |
+
+### 🛡️ Admin — Grievances & Notifications
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/grievances` | Get all grievances |
+| `PUT` | `/api/admin/grievances/:id` | Respond to a grievance |
+| `POST` | `/api/admin/notifications` | Publish a notification |
+
+### 🛡️ Admin — Papers
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/admin/papers/upload` | Upload paper PDF (with dedup) |
+| `PUT` | `/api/admin/papers/:id` | Edit paper metadata |
+| `DELETE` | `/api/admin/papers/:id` | Delete a paper |
+| `POST` | `/api/admin/papers/bulk-delete` | Bulk delete papers |
+
+### 🛡️ Admin — Users & System
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/users` | Get all users |
+| `PUT` | `/api/admin/users/:userId` | Update user |
+| `DELETE` | `/api/admin/users/:userId` | Delete user |
+| `POST` | `/api/admin/users/:userId/reset-password` | Reset user password |
+| `GET` | `/api/admin/logs` | Get system audit logs |
+| `GET` | `/api/admin/stats` | System statistics |
+| `GET` | `/api/admin/analytics` | Comprehensive analytics dashboard |
+| `GET` | `/api/admin/feedback` | Aggregated student feedback |
+
+### 🛡️ Admin — Branches, Subjects, Faculty
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/branches` | Get all branches |
+| `POST` | `/api/admin/branches` | Add branch |
+| `DELETE` | `/api/admin/branches/:id` | Delete branch |
+| `GET` | `/api/admin/subjects` | Get subjects (filterable) |
+| `POST` | `/api/admin/subjects` | Add subject |
+| `DELETE` | `/api/admin/subjects/:id` | Delete subject |
+| `GET` | `/api/admin/faculty` | Get faculty (filterable) |
+| `POST` | `/api/admin/faculty` | Add faculty |
+| `DELETE` | `/api/admin/faculty/:id` | Delete faculty |
 
 ### 📋 Workflow (Admin)
 | Method | Endpoint | Description |
@@ -367,15 +557,30 @@ project/
 | `GET` | `/api/admin/tasks` | Get all tasks |
 | `POST` | `/api/admin/tasks` | Create a task |
 | `PUT` | `/api/admin/tasks/:taskId` | Update a task |
-| `GET` | `/api/admin/tasks/stats` | Task statistics |
+| `DELETE` | `/api/admin/tasks/:taskId` | Delete a task |
+| `GET` | `/api/admin/tasks/stats` | Task statistics (Kanban) |
 | `GET` | `/api/admin/workflows` | Get automation workflows |
 | `POST` | `/api/admin/workflows` | Create a workflow |
+
+### 🏛️ Institutions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/institutions` | Get all institutions (public) |
+| `POST` | `/api/institutions` | Register institution |
+| `PUT` | `/api/admin/institutions/:id` | Update institution |
+| `DELETE` | `/api/admin/institutions/:id` | Delete institution |
 
 ### 🤖 AI Chatbot
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/chatbot/message` | Send message to AI |
-| `GET` | `/api/chatbot/history` | Get chat history |
+| `POST` | `/api/chat/message` | Send message to AI |
+| `GET` | `/api/chat/history` | Get chat history |
+
+### 🔧 System
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/health` | Health check with email diagnostics |
+| `GET` | `/api/departments-data` | Branches, subjects, and faculty data |
 
 ---
 
@@ -389,21 +594,27 @@ NODE_ENV=development
 JWT_SECRET=your-secret-key
 CORS_ORIGIN=http://localhost:3000
 
-# Email (choose one provider)
-# Gmail
-EMAIL_USER=your-email@gmail.com
-EMAIL_APP_PASSWORD=your-app-password
+# Email — choose one or more providers (auto-detected):
 
-# Outlook
-OUTLOOK_USER=your-email@outlook.com
-OUTLOOK_PASSWORD=your-password
-
-# Resend
+# Resend (HTTP API — easiest setup)
 RESEND_API_KEY=re_xxxxxxxxxxxxx
 
-# Brevo
+# Brevo HTTP API
 BREVO_API_KEY=xkeysib-xxxxxxxxxxxxx
+
+# Brevo SMTP
+BREVO_SMTP_KEY=xkeysib-xxxxxxxxxxxxx
+BREVO_LOGIN=your-email@example.com
+
+# Gmail SMTP
+SMTP_EMAIL=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+
+# Custom sender address (optional)
+SENDER_EMAIL=noreply@blockedu.com
 ```
+
+> **Tip:** If no email provider is configured, the server auto-creates an [Ethereal](https://ethereal.email) test account for development.
 
 ### Frontend `.env`
 
@@ -437,14 +648,20 @@ cd frontend && npm run build
 
 ## 🔒 Security
 
-- **JWT Authentication** — Stateless token-based sessions
-- **bcrypt Hashing** — Salted password storage
-- **CORS Protection** — Configurable origin whitelist
-- **Role-Based Access Control** — Middleware-enforced permissions
-- **Blockchain Verification** — SHA-256 hash integrity checks
-- **OTP Verification** — Email-based identity confirmation
-- **Session Timeout** — Auto-logout after 15 min inactivity with warning modal
-- **Environment Variables** — No secrets in source code
+| Layer | Implementation |
+|-------|---------------|
+| **Authentication** | JWT tokens — stateless, 24-hour expiry |
+| **Password Security** | bcrypt with salt rounds (10 rounds) |
+| **Rate Limiting** | 20 requests per 15 minutes on auth endpoints |
+| **HTTP Headers** | Helmet.js — XSS protection, HSTS, content-type sniffing prevention |
+| **CORS** | Configurable origin whitelist (strict in production) |
+| **Role-Based Access** | Middleware-enforced permissions (student / admin / institution) |
+| **Blockchain Integrity** | SHA-256 hash verification for all records |
+| **OTP Verification** | 6-digit codes — 5-minute expiry with auto-cleanup |
+| **Session Timeout** | Auto-logout after 15 min inactivity with warning modal |
+| **Audit Logging** | System logs for password changes, user updates, deletions |
+| **File Upload Security** | PDF-only filter, 20MB size limit, sanitized filenames |
+| **Environment Variables** | No secrets in source code |
 
 ---
 
@@ -454,6 +671,12 @@ cd frontend && npm run build
 - [x] ~~PWA support~~
 - [x] ~~3D flip cards & QR codes~~
 - [x] ~~Session timeout with warning modal~~
+- [x] ~~Leaderboard & peer comparison~~
+- [x] ~~Anonymous feedback system~~
+- [x] ~~Offline data bundle~~
+- [x] ~~Branch / Subject / Faculty management~~
+- [x] ~~Admin attendance marking system~~
+- [x] ~~System audit logs~~
 - [ ] PostgreSQL / MongoDB persistent database
 - [ ] Real Ethereum smart contract deployment
 - [ ] IPFS / Arweave decentralized file storage
@@ -490,7 +713,7 @@ This project is licensed under the **MIT License**.
 
 <div align="center">
 
-**⚠️ Note**: This is a demonstration project using an in-memory database. For production use, integrate a persistent database (PostgreSQL/MongoDB), deploy real smart contracts, and implement additional security hardening.
+**⚠️ Note**: This is a demonstration project using a JSON file-based database. For production use, integrate a persistent database (PostgreSQL/MongoDB), deploy real smart contracts, and implement additional security hardening.
 
 Made with ❤️ by the BlockEdu Team
 

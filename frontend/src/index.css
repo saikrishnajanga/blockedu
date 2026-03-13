@@ -1,10 +1,10 @@
 /* ==================== CSS Variables & Reset ==================== */
 :root {
   /* Primary Colors */
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --primary-dark: #5a67d8;
-  --secondary-color: #764ba2;
+  --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%);
+  --primary-color: #0ea5e9;
+  --primary-dark: #0284c7;
+  --secondary-color: #0891b2;
 
   /* Accent Colors */
   --success-color: #10b981;
@@ -28,13 +28,13 @@
   --text-muted: #718096;
 
   --border-color: rgba(255, 255, 255, 0.1);
-  --border-focus: rgba(102, 126, 234, 0.5);
+  --border-focus: rgba(14, 165, 233, 0.5);
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+  --shadow-glow: 0 0 30px rgba(14, 165, 233, 0.3);
 
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -73,12 +73,12 @@
   --text-muted: #718096;
 
   --border-color: #e2e8f0;
-  --border-focus: rgba(102, 126, 234, 0.5);
+  --border-focus: rgba(14, 165, 233, 0.5);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.15);
+  --shadow-glow: 0 0 30px rgba(14, 165, 233, 0.15);
 }
 
 * {
@@ -149,8 +149,8 @@ body {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(8, 145, 178, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
   pointer-events: none;
   z-index: -1;
@@ -395,7 +395,7 @@ a:hover {
 
 .card:hover {
   border-color: var(--border-focus);
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(102, 126, 234, 0.15);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(14, 165, 233, 0.15);
 }
 
 .card-header {
@@ -1572,11 +1572,11 @@ select.form-control {
 
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
   }
 
   50% {
-    box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 0 40px rgba(14, 165, 233, 0.6);
   }
 }
 
@@ -2579,18 +2579,18 @@ svg {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(102, 126, 234, 0.3);
+  background: rgba(14, 165, 233, 0.3);
   border-radius: 10px;
   transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(102, 126, 234, 0.6);
+  background: rgba(14, 165, 233, 0.6);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+  scrollbar-color: rgba(14, 165, 233, 0.3) transparent;
 }
 
 /* ==================== Button Ripple Effect ==================== */
@@ -2631,7 +2631,7 @@ svg {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.08), rgba(8, 145, 178, 0.06), transparent);
   animation: skeleton-shimmer 1.8s infinite;
 }
 
@@ -3020,7 +3020,7 @@ svg {
 }
 
 [data-theme="light"] .card:hover {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 20px rgba(102, 126, 234, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 20px rgba(14, 165, 233, 0.08);
 }
 
 [data-theme="light"] .sidebar {
@@ -3138,7 +3138,7 @@ svg {
 }
 
 .card-tilt:hover {
-  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25), 0 0 30px rgba(118, 75, 162, 0.1);
+  box-shadow: 0 20px 60px rgba(14, 165, 233, 0.25), 0 0 30px rgba(8, 145, 178, 0.1);
 }
 
 .card-tilt .tilt-inner {
@@ -3161,8 +3161,8 @@ svg {
   right: -2px;
   bottom: -2px;
   background: linear-gradient(60deg,
-      #667eea, #764ba2, #f093fb, #f5576c,
-      #ffc3a0, #4facfe, #00f2fe, #667eea);
+      #0ea5e9, #0891b2, #f093fb, #f5576c,
+      #ffc3a0, #4facfe, #00f2fe, #0ea5e9);
   background-size: 400% 400%;
   border-radius: inherit;
   z-index: -1;
@@ -3293,7 +3293,7 @@ svg {
 .counter-value {
   font-size: 2.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #0ea5e9, #0891b2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

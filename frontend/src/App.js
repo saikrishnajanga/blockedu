@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
@@ -312,7 +312,7 @@ class ErrorBoundary extends React.Component {
                     <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>{this.state.error?.message || 'An unexpected error occurred.'}</p>
                     <button
                         onClick={() => { this.setState({ hasError: false, error: null }); window.location.href = '/'; }}
-                        style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem' }}
+                        style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem' }}
                     >Go to Home</button>
                 </div>
             );
@@ -443,7 +443,7 @@ function ThemeToggle() {
     };
     const activeStyle = {
         background: 'var(--primary-gradient)', color: 'white',
-        boxShadow: '0 2px 10px rgba(102, 126, 234, 0.4)'
+        boxShadow: '0 2px 10px rgba(14, 165, 233, 0.4)'
     };
     const inactiveStyle = {
         background: 'transparent', color: 'var(--text-secondary)'
@@ -492,7 +492,7 @@ function ConfettiEffect({ trigger }) {
 
     useEffect(() => {
         if (trigger) {
-            const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#8b5cf6'];
+            const colors = ['#0ea5e9', '#0891b2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#8b5cf6'];
             const newPieces = Array.from({ length: 50 }, (_, i) => ({
                 id: i,
                 left: Math.random() * 100,
@@ -786,7 +786,7 @@ function Sidebar({ isOpen, onToggle, onNavClick }) {
         <aside className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
             <div className="sidebar-header">
                 <span className="logo-icon">🎓</span>
-                <h2 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
+                <h2 style={{ background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Portal</h2>
             </div>
 
             <nav className="sidebar-nav" style={{ overflowY: 'auto', flex: 1 }}>
@@ -919,13 +919,12 @@ function HomePage() {
     const t = useLanguage();
 
     const roles = [
-        { id: 'student', icon: '🎓', title: t('student'), desc: t('registerDesc'), color: '#667eea', path: '/student' },
+        { id: 'student', icon: '🎓', title: t('student'), desc: t('registerDesc'), color: '#0ea5e9', path: '/student' },
         { id: 'admin', icon: '🎓', title: t('admin'), desc: t('adminDesc'), color: '#f59e0b', path: '/login?role=admin' }
     ];
 
     if (user) {
-        navigate('/dashboard');
-        return null;
+        return <Navigate to="/dashboard" replace />;
     }
 
     return (
@@ -956,8 +955,7 @@ function StudentPortalPage() {
     const [activeTab, setActiveTab] = useState('login');
 
     if (user && user.role === 'student') {
-        navigate('/dashboard');
-        return null;
+        return <Navigate to="/dashboard" replace />;
     }
 
     return (
@@ -2410,7 +2408,7 @@ function AdminPage() {
                             </button>
                             {paperUploading && uploadProgress > 0 && (
                                 <div style={{ marginTop: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px', overflow: 'hidden', height: '8px' }}>
-                                    <div style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #667eea, #764ba2)', borderRadius: '8px', transition: 'width 0.3s ease' }} />
+                                    <div style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #0ea5e9, #0891b2)', borderRadius: '8px', transition: 'width 0.3s ease' }} />
                                 </div>
                             )}
                         </form>
@@ -2465,7 +2463,7 @@ function AdminPage() {
                                                 <td>
                                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                                         <a href={`http://localhost:5000${p.fileUrl}`} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm"></a>
-                                                        <button className="btn btn-sm" style={{ background: '#667eea', color: 'white', border: 'none' }} onClick={() => startEditPaper(p)} title="Edit"></button>
+                                                        <button className="btn btn-sm" style={{ background: '#0ea5e9', color: 'white', border: 'none' }} onClick={() => startEditPaper(p)} title="Edit"></button>
                                                         <button className="btn btn-sm" style={{ background: '#e53e3e', color: 'white', border: 'none' }} onClick={() => handleDeletePaper(p.id)} title="Delete"></button>
                                                     </div>
                                                 </td>
@@ -2569,11 +2567,11 @@ function NotificationsPage() {
             <html><head><title>Notification - ${notification.title}</title>
             <style>
                 body { font-family: 'Segoe UI', sans-serif; padding: 2rem; color: #333; max-width: 800px; margin: 0 auto; }
-                .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 2rem; }
+                .header { background: linear-gradient(135deg, #0ea5e9, #0891b2); color: white; padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 2rem; }
                 .header h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
                 .header .meta { opacity: 0.9; font-size: 0.85rem; }
                 .content { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
-                .content h2 { color: #667eea; margin: 0 0 1rem 0; font-size: 1.3rem; }
+                .content h2 { color: #0ea5e9; margin: 0 0 1rem 0; font-size: 1.3rem; }
                 .content p { line-height: 1.8; font-size: 1rem; }
                 .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
                 .badge-notice { background: #dbeafe; color: #3b82f6; }
@@ -2733,15 +2731,15 @@ function ResultsPage() {
             <html><head><title>Academic Results</title>
             <style>
                 body { font-family: 'Segoe UI', sans-serif; padding: 2rem; color: #333; }
-                h1 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem; }
+                h1 { color: #0ea5e9; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.5rem; }
                 h2 { color: #444; margin-top: 1.5rem; }
                 .summary { display: flex; gap: 2rem; margin: 1rem 0; }
                 .summary-box { background: #f0f4ff; padding: 1rem 1.5rem; border-radius: 8px; text-align: center; }
-                .summary-box .value { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+                .summary-box .value { font-size: 1.8rem; font-weight: bold; color: #0ea5e9; }
                 .summary-box .label { font-size: 0.85rem; color: #666; }
                 table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1.5rem; }
                 th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
-                th { background: #667eea; color: white; }
+                th { background: #0ea5e9; color: white; }
                 tr:nth-child(even) { background: #f9f9f9; }
                 .sgpa { background: #e8f5e9; padding: 4px 12px; border-radius: 4px; font-weight: bold; color: #2e7d32; }
                 .footer { margin-top: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 1rem; }
@@ -2773,9 +2771,9 @@ function ResultsPage() {
     const tabStyle = (tab) => ({
         padding: '0.7rem 1.5rem',
         border: 'none',
-        borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
-        background: activeTab === tab ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
-        color: activeTab === tab ? '#667eea' : 'var(--text-secondary)',
+        borderBottom: activeTab === tab ? '3px solid #0ea5e9' : '3px solid transparent',
+        background: activeTab === tab ? 'rgba(14, 165, 233, 0.1)' : 'transparent',
+        color: activeTab === tab ? '#0ea5e9' : 'var(--text-secondary)',
         fontWeight: activeTab === tab ? 700 : 500,
         cursor: 'pointer',
         fontSize: '0.95rem',
@@ -3183,7 +3181,7 @@ function PapersPage() {
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
                     <span className="badge badge-info">{paper.year}</span>
                     <span className="badge badge-secondary">{paper.semester}</span>
-                    {paper.department && <span className="badge" style={{ background: 'rgba(102,126,234,0.15)', color: '#667eea' }}>{paper.department}</span>}
+                    {paper.department && <span className="badge" style={{ background: 'rgba(102,126,234,0.15)', color: '#0ea5e9' }}>{paper.department}</span>}
                 </div>
                 <StarRating paper={paper} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
@@ -3829,7 +3827,7 @@ function AnalyticsPage() {
 
             {/* Key Metrics */}
             <div className="grid-3" style={{ marginBottom: '2rem' }}>
-                <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+                <div className="card" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%)', color: 'white' }}>
                     <h3 style={{ margin: 0, opacity: 0.9 }}>Current CGPA</h3>
                     <div style={{ fontSize: '3rem', fontWeight: 'bold', margin: '1rem 0' }}>{analytics.cgpa}</div>
                     <div style={{ opacity: 0.9 }}>
@@ -3979,12 +3977,12 @@ function StudyBuddyChat() {
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%)',
                     border: 'none',
                     color: 'white',
                     fontSize: '1.8rem',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 20px rgba(102, 126, 234, 0.4)',
+                    boxShadow: '0 4px 20px rgba(14, 165, 233, 0.4)',
                     zIndex: 1000,
                     transition: 'transform 0.2s'
                 }}
@@ -4014,7 +4012,7 @@ function StudyBuddyChat() {
             {/* Header */}
             <div style={{
                 padding: '1rem',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%)',
                 color: 'white',
                 borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
                 display: 'flex',
@@ -4367,12 +4365,12 @@ function SettingsPage() {
                                 justifyContent: 'center',
                                 border: '4px solid transparent',
                                 backgroundClip: 'padding-box',
-                                boxShadow: '0 0 0 4px var(--primary-color), 0 8px 30px rgba(102, 126, 234, 0.25)',
+                                boxShadow: '0 0 0 4px var(--primary-color), 0 8px 30px rgba(14, 165, 233, 0.25)',
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                 position: 'relative'
                             }}
-                                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 12px 40px rgba(102, 126, 234, 0.4)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 8px 30px rgba(102, 126, 234, 0.25)'; }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 12px 40px rgba(14, 165, 233, 0.4)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 0 4px var(--primary-color), 0 8px 30px rgba(14, 165, 233, 0.25)'; }}
                             >
                                 {picturePreview ? (
                                     <img src={picturePreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -5093,7 +5091,7 @@ function AdminAnalyticsPage() {
     return (
         <div className="page-container">
             <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <h1 style={{ background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Real-Time Analytics Dashboard
                 </h1>
                 <select
@@ -5111,7 +5109,7 @@ function AdminAnalyticsPage() {
 
             {/* Summary Cards */}
             <div className="grid grid-4" style={{ gap: '1.5rem', marginBottom: '2rem' }}>
-                <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', padding: '1.5rem' }}>
+                <div className="card" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%)', color: 'white', padding: '1.5rem' }}>
                     <div style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>{analytics?.summary?.totalStudents || 0}</div>
                     <div>Total Students</div>
                 </div>
@@ -5229,7 +5227,7 @@ function AdminAnalyticsPage() {
                         <div key={i} style={{ textAlign: 'center', flex: 1 }}>
                             <div style={{
                                 height: `${(month.registrations / 30) * 150}px`,
-                                background: 'linear-gradient(180deg, #667eea, #764ba2)',
+                                background: 'linear-gradient(180deg, #0ea5e9, #0891b2)',
                                 borderRadius: '5px 5px 0 0',
                                 margin: '0 5px',
                                 display: 'flex',
@@ -5271,7 +5269,7 @@ function CertificateGeneratorPage() {
     // Pre-existing certificate templates
     const certTemplates = [
         { id: 'bonafide', name: '📄 Bonafide Certificate', color: '#2b6cb0', border: '#1a4e8a', fields: ['studentName', 'fatherName', 'course', 'department', 'enrollmentYear', 'currentYear', 'studentId', 'purpose'] },
-        { id: 'course_completion', name: '🎓 Course Completion Certificate', color: '#667eea', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
+        { id: 'course_completion', name: '🎓 Course Completion Certificate', color: '#0ea5e9', border: '#4a5acf', fields: ['studentName', 'course', 'department', 'startDate', 'endDate', 'grade', 'credits'] },
         { id: 'transfer', name: '📋 Transfer Certificate (TC)', color: '#e53e3e', border: '#c53030', fields: ['studentName', 'fatherName', 'department', 'course', 'enrollmentYear', 'lastDate', 'reason', 'conduct'] },
         { id: 'migration', name: '✈️ Migration Certificate', color: '#805ad5', border: '#6b46c1', fields: ['studentName', 'fatherName', 'course', 'department', 'fromUniversity', 'toUniversity', 'enrollmentYear', 'lastDate'] },
         { id: 'merit', name: '🏆 Merit Certificate', color: '#f6ad55', border: '#e8950a', fields: ['studentName', 'achievement', 'department', 'semester', 'rank', 'year'] },
@@ -5465,7 +5463,7 @@ function CertificateGeneratorPage() {
         <div className="page-container">
             <ConfettiEffect trigger={showConfetti} />
             <div className="page-header">
-                <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <h1 style={{ background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Certificate Generator
                 </h1>
             </div>
@@ -5719,14 +5717,14 @@ function AdminAttendancePage() {
 
     const tabStyle = (tab) => ({
         padding: '0.65rem 1.25rem', border: 'none', cursor: 'pointer', fontWeight: 600,
-        fontSize: '0.9rem', borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
-        background: 'transparent', color: activeTab === tab ? '#667eea' : 'inherit', opacity: activeTab === tab ? 1 : 0.6
+        fontSize: '0.9rem', borderBottom: activeTab === tab ? '3px solid #0ea5e9' : '3px solid transparent',
+        background: 'transparent', color: activeTab === tab ? '#0ea5e9' : 'inherit', opacity: activeTab === tab ? 1 : 0.6
     });
 
     return (
         <div className="dashboard" style={{ padding: '1.5rem' }}>
             <div className="dashboard-header" style={{ marginBottom: '1rem' }}>
-                <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <h1 style={{ background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Attendance Manager
                 </h1>
             </div>
@@ -5992,7 +5990,7 @@ function WorkflowManagerPage() {
             case 'high': return '#f5576c';
             case 'medium': return '#ffd200';
             case 'low': return '#38ef7d';
-            default: return '#667eea';
+            default: return '#0ea5e9';
         }
     };
 
@@ -6001,7 +5999,7 @@ function WorkflowManagerPage() {
     return (
         <div className="page-container">
             <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h1 style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <h1 style={{ background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Workflow & Task Manager
                 </h1>
                 <button className="btn btn-primary" onClick={() => setShowAddTask(true)}>
@@ -6011,7 +6009,7 @@ function WorkflowManagerPage() {
 
             {/* Add Task Modal */}
             {showAddTask && (
-                <div className="card" style={{ marginBottom: '1.5rem', border: '2px solid #667eea' }}>
+                <div className="card" style={{ marginBottom: '1.5rem', border: '2px solid #0ea5e9' }}>
                     <h3>Create New Task</h3>
                     <div className="grid grid-2" style={{ gap: '1rem', marginTop: '1rem' }}>
                         <input
@@ -6056,7 +6054,7 @@ function WorkflowManagerPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
                 {/* To Do Column */}
                 <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', padding: '1rem' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#667eea' }}> To Do ({getColumn('todo').length})</h4>
+                    <h4 style={{ marginBottom: '1rem', color: '#0ea5e9' }}> To Do ({getColumn('todo').length})</h4>
                     {getColumn('todo').map(task => (
                         <div key={task.id} className="card" style={{ marginBottom: '0.75rem', padding: '1rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -6281,9 +6279,9 @@ function AdminResultsPage() {
     const tabStyle = (tab) => ({
         padding: '0.7rem 1.5rem',
         border: 'none',
-        borderBottom: activeTab === tab ? '3px solid #667eea' : '3px solid transparent',
-        background: activeTab === tab ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
-        color: activeTab === tab ? '#667eea' : 'var(--text-secondary)',
+        borderBottom: activeTab === tab ? '3px solid #0ea5e9' : '3px solid transparent',
+        background: activeTab === tab ? 'rgba(14, 165, 233, 0.1)' : 'transparent',
+        color: activeTab === tab ? '#0ea5e9' : 'var(--text-secondary)',
         fontWeight: activeTab === tab ? 700 : 500,
         cursor: 'pointer',
         fontSize: '0.95rem',
@@ -6522,13 +6520,13 @@ function AdminResultsPage() {
                             <a href="https://jntuh-results-analysis.onrender.com/" target="_blank" rel="noopener noreferrer"
                                 style={{
                                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem',
-                                    padding: '1.5rem 2rem', background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                    padding: '1.5rem 2rem', background: 'linear-gradient(135deg, #0ea5e9, #0891b2)',
                                     color: 'white', borderRadius: '16px', textDecoration: 'none', border: 'none',
                                     fontWeight: 600, fontSize: '1rem', minWidth: '200px',
-                                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.35)', transition: 'all 0.3s ease'
+                                    boxShadow: '0 8px 25px rgba(14, 165, 233, 0.35)', transition: 'all 0.3s ease'
                                 }}
-                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 35px rgba(102, 126, 234, 0.5)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.35)'; }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 35px rgba(14, 165, 233, 0.5)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(14, 165, 233, 0.35)'; }}
                             >
                                 <span style={{ fontSize: '2rem' }}>📊</span>
                                 <span>JNTUH Results ↗</span>
@@ -6955,7 +6953,7 @@ function ChatbotPage() {
             {/* Header - mobile responsive */}
             <div style={{
                 padding: window.innerWidth <= 768 ? '0.75rem 1rem' : '1.5rem',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%)',
                 color: 'white',
                 borderRadius: window.innerWidth <= 768 ? '0' : 'var(--radius-lg) var(--radius-lg) 0 0',
                 display: 'flex',
@@ -7040,7 +7038,7 @@ function ChatbotPage() {
                             padding: window.innerWidth <= 768 ? '0.6rem 0.85rem' : '0.75rem 1rem',
                             borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                             background: msg.sender === 'user'
-                                ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                                ? 'linear-gradient(135deg, #0ea5e9, #0891b2)'
                                 : 'var(--bg-tertiary)',
                             color: msg.sender === 'user' ? 'white' : 'var(--text-primary)',
                             whiteSpace: 'pre-wrap',
@@ -7949,7 +7947,7 @@ function AppInner({ sidebarOpen, setSidebarOpen }) {
                         <Route path="/feedback" element={<ProtectedRoute roles={['student']}><PageWrapper><FeedbackPage /></PageWrapper></ProtectedRoute>} />
                         <Route path="*" element={
                             <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                                <h1 style={{ fontSize: '4rem', marginBottom: '1rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>404</h1>
+                                <h1 style={{ fontSize: '4rem', marginBottom: '1rem', background: 'linear-gradient(135deg, #0ea5e9, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>404</h1>
                                 <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Page not found</p>
                                 <Link to="/" style={{ padding: '0.75rem 1.5rem', background: 'var(--primary-gradient)', color: 'white', borderRadius: '8px', textDecoration: 'none' }}>Go Home</Link>
                             </div>
