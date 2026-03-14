@@ -205,9 +205,14 @@ app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
 // CORS — restrict in production
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'https://blockedu-tau.vercel.app'
+];
 const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',')
-  : ['http://localhost:3000', 'http://localhost:5000'];
+  ? [...new Set([...process.env.CORS_ORIGIN.split(','), ...defaultOrigins])]
+  : defaultOrigins;
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? allowedOrigins : '*',
   credentials: true
